@@ -1,0 +1,190 @@
+schema_version: 6
+publication_status: published
+
+slug: freshrss
+name: FreshRSS
+tagline: A personal RSS and Atom reader on your own server
+summary: >-
+  FreshRSS collects RSS and Atom feeds, filters articles, keeps reading history,
+  and offers APIs for third-party mobile and desktop clients. This recipe adds
+  PostgreSQL 18, scheduled feed refreshes, a deterministic first run, and a web
+  port bound safely to localhost.
+
+status: active
+editorial_status: experimental
+
+links:
+  website: https://freshrss.org/
+  source: https://github.com/FreshRSS/FreshRSS
+  documentation: https://freshrss.github.io/FreshRSS/en/
+  issues: https://github.com/FreshRSS/FreshRSS/issues
+
+classification:
+  categories:
+    - RSS and news
+  tags:
+    - rss
+    - atom
+    - feed-reader
+    - news
+    - api
+  implementation_languages:
+    - PHP
+  alternatives_to:
+    - Feedly
+    - Inoreader
+    - NewsBlur
+
+license:
+  spdx: AGPL-3.0-only
+  kind: open_source
+  restrictions: []
+  notes: >-
+    Upstream calls the license GNU AGPL 3 without an explicit only/or-later
+    suffix. AGPL-3.0-only is the conservative SPDX choice here; inspect source
+    file headers and confirm the copyright holders' intent before legally
+    significant redistribution.
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: true
+  ios: true
+  desktop: true
+
+auth:
+  oidc: native
+  saml: none
+  two_factor: none
+  proxy_header: true
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+    - armv7
+  min_cpu_cores: 1
+  min_ram_mb: 512
+  recommended_ram_mb: 1024
+  min_disk_gb: 2
+  gpu:
+    required: false
+    supported: false
+  database: postgresql
+  dependencies:
+    - PostgreSQL 18
+
+operations:
+  install_difficulty: 2
+  installation_levels:
+    home: partial
+    vps: partial
+    reliable: partial
+  maintenance_difficulty: 2
+  backup_supported: true
+  restore_tested: false
+  healthcheck: true
+  reverse_proxy_required: true
+  update_complexity: manual_steps
+
+recipe:
+  id: freshrss-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: 1.29.1
+  images:
+    - name: freshrss/freshrss
+      tag_source: pinned
+    - name: postgres
+      tag_source: pinned
+  tested_at: "2026-09-03"
+  tested_architectures:
+    amd64: passed
+    arm64: passed
+    armv7: passed
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-09-03"
+      application_version: 1.29.1
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: passed
+        armv7: passed
+      smoke_test: full
+      restore_tested: false
+  license: MIT
+  smoke_test_limitations:
+    - The full HTTP smoke test passed on amd64, arm64, and armv7.
+    - Backup, restore, and PostgreSQL migration procedures have not passed a practical restore test.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - Feed retrieval runs on the server and permits private, loopback, and link-local destinations; an untrusted user can turn this into SSRF.
+    - The recipe targets a trusted administrator and does not invent an INTERNAL_HOST_ALLOWLIST option absent from FreshRSS 1.29.1; enforce container egress restrictions for multiple users.
+    - TRUSTED_PROXY defaults to 0; a broad trusted range enables client-address spoofing and dangerous external-auth headers.
+    - Third-party extensions execute PHP with access to FreshRSS data; install reviewed code only and include extensions in backups.
+    - Administrator, API, and PostgreSQL passwords live in .env; encrypt that file and backups and keep them out of Git.
+  assessment:
+    status: not_assessed
+    assessed_at: null
+
+upstream:
+  release_source: github
+  repository: FreshRSS/FreshRSS
+  last_release_at: "2026-05-20"
+  last_checked_at: "2026-09-01T00:22:19Z"
+  stars: 15892
+  stars_checked_at: "2026-09-01T00:22:19Z"
+  releases_last_year: 5
+  releases_checked_at: "2026-09-02T17:47:54Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-09-01T00:22:19Z"
+    latest_version: "1.29.1"
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+
+update_policy:
+  images:
+    - image: freshrss/freshrss
+      provider: docker_hub
+      repository: freshrss/freshrss
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots: []
+  updated_at: "2026-09-01"

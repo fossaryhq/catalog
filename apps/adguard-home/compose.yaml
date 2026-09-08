@@ -1,0 +1,38 @@
+name: adguard-home
+
+services:
+  adguard-home:
+    image: adguard/adguardhome:${ADGUARD_VERSION:-v0.107.79}
+    restart: unless-stopped
+    ports:
+      # DNS listens on localhost only by default. Set the LAN interface address
+      # in ADGUARD_DNS_BIND, and never 0.0.0.0 on a VPS: that makes it an open
+      # resolver, which gets abused for DNS amplification.
+      - "${ADGUARD_DNS_BIND:-127.0.0.1}:${ADGUARD_DNS_PORT:-53}:53/tcp"
+      - "${ADGUARD_DNS_BIND:-127.0.0.1}:${ADGUARD_DNS_PORT:-53}:53/udp"
+      # The setup wizard and the control panel. For a reverse proxy or an SSH
+      # tunnel only: a DNS control panel has no business facing the internet.
+      - "127.0.0.1:${ADGUARD_WEB_PORT:-3000}:3000/tcp"
+    environment:
+      TZ: ${TZ:-UTC}
+    volumes:
+      - adguard-home-conf:/opt/adguardhome/conf
+      - adguard-home-work:/opt/adguardhome/work
+    healthcheck:
+      # Probes the panel on port 3000: the installer answers there until the
+      # wizard finishes, the panel itself afterwards. Choosing a different
+      # interface port in the wizard means fixing this healthcheck to match.
+      test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1:3000/ >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+volumes:
+  adguard-home-conf:
+    name: ${ADGUARD_CONF_VOLUME:-adguard-home-conf}
+  adguard-home-work:
+    name: ${ADGUARD_WORK_VOLUME:-adguard-home-work}

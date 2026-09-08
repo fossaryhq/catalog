@@ -1,0 +1,98 @@
+name: nextcloud
+
+services:
+  app:
+    image: nextcloud:${NEXTCLOUD_VERSION:-34.0.3}-apache
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${NEXTCLOUD_PORT:-8080}:80"
+    environment:
+      TZ: ${TZ:-UTC}
+      POSTGRES_HOST: database
+      POSTGRES_DB: ${NEXTCLOUD_DB_NAME:-nextcloud}
+      POSTGRES_USER: ${NEXTCLOUD_DB_USER:-nextcloud}
+      POSTGRES_PASSWORD: ${NEXTCLOUD_DB_PASSWORD}
+      REDIS_HOST: redis
+      NEXTCLOUD_ADMIN_USER: ${NEXTCLOUD_ADMIN_USER:-admin}
+      NEXTCLOUD_ADMIN_PASSWORD: ${NEXTCLOUD_ADMIN_PASSWORD}
+      NEXTCLOUD_TRUSTED_DOMAINS: ${NEXTCLOUD_TRUSTED_DOMAINS:-localhost}
+      TRUSTED_PROXIES: ${NEXTCLOUD_TRUSTED_PROXIES:-}
+      OVERWRITEPROTOCOL: ${NEXTCLOUD_OVERWRITE_PROTOCOL:-}
+      OVERWRITECLIURL: ${NEXTCLOUD_OVERWRITE_CLI_URL:-}
+      PHP_MEMORY_LIMIT: ${NEXTCLOUD_PHP_MEMORY_LIMIT:-512M}
+      PHP_UPLOAD_LIMIT: ${NEXTCLOUD_PHP_UPLOAD_LIMIT:-10G}
+    volumes:
+      - nextcloud-html:/var/www/html
+      - ${NEXTCLOUD_DATA_LOCATION:-./data}:/var/www/html/data
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent http://localhost/status.php || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+  # Background jobs. Without a dedicated cron container Nextcloud falls back to
+  # AJAX mode and only runs them while somebody has the interface open.
+  cron:
+    image: nextcloud:${NEXTCLOUD_VERSION:-34.0.3}-apache
+    restart: unless-stopped
+    entrypoint: /cron.sh
+    environment:
+      TZ: ${TZ:-UTC}
+    volumes:
+      - nextcloud-html:/var/www/html
+      - ${NEXTCLOUD_DATA_LOCATION:-./data}:/var/www/html/data
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+  database:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${NEXTCLOUD_DB_NAME:-nextcloud}
+      POSTGRES_USER: ${NEXTCLOUD_DB_USER:-nextcloud}
+      POSTGRES_PASSWORD: ${NEXTCLOUD_DB_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+      TZ: ${TZ:-UTC}
+    volumes:
+      - nextcloud-database:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${NEXTCLOUD_DB_USER:-nextcloud} -d ${NEXTCLOUD_DB_NAME:-nextcloud}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+  redis:
+    image: valkey/valkey:9-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli ping || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+volumes:
+  nextcloud-html:
+    name: ${NEXTCLOUD_HTML_VOLUME:-nextcloud-html}
+  nextcloud-database:
+    name: ${NEXTCLOUD_DB_VOLUME:-nextcloud-database}

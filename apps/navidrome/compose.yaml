@@ -1,0 +1,34 @@
+name: navidrome
+
+services:
+  navidrome:
+    image: deluan/navidrome:${NAVIDROME_VERSION:-0.63.2}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${NAVIDROME_PORT:-4533}:4533"
+    environment:
+      TZ: ${TZ:-UTC}
+      ND_LOGLEVEL: ${NAVIDROME_LOG_LEVEL:-info}
+      ND_SCANINTERVAL: ${NAVIDROME_SCAN_INTERVAL:-24h}
+      ND_SESSIONTIMEOUT: ${NAVIDROME_SESSION_TIMEOUT:-24h}
+      ND_BASEURL: ${NAVIDROME_BASE_URL:-}
+      ND_ENABLEINSIGHTSCOLLECTOR: ${NAVIDROME_INSIGHTS:-false}
+    volumes:
+      - navidrome-data:/data
+      - type: bind
+        source: ${NAVIDROME_MUSIC_LOCATION:-./music}
+        target: /music
+        read_only: true
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:4533/ping || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+volumes:
+  navidrome-data:
+    name: ${NAVIDROME_DATA_VOLUME:-navidrome-data}

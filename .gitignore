@@ -1,0 +1,14 @@
+# Local recipe state and secrets
+.env
+.env.*
+!.env.example
+apps/*/.env
+!apps/*/.env.example
+
+# Editor, operating system, and test artifacts
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.log
+tmp/

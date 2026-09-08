@@ -1,0 +1,14 @@
+http:
+  routers:
+    photoprism:
+      rule: Host(`photos.example.com`)
+      entryPoints:
+        - websecure
+      service: photoprism
+      tls:
+        certResolver: letsencrypt
+  services:
+    photoprism:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:2342

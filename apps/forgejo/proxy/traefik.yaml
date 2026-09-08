@@ -1,0 +1,14 @@
+http:
+  routers:
+    forgejo:
+      rule: Host(`git.example.com`)
+      entryPoints:
+        - websecure
+      service: forgejo
+      tls:
+        certResolver: letsencrypt
+  services:
+    forgejo:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:3000

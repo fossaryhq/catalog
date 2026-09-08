@@ -1,0 +1,75 @@
+name: freshrss
+
+services:
+  freshrss:
+    image: freshrss/freshrss:1.29.1
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${FRESHRSS_PORT:-8080}:80"
+    environment:
+      TZ: ${FRESHRSS_TIME_ZONE:-Etc/UTC}
+      CRON_MIN: ${FRESHRSS_CRON_MIN:-13,43}
+      FRESHRSS_ENV: production
+      TRUSTED_PROXY: ${FRESHRSS_TRUSTED_PROXY:-0}
+      FRESHRSS_INSTALL: >-
+        --api-enabled
+        --auth-type form
+        --base-url ${FRESHRSS_BASE_URL:-https://rss.example.com}
+        --db-base ${FRESHRSS_DB_NAME:-freshrss}
+        --db-host database
+        --db-password ${FRESHRSS_DB_PASSWORD}
+        --db-type pgsql
+        --db-user ${FRESHRSS_DB_USER:-freshrss}
+        --default-user ${FRESHRSS_ADMIN_USER:-freshrssadmin}
+        --disable-update
+        --environment production
+        --language en
+      FRESHRSS_USER: >-
+        --api-password ${FRESHRSS_ADMIN_API_PASSWORD}
+        --email ${FRESHRSS_ADMIN_EMAIL:-admin@example.com}
+        --language en
+        --password ${FRESHRSS_ADMIN_PASSWORD}
+        --user ${FRESHRSS_ADMIN_USER:-freshrssadmin}
+    volumes:
+      - freshrss-data:/var/www/FreshRSS/data
+      - freshrss-extensions:/var/www/FreshRSS/extensions
+    healthcheck:
+      test: ["CMD", "cli/health.php"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 90s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 60s
+
+  database:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${FRESHRSS_DB_NAME:-freshrss}
+      POSTGRES_USER: ${FRESHRSS_DB_USER:-freshrss}
+      POSTGRES_PASSWORD: ${FRESHRSS_DB_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+      TZ: ${FRESHRSS_TIME_ZONE:-Etc/UTC}
+    volumes:
+      - freshrss-database:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${FRESHRSS_DB_USER:-freshrss} -d ${FRESHRSS_DB_NAME:-freshrss}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 60s
+
+volumes:
+  freshrss-data:
+    name: ${FRESHRSS_DATA_VOLUME:-freshrss-data}
+  freshrss-extensions:
+    name: ${FRESHRSS_EXTENSIONS_VOLUME:-freshrss-extensions}
+  freshrss-database:
+    name: ${FRESHRSS_DB_VOLUME:-freshrss-database}

@@ -1,0 +1,75 @@
+name: Catalog checks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: catalog-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Schema, Compose, and shell
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Validate manifests
+        run: |
+          pipx run check-jsonschema==0.33.3 \
+            --schemafile schemas/app-manifest.schema.json \
+            apps/*/manifest.yaml
+
+      - name: Validate Docker Compose
+        run: |
+          set -euo pipefail
+          for directory in apps/*; do
+            echo "Validating $directory"
+            docker compose \
+              --env-file "$directory/.env.example" \
+              --file "$directory/compose.yaml" \
+              config --quiet
+          done
+
+      - name: Check shell syntax
+        run: bash -n apps/*/*.sh
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Scan for secrets
+        run: |
+          docker run --rm \
+            --volume "$PWD:/repo" \
+            --workdir /repo \
+            zricethezav/gitleaks:v8.30.1@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f \
+            git . --no-banner --redact
+
+  security:
+    name: Configuration security scan
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Scan recipes with Trivy
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: config
+          scan-ref: apps
+          severity: HIGH,CRITICAL
+          format: table
+          exit-code: "1"

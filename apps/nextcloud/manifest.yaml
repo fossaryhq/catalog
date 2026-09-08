@@ -1,0 +1,217 @@
+schema_version: 6
+publication_status: published
+
+slug: nextcloud
+name: Nextcloud
+tagline: Your own cloud with files, calendar, and collaboration
+summary: >-
+  Nextcloud is cloud storage on your own server: files sync with a computer and
+  a phone, folders open to colleagues by link or by name, and a calendar,
+  contacts, and notes sit on top. The recipe brings up the server, PostgreSQL,
+  Valkey, and a separate container for background jobs.
+
+status: active
+editorial_status: recommended
+
+links:
+  website: https://nextcloud.com/
+  source: https://github.com/nextcloud/server
+  documentation: https://docs.nextcloud.com/server/latest/admin_manual/
+  issues: https://github.com/nextcloud/server/issues
+
+classification:
+  categories:
+    - Cloud storage
+  tags:
+    - files
+    - sync
+    - collaboration
+    - calendar
+    - homelab
+  implementation_languages:
+    - PHP
+    - JavaScript
+  alternatives_to:
+    - Google Drive
+    - Dropbox
+    - Microsoft 365
+    - Яндекс Диск
+
+license:
+  spdx: AGPL-3.0-only
+  kind: open_source
+  restrictions: []
+  notes: >-
+    The server and the clients are free software and need no subscription.
+    Nextcloud GmbH sells a separate enterprise subscription with support and a few
+    closed add-ons; it does not affect what this recipe provides.
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: true
+  ios: true
+  desktop: true
+
+auth:
+  oidc: plugin
+  saml: plugin
+  two_factor: plugin
+  proxy_header: false
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+    - armv7
+  min_cpu_cores: 2
+  min_ram_mb: 2048
+  recommended_ram_mb: 4096
+  min_disk_gb: 20
+  gpu:
+    required: false
+    supported: false
+  database: postgresql
+  dependencies:
+    - PostgreSQL 17
+    - Valkey 9
+
+operations:
+  install_difficulty: 3
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: partial
+  maintenance_difficulty: 4
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: true
+  update_complexity: staged_migration
+
+recipe:
+  id: nextcloud-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: v34.0.3
+  images:
+    - name: nextcloud
+      tag_source: env
+    - name: postgres
+      tag_source: pinned
+    - name: valkey/valkey
+      tag_source: pinned
+  tested_at: "2026-08-31"
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+    armv7: not_tested
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-08-31"
+      application_version: v34.0.3
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+    - Full smoke, backup, and restore passed on amd64; ARM64 and ARMv7 remain untested.
+    - The smoke test starts the stack, checks the background job mode and Redis locking, and restores the database from a dump, but it does not verify desktop or mobile client sync.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - The administrator and database passwords are set in `.env` and end up in the container environment; set the file mode to 600 and keep it out of Git.
+    - "Nextcloud holds the files, calendars, and contacts of several people at once: publish it over HTTPS only and enable two-factor authentication."
+    - Apps from the built-in store execute code on the server; install only the ones you trust.
+    - The recipe sets no CPU or memory limits, and background jobs or preview generation can consume a small server entirely.
+  assessment:
+    status: warnings
+    assessed_at: "2026-08-31"
+
+upstream:
+  release_source: github
+  repository: nextcloud/server
+  last_release_at: "2026-08-13"
+  last_checked_at: "2026-08-31T09:31:23Z"
+  stars: 36647
+  stars_checked_at: "2026-08-31T09:31:23Z"
+  releases_last_year: 37
+  releases_checked_at: "2026-09-02T17:47:54Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-08-31T09:31:23Z"
+    latest_version: "v34.0.3"
+  critical_vulnerabilities:
+    status: findings
+    checked_at: "2026-08-31T09:47:38Z"
+    critical_count: 32
+    scanner: Trivy 0.74.0
+    ids:
+      - CVE-2026-13221
+      - CVE-2026-20884
+      - CVE-2026-24450
+      - CVE-2026-24660
+      - CVE-2026-42216
+      - CVE-2026-42217
+      - CVE-2026-42496
+      - CVE-2026-43185
+      - CVE-2026-56372
+      - CVE-2026-58016
+      - CVE-2026-6653
+      - CVE-2026-8376
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: current
+    checked_at: "2026-08-31T09:47:38Z"
+    images: []
+
+update_policy:
+  # PostgreSQL and Valkey are pinned independently of the Nextcloud version, so
+  # only the main image belongs in the policy.
+  images:
+    - image: nextcloud
+      provider: docker_hub
+      repository: library/nextcloud
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+    - file: assets/files.webp
+      alt: Nextcloud file manager with the folder list, sizes, and modification dates in light theme
+    - file: assets/sharing.webp
+      alt: Folder sharing panel with a user's permissions, an internal link, and a public link
+    - file: assets/photos.webp
+      alt: Photo directory in tile view with image previews in dark theme
+    - file: assets/users.webp
+      alt: Account management with the user list, groups, and administrator rights
+    - file: assets/admin.webp
+      alt: Security and setup checks with warnings about HTTPS and headers in dark theme
+  updated_at: "2026-08-31"

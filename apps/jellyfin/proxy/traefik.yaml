@@ -1,0 +1,21 @@
+http:
+  routers:
+    jellyfin:
+      rule: Host(`media.example.com`)
+      entryPoints:
+        - websecure
+      service: jellyfin
+      middlewares:
+        - jellyfin-headers
+      tls:
+        certResolver: letsencrypt
+  middlewares:
+    jellyfin-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: https
+  services:
+    jellyfin:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8096

@@ -1,0 +1,62 @@
+name: gitea
+
+services:
+  gitea:
+    image: docker.gitea.com/gitea:1.27.3
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${GITEA_HTTP_PORT:-3000}:3000"
+      - "127.0.0.1:${GITEA_SSH_PORT:-2222}:22"
+    environment:
+      USER_UID: "1000"
+      USER_GID: "1000"
+      GITEA__database__DB_TYPE: postgres
+      GITEA__database__HOST: database:5432
+      GITEA__database__NAME: ${POSTGRES_DB:-gitea}
+      GITEA__database__USER: ${POSTGRES_USER:-gitea}
+      GITEA__database__PASSWD: ${POSTGRES_PASSWORD}
+      GITEA__server__DOMAIN: ${GITEA_DOMAIN:-git.example.com}
+      GITEA__server__ROOT_URL: ${GITEA_ROOT_URL:-https://git.example.com/}
+      GITEA__server__HTTP_PORT: "3000"
+      GITEA__server__SSH_DOMAIN: ${GITEA_SSH_DOMAIN:-git.example.com}
+      GITEA__server__SSH_PORT: ${GITEA_SSH_PORT:-2222}
+      GITEA__server__SSH_LISTEN_PORT: "22"
+      GITEA__service__DISABLE_REGISTRATION: "true"
+      GITEA__security__INSTALL_LOCK: "true"
+    volumes:
+      - gitea-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --spider http://127.0.0.1:3000/api/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 60s
+
+  database:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-gitea}
+      POSTGRES_USER: ${POSTGRES_USER:-gitea}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - gitea-database:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  gitea-data:
+    name: ${GITEA_DATA_VOLUME:-gitea-data}
+  gitea-database:
+    name: ${GITEA_DB_VOLUME:-gitea-database}

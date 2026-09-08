@@ -1,0 +1,79 @@
+name: photoprism
+
+services:
+  photoprism:
+    image: photoprism/photoprism:${PHOTOPRISM_VERSION:-260728}
+    restart: unless-stopped
+    stop_grace_period: 30s
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${PHOTOPRISM_PORT:-2342}:2342"
+    environment:
+      PHOTOPRISM_UID: ${PHOTOPRISM_UID:-1000}
+      PHOTOPRISM_GID: ${PHOTOPRISM_GID:-1000}
+      PHOTOPRISM_ADMIN_USER: ${PHOTOPRISM_ADMIN_USER:-admin}
+      PHOTOPRISM_ADMIN_PASSWORD: ${PHOTOPRISM_ADMIN_PASSWORD}
+      PHOTOPRISM_AUTH_MODE: password
+      PHOTOPRISM_DISABLE_TLS: "true"
+      PHOTOPRISM_DEFAULT_LOCALE: ${PHOTOPRISM_DEFAULT_LOCALE:-en}
+      PHOTOPRISM_SITE_URL: ${PHOTOPRISM_SITE_URL:-http://localhost:2342/}
+      PHOTOPRISM_READONLY: "false"
+      PHOTOPRISM_DATABASE_DRIVER: mysql
+      PHOTOPRISM_DATABASE_SERVER: mariadb:3306
+      PHOTOPRISM_DATABASE_NAME: ${PHOTOPRISM_DATABASE_NAME:-photoprism}
+      PHOTOPRISM_DATABASE_USER: ${PHOTOPRISM_DATABASE_USER:-photoprism}
+      PHOTOPRISM_DATABASE_PASSWORD: ${PHOTOPRISM_DATABASE_PASSWORD}
+      PHOTOPRISM_INIT: ${PHOTOPRISM_INIT:-}
+      PHOTOPRISM_BACKUP_DATABASE: "true"
+      PHOTOPRISM_BACKUP_SCHEDULE: daily
+      TZ: ${TZ:-UTC}
+    volumes:
+      - ${PHOTOPRISM_ORIGINALS_PATH:-./originals}:/photoprism/originals
+      - ${PHOTOPRISM_STORAGE_PATH:-./storage}:/photoprism/storage
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          curl --fail --silent http://127.0.0.1:2342/api/v1/status | grep -q operational
+      interval: 30s
+      timeout: 15s
+      retries: 20
+      start_period: 120s
+    security_opt:
+      - no-new-privileges:true
+
+  mariadb:
+    image: mariadb:12.3.2
+    restart: unless-stopped
+    stop_grace_period: 30s
+    command: >-
+      --innodb-buffer-pool-size=512M
+      --transaction-isolation=READ-COMMITTED
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --max-connections=512
+      --innodb-rollback-on-timeout=OFF
+      --innodb-lock-wait-timeout=120
+    environment:
+      MARIADB_AUTO_UPGRADE: "1"
+      MARIADB_INITDB_SKIP_TZINFO: "1"
+      MARIADB_DATABASE: ${PHOTOPRISM_DATABASE_NAME:-photoprism}
+      MARIADB_USER: ${PHOTOPRISM_DATABASE_USER:-photoprism}
+      MARIADB_PASSWORD: ${PHOTOPRISM_DATABASE_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${PHOTOPRISM_DATABASE_ROOT_PASSWORD}
+    volumes:
+      - photoprism-database:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "healthcheck.sh --connect --innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  photoprism-database:
+    name: ${PHOTOPRISM_DATABASE_VOLUME:-photoprism-database}

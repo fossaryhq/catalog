@@ -1,0 +1,7 @@
+photos.example.com {
+  reverse_proxy 127.0.0.1:2342
+
+  request_body {
+    max_size 5GB
+  }
+}

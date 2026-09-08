@@ -1,0 +1,196 @@
+schema_version: 6
+publication_status: published
+
+slug: n8n
+name: n8n
+tagline: A workflow automation and integration builder on your own server
+summary: >-
+  n8n connects services to each other without programming: a workflow is built
+  from nodes on a canvas, runs on a schedule, a webhook, or an event, and can
+  branch, retry steps, and handle errors. Over five hundred ready-made
+  integrations, a node for custom JavaScript and Python, and LLM support. Your
+  data and credentials stay on your own server.
+
+status: active
+editorial_status: experimental
+
+links:
+  website: https://n8n.io
+  source: https://github.com/n8n-io/n8n
+  documentation: https://docs.n8n.io
+  issues: https://github.com/n8n-io/n8n/issues
+
+classification:
+  categories:
+    - Automation
+  tags:
+    - workflow
+    - automation
+    - integrations
+    - webhooks
+    - low-code
+  implementation_languages:
+    - TypeScript
+  alternatives_to:
+    - Zapier
+    - Make
+    - Microsoft Power Automate
+
+license:
+  spdx: LicenseRef-n8n-Sustainable-Use-1.0
+  kind: source_available
+  restrictions:
+    - "You may not offer n8n to third parties as a hosted or managed service: your own instance is for your own organization and its work."
+    - You may not remove or alter the licence notices, the attribution, or the n8n trademarks.
+    - Files with .ee. in the name and .ee directories fall outside the Sustainable Use License and need a commercial n8n Enterprise licence.
+  notes: >-
+    n8n ships under the Sustainable Use License 1.0 — fair-code, not an
+    OSI-approved open source licence. Personal and internal company use, including
+    commercial use, is free of charge; the limitations concern reselling n8n as a
+    service. Some enterprise features are covered by a separate licence and are
+    not available in this recipe.
+
+localization:
+  ui_languages:
+    - en
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: false
+
+auth:
+  oidc: paid
+  saml: paid
+  two_factor: native
+  proxy_header: false
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+  min_cpu_cores: 2
+  min_ram_mb: 1024
+  recommended_ram_mb: 2048
+  min_disk_gb: 5
+  gpu:
+    required: false
+    supported: false
+  database: postgresql
+  dependencies:
+    - PostgreSQL 17
+
+operations:
+  install_difficulty: 3
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: partial
+  maintenance_difficulty: 3
+  backup_supported: true
+  restore_tested: false
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: staged_migration
+
+recipe:
+  id: n8n-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: 2.36.9
+  images:
+    - name: n8nio/n8n
+      tag_source: env
+    - name: postgres
+      tag_source: pinned
+  tested_at: "2026-08-31"
+  tested_architectures:
+    amd64: not_tested
+    arm64: not_tested
+  smoke_test: not_tested
+  license: MIT
+  smoke_test_limitations:
+    - "No isolated run has been performed on any architecture yet, so the published recipe remains unverified."
+    - The external sandboxed task runner and the Redis-backed queue are not part of the recipe and were not tested.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - "n8n holds the credentials of every connected service; the database together with N8N_ENCRYPTION_KEY is enough to decrypt them, so the key and the dumps must be protected like passwords."
+    - "The Code node runs arbitrary JavaScript and Python inside the n8n container: the official sandboxed runner needs privileged Docker-in-Docker and is deliberately left out of this recipe."
+    - "Webhooks and the editor share one port, so publishing webhooks to the internet also exposes the control panel: HTTPS and a strong owner password are mandatory."
+    - Installing community nodes pulls npm packages into the instance and runs their code with n8n's privileges.
+  assessment:
+    status: warnings
+    assessed_at: "2026-08-31"
+
+upstream:
+  # The release feed interleaves several maintained lines: 1.123.x, 2.36.x and
+  # 2.37.x all publish as full releases, so /releases/latest returns whichever
+  # was published last rather than the stable line this recipe tracks. Reviewed
+  # by hand instead of guessing the channel from a tag.
+  release_source: manual
+  repository: n8n-io/n8n
+  last_release_at: "2026-08-31"
+  last_checked_at: "2026-08-31T21:46:32Z"
+  stars: 202971
+  stars_checked_at: "2026-08-31T21:46:32Z"
+  releases_last_year: 241
+  releases_checked_at: "2026-09-02T17:47:54Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-08-31T23:16:08Z"
+    latest_version: 2.36.9
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: current
+    checked_at: "2026-08-31T23:16:08Z"
+    images: []
+
+update_policy:
+  # PostgreSQL is pinned independently of the n8n version, so only the main image
+  # belongs in the policy. The stable n8n line is 2.36.x; the 2.37.x tags on
+  # Docker Hub are the beta channel and are not used by this recipe.
+  images:
+    - image: n8nio/n8n
+      provider: docker_hub
+      repository: n8nio/n8n
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+    - file: assets/canvas.webp
+      alt: n8n canvas with a workflow of several connected nodes in dark theme
+    - file: assets/executions.webp
+      alt: Execution history with the status, duration, and mode of every run in light theme
+    - file: assets/credentials.webp
+      alt: List of stored credentials for external services in dark theme
+    - file: assets/node-editor.webp
+      alt: Code node panel with the transformation script and a preview of input and output data in light theme
+  updated_at: "2026-08-31"

@@ -1,0 +1,186 @@
+schema_version: 6
+publication_status: published
+
+slug: paperless-ngx
+name: Paperless-ngx
+tagline: Search, OCR, and organize documents on your own server
+summary: >-
+  Paperless-ngx ingests scans and PDFs, runs OCR over them, extracts metadata,
+  and turns a document archive into a searchable full-text database.
+  This recipe uses PostgreSQL and Valkey, keeps originals locally, and exposes
+  the web interface on localhost only.
+
+status: active
+editorial_status: experimental
+
+links:
+  website: https://docs.paperless-ngx.com/
+  source: https://github.com/paperless-ngx/paperless-ngx
+  documentation: https://docs.paperless-ngx.com/
+  issues: https://github.com/paperless-ngx/paperless-ngx/issues
+
+classification:
+  categories:
+    - Documents
+  tags:
+    - document-management
+    - ocr
+    - archive
+    - pdf
+    - search
+  implementation_languages:
+    - Python
+    - TypeScript
+  alternatives_to:
+    - Adobe Acrobat
+    - Docspell Cloud
+    - Evernote
+
+license:
+  spdx: GPL-3.0-only
+  kind: open_source
+  restrictions: []
+  notes: null
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: false
+
+auth:
+  oidc: native
+  saml: none
+  two_factor: native
+  proxy_header: true
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+  min_cpu_cores: 2
+  min_ram_mb: 2048
+  recommended_ram_mb: 4096
+  min_disk_gb: 10
+  gpu:
+    required: false
+    supported: false
+  database: postgresql
+  dependencies:
+    - PostgreSQL 18
+    - Valkey 9
+
+operations:
+  install_difficulty: 3
+  installation_levels:
+    home: partial
+    vps: partial
+    reliable: partial
+  maintenance_difficulty: 3
+  backup_supported: true
+  restore_tested: false
+  healthcheck: true
+  reverse_proxy_required: true
+  update_complexity: manual_steps
+
+recipe:
+  id: paperless-ngx-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: 3.1.2
+  images:
+    - name: paperlessngx/paperless-ngx
+      tag_source: pinned
+    - name: postgres
+      tag_source: pinned
+    - name: valkey/valkey
+      tag_source: pinned
+  tested_at: "2026-09-03"
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-09-03"
+      application_version: 3.1.2
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: false
+  license: MIT
+  smoke_test_limitations:
+    - The full HTTP smoke test passed on amd64; arm64 remains untested because of WSL/QEMU host limitations.
+    - The document_exporter, document_importer, and restore procedures have not passed a practical restore test.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - Documents, thumbnails, and recognized text are not encrypted at rest; encrypt the server and backups when the archive contains sensitive data.
+    - OCR and converters process untrusted PDFs and images; crafted files may exploit parsers or exhaust CPU, RAM, and disk.
+    - A compromised account exposes the document archive; public access requires HTTPS, strong passwords, timely updates, and access restrictions.
+    - Exports contain documents, users, and configuration but omit API tokens; protect them like source documents and issue new tokens after restore.
+  assessment:
+    status: not_assessed
+    assessed_at: null
+
+upstream:
+  release_source: github
+  repository: paperless-ngx/paperless-ngx
+  last_release_at: "2026-09-01"
+  last_checked_at: "2026-09-02T09:26:18Z"
+  stars: 44757
+  stars_checked_at: "2026-09-01T00:21:29Z"
+  releases_last_year: 33
+  releases_checked_at: "2026-09-02T17:47:54Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-09-02T09:26:18Z"
+    latest_version: "3.1.2"
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+
+update_policy:
+  images:
+    - image: paperlessngx/paperless-ngx
+      provider: docker_hub
+      repository: paperlessngx/paperless-ngx
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots: []
+  updated_at: "2026-09-01"

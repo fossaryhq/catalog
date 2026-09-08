@@ -1,0 +1,7 @@
+files.example.com {
+  # Seafile uploads and downloads whole file blocks through the same origin.
+  request_body {
+    max_size 0
+  }
+  reverse_proxy 127.0.0.1:8000
+}

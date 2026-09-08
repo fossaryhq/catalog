@@ -1,0 +1,14 @@
+http:
+  routers:
+    uptime-kuma:
+      rule: Host(`status.example.com`)
+      entryPoints:
+        - websecure
+      service: uptime-kuma
+      tls:
+        certResolver: letsencrypt
+  services:
+    uptime-kuma:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:3001

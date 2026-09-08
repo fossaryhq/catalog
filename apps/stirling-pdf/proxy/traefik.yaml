@@ -1,0 +1,14 @@
+http:
+  routers:
+    stirling-pdf:
+      rule: Host(`pdf.example.com`)
+      entryPoints:
+        - websecure
+      service: stirling-pdf
+      tls:
+        certResolver: letsencrypt
+  services:
+    stirling-pdf:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8080

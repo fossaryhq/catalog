@@ -1,0 +1,197 @@
+schema_version: 6
+publication_status: published
+
+slug: adguard-home
+name: AdGuard Home
+tagline: A DNS server that blocks ads and trackers for the whole network
+summary: >-
+  AdGuard Home replaces the router's DNS resolver and filters ads, trackers, and
+  malicious domains for every device on the network at once, including TVs and
+  phones where no blocker can be installed. One container, a web panel with
+  statistics and a query log, plus DNS-over-HTTPS and DNS-over-TLS upstreams.
+
+status: active
+editorial_status: experimental
+
+links:
+  website: https://adguard.com/adguard-home/overview.html
+  source: https://github.com/AdguardTeam/AdGuardHome
+  documentation: https://adguard-dns.io/kb/adguard-home/
+  issues: https://github.com/AdguardTeam/AdGuardHome/issues
+
+classification:
+  categories:
+    - Networking
+  tags:
+    - dns
+    - adblock
+    - privacy
+    - homelab
+    - doh
+  implementation_languages:
+    - TypeScript
+    - Go
+  alternatives_to:
+    - NextDNS
+    - AdGuard DNS
+    - Cloudflare Gateway
+
+license:
+  spdx: GPL-3.0-only
+  kind: open_source
+  restrictions: []
+  notes: >-
+    AdGuard Home is fully free software and needs no AdGuard subscription. The
+    company's paid products (AdGuard DNS, Premium browser extensions) are
+    unrelated to this recipe.
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+    - ru
+
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: false
+
+auth:
+  oidc: none
+  saml: none
+  two_factor: none
+  proxy_header: false
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+    - armv7
+  min_cpu_cores: 1
+  min_ram_mb: 256
+  recommended_ram_mb: 512
+  min_disk_gb: 2
+  gpu:
+    required: false
+    supported: false
+  database: none
+  dependencies: []
+
+operations:
+  install_difficulty: 3
+  installation_levels:
+    home: supported
+    vps: partial
+    reliable: unsupported
+  maintenance_difficulty: 2
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: in_place
+
+recipe:
+  id: adguard-home-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: v0.107.79
+  images:
+    - name: adguard/adguardhome
+      tag_source: env
+  tested_at: "2026-08-31"
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+    armv7: not_tested
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-08-31"
+      application_version: v0.107.79
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+    - Full smoke, backup, and restore passed on amd64; ARM64 and ARMv7 remain untested.
+    - The DHCP server and DNS-over-HTTPS are not enabled in the recipe and were not tested.
+
+security:
+  public_exposure: not_recommended
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - Port 53 exposed to the internet turns the server into an open resolver used for DNS amplification; by default the recipe publishes DNS on 127.0.0.1 only.
+    - The query log records the domains every device on the network visits; retention and client anonymization must be configured deliberately.
+    - The built-in DHCP server needs host networking or macvlan, so it is not enabled in this recipe and will not work.
+    - On Ubuntu and Debian port 53 is normally held by systemd-resolved, and reconfiguring it affects name resolution on the host itself.
+  assessment:
+    status: warnings
+    assessed_at: "2026-08-31"
+
+upstream:
+  release_source: github
+  repository: AdguardTeam/AdGuardHome
+  last_release_at: "2026-08-18"
+  last_checked_at: "2026-08-31T15:23:09Z"
+  stars: 36591
+  stars_checked_at: "2026-08-31T15:23:09Z"
+  releases_last_year: 14
+  releases_checked_at: "2026-09-02T17:47:54Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-08-31T18:49:53Z"
+    latest_version: v0.107.79
+  critical_vulnerabilities:
+    status: no_findings
+    checked_at: "2026-08-31T18:49:53Z"
+    critical_count: 0
+    scanner: Trivy 0.74.0
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: current
+    checked_at: "2026-08-31T18:49:53Z"
+    images: []
+
+update_policy:
+  # This image's Docker Hub tags carry the "v" prefix (v0.107.79) rather than the
+  # spelling without it that the registry conventionally uses.
+  images:
+    - image: adguard/adguardhome
+      provider: docker_hub
+      repository: adguard/adguardhome
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+    - file: assets/dashboard.webp
+      alt: AdGuard Home dashboard with a query summary, the share of blocked ads, and the list of active devices in dark theme
+    - file: assets/query-log.webp
+      alt: Query log listing domains, clients, and the blocking reason in light theme
+    - file: assets/filters.webp
+      alt: Connected blocklists with rule counts and update timestamps in dark theme
+    - file: assets/dns-settings.webp
+      alt: DNS settings with upstream server fields and the upstream mode selector in light theme
+  updated_at: "2026-08-31"

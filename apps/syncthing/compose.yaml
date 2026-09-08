@@ -1,0 +1,28 @@
+name: syncthing
+
+services:
+  syncthing:
+    image: syncthing/syncthing:${SYNCTHING_VERSION:-2.1.3}
+    restart: unless-stopped
+    hostname: ${SYNCTHING_DEVICE_NAME:-fossary}
+    ports:
+      # The web interface stays local; publish it through a reverse proxy.
+      - "127.0.0.1:${SYNCTHING_GUI_PORT:-8384}:8384"
+      # The sync ports must be reachable by other devices directly.
+      - "${SYNCTHING_SYNC_PORT:-22000}:22000/tcp"
+      - "${SYNCTHING_SYNC_PORT:-22000}:22000/udp"
+      - "${SYNCTHING_DISCOVERY_PORT:-21027}:21027/udp"
+    environment:
+      TZ: ${TZ:-UTC}
+      PUID: ${SYNCTHING_UID:-1000}
+      PGID: ${SYNCTHING_GID:-1000}
+    volumes:
+      - syncthing-config:/var/syncthing
+      - ${SYNCTHING_DATA_LOCATION:-./data}:/data
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+volumes:
+  syncthing-config:
+    name: ${SYNCTHING_CONFIG_VOLUME:-syncthing-config}

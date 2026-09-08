@@ -1,0 +1,196 @@
+schema_version: 6
+publication_status: published
+
+slug: syncthing
+name: Syncthing
+tagline: File synchronisation between devices, directly and without a cloud
+summary: >-
+  Syncthing keeps chosen folders identical on several devices and transfers
+  files directly between them over an encrypted channel. There is no server in
+  the middle: every node holds a copy, and the server in this recipe acts as the
+  always-available participant in the exchange.
+
+status: active
+editorial_status: recommended
+
+links:
+  website: https://syncthing.net/
+  source: https://github.com/syncthing/syncthing
+  documentation: https://docs.syncthing.net/
+  issues: https://github.com/syncthing/syncthing/issues
+
+classification:
+  categories:
+    - File synchronisation
+  tags:
+    - sync
+    - files
+    - p2p
+    - privacy
+    - homelab
+  implementation_languages:
+    - Go
+    - JavaScript
+  alternatives_to:
+    - Dropbox
+    - Google Drive
+    - Яндекс Диск
+
+license:
+  spdx: MPL-2.0
+  kind: open_source
+  restrictions: []
+  notes: >-
+    The official Android app was archived in December 2024; on Android and iOS
+    Syncthing runs through community-maintained apps. The server, the web
+    interface, and the desktop builds are developed by the project itself.
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: true
+  ios: true
+  desktop: true
+
+auth:
+  oidc: none
+  saml: none
+  two_factor: none
+  proxy_header: false
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+    - armv7
+  min_cpu_cores: 1
+  min_ram_mb: 256
+  recommended_ram_mb: 512
+  min_disk_gb: 2
+  gpu:
+    required: false
+    supported: false
+  database: none
+  dependencies: []
+
+operations:
+  install_difficulty: 2
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: unsupported
+  maintenance_difficulty: 2
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: true
+  update_complexity: in_place
+
+recipe:
+  id: syncthing-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: v2.1.3
+  images:
+    - name: syncthing/syncthing
+      tag_source: env
+  tested_at: "2026-08-31"
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+    armv7: not_tested
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-08-31"
+      application_version: v2.1.3
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+    - Full smoke, backup, and restore passed on amd64; ARM64 and ARMv7 remain untested.
+    - The smoke test starts a single node and checks the API, the data directory permissions, and that the device key survives a restore, but it does not exchange files between two nodes.
+
+security:
+  public_exposure: supported
+  default_bind: all_interfaces
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - "The sync port 22000 is published on all interfaces: without it, nodes connect only through public relays and noticeably slower. The web interface still stays on 127.0.0.1."
+    - The web interface has no password by default; set a user and password under Settings → GUI before publishing it on a domain.
+    - "The configuration archive contains the devices private key: anyone who gets it can impersonate your node, so the copies must be encrypted."
+    - "Syncthing synchronises deletions: a file removed by mistake disappears on every device unless file versioning is enabled for the folder."
+  assessment:
+    status: warnings
+    assessed_at: "2026-08-31"
+
+upstream:
+  release_source: github
+  repository: syncthing/syncthing
+  last_release_at: "2026-08-05"
+  last_checked_at: "2026-08-31T08:59:25Z"
+  stars: 88148
+  stars_checked_at: "2026-08-31T08:59:25Z"
+  releases_last_year: 16
+  releases_checked_at: "2026-09-02T17:47:54Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-08-31T08:59:25Z"
+    latest_version: "v2.1.3"
+  critical_vulnerabilities:
+    status: no_findings
+    checked_at: "2026-08-31T09:07:21Z"
+    critical_count: 0
+    scanner: Trivy 0.74.0
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: current
+    checked_at: "2026-08-31T09:07:21Z"
+    images: []
+
+update_policy:
+  images:
+    - image: syncthing/syncthing
+      provider: docker_hub
+      repository: syncthing/syncthing
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+    - file: assets/dashboard.webp
+      alt: Syncthing main screen with two synchronised folders and a connected remote device
+    - file: assets/folder.webp
+      alt: Expanded folder card with the path, file count, sync type, and versioning setting
+    - file: assets/device.webp
+      alt: Remote device card with its address, connection type, and the shared folders
+    - file: assets/settings.webp
+      alt: Web interface settings with the user and password fields, the HTTPS switch, and the theme selector
+    - file: assets/folder-edit.webp
+      alt: Folder edit dialog with the sharing, versioning, and ignore pattern tabs
+  updated_at: "2026-08-31"

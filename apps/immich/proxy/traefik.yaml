@@ -1,0 +1,21 @@
+http:
+  routers:
+    immich:
+      rule: Host(`photos.example.com`)
+      entryPoints:
+        - websecure
+      service: immich
+      middlewares:
+        - immich-buffering
+      tls:
+        certResolver: letsencrypt
+  middlewares:
+    immich-buffering:
+      buffering:
+        maxRequestBodyBytes: 0
+        memRequestBodyBytes: 2097152
+  services:
+    immich:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:2283

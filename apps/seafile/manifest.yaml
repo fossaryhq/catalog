@@ -1,0 +1,205 @@
+schema_version: 6
+publication_status: published
+
+slug: seafile
+name: Seafile
+tagline: Library-based file sync and sharing with fast desktop clients
+summary: >-
+  Seafile syncs files as deduplicated blocks rather than as a mirrored
+  directory, which is what makes large collections and interrupted transfers
+  fast. Each library syncs separately to desktop, mobile, and the browser, can
+  be shared by link or account, and can be encrypted client-side so the server
+  never sees its contents.
+
+status: active
+editorial_status: experimental
+
+links:
+  website: https://www.seafile.com/
+  source: https://github.com/haiwen/seafile-server
+  documentation: https://manual.seafile.com/13.0/
+  issues: https://github.com/haiwen/seafile/issues
+
+classification:
+  categories:
+    - Cloud storage
+  tags:
+    - files
+    - sync
+    - sharing
+    - encryption
+    - homelab
+  implementation_languages:
+    - C
+    - Python
+    - JavaScript
+    - Go
+  alternatives_to:
+    - Dropbox
+    - Google Drive
+    - Яндекс Диск
+
+license:
+  spdx: AGPL-3.0-only AND Apache-2.0
+  kind: open_source
+  restrictions: []
+  notes: >-
+    The Community Edition is split: the server core is AGPLv3 with an OpenSSL
+    linking exception, and Seahub, the web frontend, is Apache-2.0. The
+    Professional Edition adds SAML, advanced administration, and online office
+    integration under a paid licence and is free for up to three users; this
+    recipe deploys the Community Edition only.
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: true
+  ios: true
+  desktop: true
+
+auth:
+  oidc: native
+  saml: paid
+  two_factor: native
+  proxy_header: true
+
+requirements:
+  architectures:
+    - amd64
+  min_cpu_cores: 2
+  min_ram_mb: 2048
+  recommended_ram_mb: 4096
+  min_disk_gb: 10
+  gpu:
+    required: false
+    supported: false
+  database: mariadb
+  dependencies:
+    - MariaDB 10.11
+    - Valkey 9
+
+operations:
+  install_difficulty: 3
+  installation_levels:
+    home: partial
+    vps: partial
+    reliable: partial
+  maintenance_difficulty: 4
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: true
+  update_complexity: staged_migration
+
+recipe:
+  id: seafile-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: 13.0.25
+  images:
+    - name: seafileltd/seafile-mc
+      tag_source: pinned
+    - name: mariadb
+      tag_source: pinned
+    - name: valkey/valkey
+      tag_source: pinned
+  tested_at: "2026-09-03"
+  tested_architectures:
+    amd64: passed
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-09-03"
+      application_version: 13.0.25
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+      smoke_test: full
+      restore_tested: true
+    - tested_at: "2026-09-02"
+      application_version: 13.0.25
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+      smoke_test: partial
+      restore_tested: false
+  license: MIT
+  smoke_test_limitations:
+    - The full application smoke test passed on amd64; the published image has no stable ARM build to test.
+    - A practical backup and restore test passed on amd64.
+    - Desktop and mobile synchronisation, client-side encrypted libraries, sharing links, and OAuth sign-in are not exercised by the smoke test.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - Five secrets live in .env — the administrator password, the MariaDB root and role passwords, the cache password, and the JWT key; the same file also decrypts nothing, so archives must be encrypted separately.
+    - SEAFILE_SERVER_HOSTNAME and SEAFILE_SERVER_PROTOCOL are written into the generated configuration at first start, so a wrong scheme keeps producing insecure links until the files inside the volume are edited.
+    - The container runs its own nginx as root inside the image because NON_ROOT is false, which is what the upstream image expects.
+    - Libraries that are not encrypted client-side are stored as plain blocks; anyone with access to the data volume or a backup reads every file.
+    - SAML, advanced administration, and online office belong to the paid Professional Edition, so an installation that needs them cannot stay on this recipe.
+  assessment:
+    status: not_assessed
+    assessed_at: null
+
+upstream:
+  release_source: manual
+  repository: haiwen/seafile-server
+  last_release_at: "2026-07-13"
+  last_checked_at: "2026-09-02T20:10:00Z"
+  stars: 15195
+  stars_checked_at: "2026-09-02T20:10:00Z"
+  releases_last_year: 11
+  releases_checked_at: "2026-09-02T20:10:00Z"
+
+update_tracking:
+  # The GitHub releases of the server repository lag far behind the shipped
+  # server, so the version snapshot is taken from the published image tags by
+  # hand instead of from a release feed.
+  releases:
+    status: current
+    checked_at: "2026-09-02T20:10:00Z"
+    latest_version: 13.0.25
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+
+update_policy:
+  # MariaDB and Valkey are pinned independently of the server version, so only
+  # the Seafile image belongs in the policy.
+  images:
+    - image: seafileltd/seafile-mc
+      provider: docker_hub
+      repository: seafileltd/seafile-mc
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots: []
+  updated_at: "2026-09-02"

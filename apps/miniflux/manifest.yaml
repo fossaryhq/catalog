@@ -1,0 +1,193 @@
+schema_version: 6
+publication_status: published
+
+slug: miniflux
+name: Miniflux
+tagline: A minimalist feed reader with the Google Reader API
+summary: >-
+  Miniflux is one Go binary and one PostgreSQL database: no plugins, no
+  recommendation feed, no account anywhere else. It reads RSS, Atom, JSON Feed,
+  and RDF, pulls the full article when a feed ships only an excerpt, and serves
+  the Google Reader and Fever APIs so existing mobile readers sync against it.
+
+status: active
+editorial_status: experimental
+
+links:
+  website: https://miniflux.app/
+  source: https://github.com/miniflux/v2
+  documentation: https://miniflux.app/docs/
+  issues: https://github.com/miniflux/v2/issues
+
+classification:
+  categories:
+    - RSS and news
+  tags:
+    - rss
+    - atom
+    - feed-reader
+    - news
+    - api
+  implementation_languages:
+    - Go
+  alternatives_to:
+    - Feedly
+    - Inoreader
+    - NewsBlur
+
+license:
+  spdx: Apache-2.0
+  kind: open_source
+  restrictions: []
+  notes: null
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: false
+
+auth:
+  oidc: native
+  saml: none
+  two_factor: native
+  proxy_header: true
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+  min_cpu_cores: 1
+  min_ram_mb: 512
+  recommended_ram_mb: 1024
+  min_disk_gb: 2
+  gpu:
+    required: false
+    supported: false
+  database: postgresql
+  dependencies:
+    - PostgreSQL 18
+
+operations:
+  install_difficulty: 2
+  installation_levels:
+    home: partial
+    vps: partial
+    reliable: partial
+  maintenance_difficulty: 2
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: true
+  update_complexity: in_place
+
+recipe:
+  id: miniflux-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: 2.3.3
+  images:
+    - name: miniflux/miniflux
+      tag_source: pinned
+    - name: postgres
+      tag_source: pinned
+  tested_at: "2026-09-03"
+  tested_architectures:
+    amd64: passed
+    arm64: passed
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-09-03"
+      application_version: 2.3.3
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: passed
+      smoke_test: full
+      restore_tested: true
+    - tested_at: "2026-09-02"
+      application_version: 2.3.3
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: partial
+      restore_tested: false
+  license: MIT
+  smoke_test_limitations:
+    - The full application smoke test passed on amd64 and arm64.
+    - A practical backup and restore test passed on amd64; restore was not tested on arm64.
+    - Feed polling, the Google Reader and Fever APIs, OAuth2 sign-in, and passkeys are not exercised by the smoke test.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - The poller fetches arbitrary URLs from the server on a schedule, so it reaches whatever the container network reaches; restrict egress when the instance is shared.
+    - The administrator password and the PostgreSQL password live in .env; set the file mode to 600, keep it out of Git, and encrypt backups.
+    - TRUSTED_REVERSE_PROXY_NETWORKS is limited to loopback, so forwarded client-IP and proxy-authentication headers are ignored until an operator widens it deliberately.
+    - Google Reader and Fever API keys grant full access to the account that issued them and are stored in the same database as everything else.
+  assessment:
+    status: not_assessed
+    assessed_at: null
+
+upstream:
+  release_source: github
+  repository: miniflux/v2
+  last_release_at: "2026-07-24"
+  last_checked_at: "2026-09-02T19:40:00Z"
+  stars: 9646
+  stars_checked_at: "2026-09-02T19:40:00Z"
+  releases_last_year: 11
+  releases_checked_at: "2026-09-02T19:40:00Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-09-02T19:40:00Z"
+    latest_version: 2.3.3
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+
+update_policy:
+  # PostgreSQL is pinned independently of the application version, so only the
+  # Miniflux image belongs in the policy.
+  images:
+    - image: miniflux/miniflux
+      provider: docker_hub
+      repository: miniflux/miniflux
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots: []
+  updated_at: "2026-09-02"

@@ -1,0 +1,28 @@
+http:
+  routers:
+    nextcloud:
+      rule: Host(`cloud.example.com`)
+      entryPoints:
+        - websecure
+      service: nextcloud
+      middlewares:
+        - nextcloud-dav
+        - nextcloud-buffering
+      tls:
+        certResolver: letsencrypt
+  middlewares:
+    # Nextcloud expects these addresses at the short path.
+    nextcloud-dav:
+      redirectRegex:
+        regex: "https://(.*)/.well-known/(card|cal)dav"
+        replacement: "https://${1}/remote.php/dav"
+        permanent: true
+    nextcloud-buffering:
+      buffering:
+        maxRequestBodyBytes: 0
+        memRequestBodyBytes: 2097152
+  services:
+    nextcloud:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8080

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="AdGuard Home">
+  <linearGradient id="adguard-shield" x1="6" y1="4" x2="58" y2="60" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#68BC71"/>
+    <stop offset="1" stop-color="#67B279"/>
+  </linearGradient>
+  <path d="M32 3.5 58 12v20.5c0 13.6-10.6 22.9-26 28-15.4-5.1-26-14.4-26-28V12z" fill="url(#adguard-shield)"/>
+  <path d="M21.5 31.5 29 39l14-15" fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,14 @@
+http:
+  routers:
+    linkwarden:
+      rule: Host(`links.example.com`) || Host(`saved.example.net`)
+      entryPoints:
+        - websecure
+      service: linkwarden
+      tls:
+        certResolver: letsencrypt
+  services:
+    linkwarden:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:3000

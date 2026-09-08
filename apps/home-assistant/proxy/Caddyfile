@@ -1,0 +1,5 @@
+# Home Assistant rejects proxied requests until configuration.yaml sets
+# use_x_forwarded_for and lists this proxy's address in trusted_proxies.
+home.example.com {
+  reverse_proxy 127.0.0.1:8123
+}

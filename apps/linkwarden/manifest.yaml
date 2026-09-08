@@ -1,0 +1,188 @@
+schema_version: 6
+publication_status: published
+
+slug: linkwarden
+name: Linkwarden
+tagline: Bookmarks and web archives on your own server
+summary: >-
+  Linkwarden saves, organizes, and searches bookmarks, preserves local copies of
+  pages, and shares collections. This recipe includes PostgreSQL 16, Meilisearch
+  1.13.3, a separate origin for preserved HTML, and a web port safely bound to
+  localhost.
+
+status: active
+editorial_status: experimental
+
+links:
+  website: https://linkwarden.app/
+  source: https://github.com/linkwarden/linkwarden
+  documentation: https://docs.linkwarden.app/
+  issues: https://github.com/linkwarden/linkwarden/issues
+
+classification:
+  categories:
+    - Bookmarks and archiving
+  tags:
+    - bookmarks
+    - web-archive
+    - read-later
+    - collaboration
+    - search
+  implementation_languages:
+    - TypeScript
+  alternatives_to:
+    - Pocket
+    - Raindrop.io
+    - Pinboard
+
+license:
+  spdx: AGPL-3.0-only
+  kind: open_source
+  restrictions: []
+  notes: null
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: true
+  ios: true
+  desktop: false
+
+auth:
+  oidc: native
+  saml: none
+  two_factor: none
+  proxy_header: false
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+  min_cpu_cores: 2
+  min_ram_mb: 2048
+  recommended_ram_mb: 4096
+  min_disk_gb: 5
+  gpu:
+    required: false
+    supported: false
+  database: postgresql
+  dependencies:
+    - PostgreSQL 16
+    - Meilisearch 1.13.3
+
+operations:
+  install_difficulty: 3
+  installation_levels:
+    home: partial
+    vps: partial
+    reliable: partial
+  maintenance_difficulty: 3
+  backup_supported: true
+  restore_tested: false
+  healthcheck: true
+  reverse_proxy_required: true
+  update_complexity: manual_steps
+
+recipe:
+  id: linkwarden-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: v2.16.2
+  images:
+    - name: ghcr.io/linkwarden/linkwarden
+      tag_source: pinned
+    - name: postgres
+      tag_source: pinned
+    - name: getmeili/meilisearch
+      tag_source: pinned
+  tested_at: "2026-09-03"
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-09-03"
+      application_version: v2.16.2
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: false
+  license: MIT
+  smoke_test_limitations:
+    - The full HTTP smoke test passed on amd64; arm64 remains untested because the WSL/QEMU host could not run it reliably.
+    - Backup, restore, PostgreSQL migrations, and Meilisearch index restoration have not passed practical testing.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - A headless browser fetches untrusted URLs and processes active content; upstream or network-policy flaws can cause SSRF or exhaust CPU, RAM, and disk.
+    - Preserved HTML can contain active content and must be served from a separate origin that does not share application cookies.
+    - ALLOW_PRIVATE_NETWORK_ACCESS and ALLOW_INSECURE_TLS are pinned to false; enabling them permits internal-service access or invalid TLS certificates.
+    - Open registration is required only for the first account and must be disabled immediately after it is created.
+    - NEXTAUTH_SECRET, the PostgreSQL password, and the Meilisearch key live in .env; encrypt that file and backups and keep them out of Git.
+  assessment:
+    status: not_assessed
+    assessed_at: null
+
+upstream:
+  release_source: github
+  repository: linkwarden/linkwarden
+  last_release_at: "2026-08-31"
+  last_checked_at: "2026-09-01T00:22:20Z"
+  stars: 19653
+  stars_checked_at: "2026-09-01T00:22:20Z"
+  releases_last_year: 13
+  releases_checked_at: "2026-09-02T17:47:54Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-09-01T00:22:20Z"
+    latest_version: v2.16.2
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+
+update_policy:
+  # PostgreSQL and Meilisearch follow their own versions and their tags do not
+  # track the application version, so only the Linkwarden image is in the policy.
+  images:
+    - image: ghcr.io/linkwarden/linkwarden
+      provider: ghcr
+      repository: linkwarden/linkwarden
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots: []
+  updated_at: "2026-09-01"

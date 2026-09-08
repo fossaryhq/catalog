@@ -1,0 +1,22 @@
+name: vaultwarden
+
+services:
+  vaultwarden:
+    image: vaultwarden/server:${VAULTWARDEN_VERSION:-1.37.2}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${VAULTWARDEN_PORT:-8000}:80"
+    environment:
+      DOMAIN: ${VAULTWARDEN_DOMAIN:-https://vault.example.com}
+      SIGNUPS_ALLOWED: ${VAULTWARDEN_SIGNUPS_ALLOWED:-false}
+      INVITATIONS_ALLOWED: ${VAULTWARDEN_INVITATIONS_ALLOWED:-false}
+      TZ: ${TZ:-UTC}
+    volumes:
+      - vaultwarden-data:/data
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+volumes:
+  vaultwarden-data:
+    name: ${VAULTWARDEN_DATA_VOLUME:-vaultwarden-data}

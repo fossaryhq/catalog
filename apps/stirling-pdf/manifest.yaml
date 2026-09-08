@@ -1,0 +1,190 @@
+schema_version: 6
+publication_status: published
+
+slug: stirling-pdf
+name: Stirling PDF
+tagline: More than 60 PDF tools on your own server
+summary: >-
+  Stirling PDF combines editing, conversion, OCR, compression, signing, and
+  automated PDF processing in one web interface. This recipe makes authentication
+  mandatory, uses local H2, and binds to localhost, so documents never need to
+  reach a cloud service.
+
+status: active
+editorial_status: experimental
+
+links:
+  website: https://stirling.com/
+  source: https://github.com/Stirling-Tools/Stirling-PDF
+  documentation: https://docs.stirlingpdf.com/
+  issues: https://github.com/Stirling-Tools/Stirling-PDF/issues
+
+classification:
+  categories:
+    - Documents
+  tags:
+    - pdf
+    - document-conversion
+    - ocr
+    - editing
+    - automation
+  implementation_languages:
+    - Java
+    - TypeScript
+  alternatives_to:
+    - Adobe Acrobat
+    - Smallpdf
+    - iLovePDF
+
+license:
+  spdx: LicenseRef-Stirling-PDF-User-License
+  kind: source_available
+  restrictions:
+    - The product as a whole is under a composite licence; the proprietary directories, and the other parts the root LICENSE lists, are governed by the Stirling PDF User License rather than MIT.
+    - Without a subscription the User License permits internal evaluation or minimal use only, and forbids production, business-critical, client-facing, and commercial use, redistribution, and circumventing the licence restrictions.
+    - Upstream also advertises a free plan for up to five users; whether that widens the User License wording for production is unclear, so obtain confirmation from the rights holder before such use.
+  notes: >-
+    Stirling PDF is open-core, not wholly MIT. The standard image includes parts
+    under the Stirling PDF User License, which limits production, commercial,
+    client-facing, and business-critical use without a subscription. Upstream
+    also advertises a Free tier for up to five users, but how that statement
+    modifies the narrower embedded licence is unclear; obtain confirmation from
+    the rights holder before production use.
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: true
+
+auth:
+  oidc: paid
+  saml: paid
+  two_factor: native
+  proxy_header: false
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+  min_cpu_cores: 2
+  min_ram_mb: 2048
+  recommended_ram_mb: 4096
+  min_disk_gb: 10
+  gpu:
+    required: false
+    supported: false
+  database: other
+  dependencies: []
+
+operations:
+  install_difficulty: 2
+  installation_levels:
+    home: partial
+    vps: partial
+    reliable: partial
+  maintenance_difficulty: 3
+  backup_supported: true
+  restore_tested: false
+  healthcheck: true
+  reverse_proxy_required: true
+  update_complexity: manual_steps
+
+recipe:
+  id: stirling-pdf-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: 2.14.3
+  images:
+    - name: stirlingtools/stirling-pdf
+      tag_source: pinned
+  tested_at: "2026-09-03"
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-09-03"
+      application_version: 2.14.3
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: false
+  license: MIT
+  smoke_test_limitations:
+    - The full application-level HTTP smoke test passed on amd64; arm64 remains untested because of WSL/QEMU host limitations.
+    - Backup and restoration of H2 together with configuration, custom files, pipelines, and tessdata have not passed a practical restore test.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - PDF, image, and office documents reach complex native tools; crafted input may attack parsers or exhaust CPU, RAM, temporary space, and disk.
+    - URL-to-PDF carries an SSRF risk and is explicitly disabled; do not enable it on a public instance without separate network isolation and review of upstream protections.
+    - Embedded H2, accounts, and settings live under /configs; damage or an inconsistent copy can make users and configuration unavailable.
+    - The initial password is stored in .env and applies only while the first database is created; protect the file and backups as secrets and change the password after first login.
+    - Production rights and the advertised Free tier for up to five users are ambiguous; verify your use case with Stirling PDF Inc.
+  assessment:
+    status: not_assessed
+    assessed_at: null
+
+upstream:
+  release_source: github
+  repository: Stirling-Tools/Stirling-PDF
+  last_release_at: "2026-08-06"
+  last_checked_at: "2026-09-01T00:21:59Z"
+  stars: 91063
+  stars_checked_at: "2026-09-01T00:21:59Z"
+  releases_last_year: 51
+  releases_checked_at: "2026-09-02T17:47:54Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-09-01T00:21:59Z"
+    latest_version: "2.14.3"
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+
+update_policy:
+  images:
+    - image: stirlingtools/stirling-pdf
+      provider: docker_hub
+      repository: stirlingtools/stirling-pdf
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots: []
+  updated_at: "2026-09-01"

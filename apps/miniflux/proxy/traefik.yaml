@@ -1,0 +1,14 @@
+http:
+  routers:
+    miniflux:
+      rule: Host(`reader.example.com`)
+      entryPoints:
+        - websecure
+      service: miniflux
+      tls:
+        certResolver: letsencrypt
+  services:
+    miniflux:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8080

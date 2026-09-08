@@ -1,0 +1,1036 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fossary.com/schemas/app-manifest.schema.json",
+  "title": "Fossary application manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "publication_status",
+    "slug",
+    "name",
+    "tagline",
+    "summary",
+    "status",
+    "editorial_status",
+    "links",
+    "classification",
+    "license",
+    "localization",
+    "clients",
+    "auth",
+    "requirements",
+    "operations",
+    "recipe",
+    "security",
+    "upstream",
+    "update_tracking",
+    "update_policy",
+    "content"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 6
+    },
+    "publication_status": {
+      "enum": [
+        "published",
+        "draft"
+      ]
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tagline": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 140
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 40,
+      "maxLength": 600
+    },
+    "status": {
+      "enum": [
+        "active",
+        "archived",
+        "discontinued"
+      ]
+    },
+    "editorial_status": {
+      "enum": [
+        "recommended",
+        "listed",
+        "experimental"
+      ]
+    },
+    "links": {
+      "$ref": "#/$defs/links"
+    },
+    "classification": {
+      "$ref": "#/$defs/classification"
+    },
+    "license": {
+      "$ref": "#/$defs/license"
+    },
+    "localization": {
+      "$ref": "#/$defs/localization"
+    },
+    "clients": {
+      "$ref": "#/$defs/clients"
+    },
+    "auth": {
+      "$ref": "#/$defs/auth"
+    },
+    "requirements": {
+      "$ref": "#/$defs/requirements"
+    },
+    "operations": {
+      "$ref": "#/$defs/operations"
+    },
+    "recipe": {
+      "$ref": "#/$defs/recipe"
+    },
+    "security": {
+      "$ref": "#/$defs/security"
+    },
+    "upstream": {
+      "$ref": "#/$defs/upstream"
+    },
+    "update_tracking": {
+      "$ref": "#/$defs/updateTracking"
+    },
+    "update_policy": {
+      "$ref": "#/$defs/updatePolicy"
+    },
+    "content": {
+      "$ref": "#/$defs/content"
+    }
+  },
+  "$defs": {
+    "httpUrl": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "nonEmptyStrings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "links": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "website",
+        "source",
+        "documentation",
+        "issues"
+      ],
+      "properties": {
+        "website": {
+          "$ref": "#/$defs/httpUrl"
+        },
+        "source": {
+          "$ref": "#/$defs/httpUrl"
+        },
+        "documentation": {
+          "$ref": "#/$defs/httpUrl"
+        },
+        "issues": {
+          "$ref": "#/$defs/httpUrl"
+        }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "categories",
+        "tags",
+        "implementation_languages",
+        "alternatives_to"
+      ],
+      "properties": {
+        "categories": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/nonEmptyStrings"
+            },
+            {
+              "minItems": 1
+            }
+          ]
+        },
+        "tags": {
+          "$ref": "#/$defs/nonEmptyStrings"
+        },
+        "implementation_languages": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/nonEmptyStrings"
+            },
+            {
+              "minItems": 1
+            }
+          ]
+        },
+        "alternatives_to": {
+          "$ref": "#/$defs/nonEmptyStrings"
+        }
+      }
+    },
+    "license": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "spdx",
+        "kind",
+        "restrictions",
+        "notes"
+      ],
+      "properties": {
+        "spdx": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": [
+            "open_source",
+            "source_available",
+            "proprietary"
+          ]
+        },
+        "restrictions": {
+          "$ref": "#/$defs/nonEmptyStrings"
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "localization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ui_languages",
+        "docs_languages"
+      ],
+      "properties": {
+        "ui_languages": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+          },
+          "uniqueItems": true
+        },
+        "docs_languages": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "clients": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "web",
+        "android",
+        "ios",
+        "desktop"
+      ],
+      "properties": {
+        "web": {
+          "type": "boolean"
+        },
+        "android": {
+          "type": "boolean"
+        },
+        "ios": {
+          "type": "boolean"
+        },
+        "desktop": {
+          "type": "boolean"
+        }
+      }
+    },
+    "authSupport": {
+      "enum": [
+        "native",
+        "plugin",
+        "paid",
+        "none"
+      ]
+    },
+    "auth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "oidc",
+        "saml",
+        "two_factor",
+        "proxy_header"
+      ],
+      "properties": {
+        "oidc": {
+          "$ref": "#/$defs/authSupport"
+        },
+        "saml": {
+          "$ref": "#/$defs/authSupport"
+        },
+        "two_factor": {
+          "$ref": "#/$defs/authSupport"
+        },
+        "proxy_header": {
+          "type": "boolean"
+        }
+      }
+    },
+    "requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "architectures",
+        "min_cpu_cores",
+        "min_ram_mb",
+        "recommended_ram_mb",
+        "min_disk_gb",
+        "gpu",
+        "database",
+        "dependencies"
+      ],
+      "properties": {
+        "architectures": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "amd64",
+              "arm64",
+              "armv7"
+            ]
+          }
+        },
+        "min_cpu_cores": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "min_ram_mb": {
+          "type": "integer",
+          "minimum": 128
+        },
+        "recommended_ram_mb": {
+          "type": "integer",
+          "minimum": 128
+        },
+        "min_disk_gb": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "gpu": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "required",
+            "supported"
+          ],
+          "properties": {
+            "required": {
+              "type": "boolean"
+            },
+            "supported": {
+              "type": "boolean"
+            }
+          }
+        },
+        "database": {
+          "enum": [
+            "none",
+            "sqlite",
+            "postgresql",
+            "mysql",
+            "mariadb",
+            "mongodb",
+            "other"
+          ]
+        },
+        "dependencies": {
+          "$ref": "#/$defs/nonEmptyStrings"
+        }
+      }
+    },
+    "operations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "install_difficulty",
+        "installation_levels",
+        "maintenance_difficulty",
+        "backup_supported",
+        "restore_tested",
+        "healthcheck",
+        "reverse_proxy_required",
+        "update_complexity"
+      ],
+      "properties": {
+        "install_difficulty": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "installation_levels": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "home",
+            "vps",
+            "reliable"
+          ],
+          "properties": {
+            "home": {
+              "enum": [
+                "supported",
+                "partial",
+                "unsupported"
+              ]
+            },
+            "vps": {
+              "enum": [
+                "supported",
+                "partial",
+                "unsupported"
+              ]
+            },
+            "reliable": {
+              "enum": [
+                "supported",
+                "partial",
+                "unsupported"
+              ]
+            }
+          }
+        },
+        "maintenance_difficulty": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "backup_supported": {
+          "type": "boolean"
+        },
+        "restore_tested": {
+          "type": "boolean"
+        },
+        "healthcheck": {
+          "type": "boolean"
+        },
+        "reverse_proxy_required": {
+          "type": "boolean"
+        },
+        "update_complexity": {
+          "enum": [
+            "in_place",
+            "manual_steps",
+            "staged_migration"
+          ]
+        }
+      }
+    },
+    "recipeCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tested_at",
+        "application_version",
+        "recipe_version",
+        "tested_architectures",
+        "smoke_test",
+        "restore_tested"
+      ],
+      "properties": {
+        "tested_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "application_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recipe_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "tested_architectures": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "enum": [
+              "passed",
+              "failed",
+              "not_tested"
+            ]
+          }
+        },
+        "smoke_test": {
+          "enum": [
+            "full",
+            "partial"
+          ]
+        },
+        "restore_tested": {
+          "type": "boolean"
+        }
+      }
+    },
+    "recipe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "compose_file",
+        "env_example",
+        "installation",
+        "troubleshooting",
+        "supported_docker_compose",
+        "application_version",
+        "images",
+        "tested_at",
+        "tested_architectures",
+        "smoke_test",
+        "license",
+        "smoke_test_limitations"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "compose_file": {
+          "$ref": "#/$defs/localFile"
+        },
+        "env_example": {
+          "$ref": "#/$defs/localFile"
+        },
+        "installation": {
+          "$ref": "#/$defs/localFile"
+        },
+        "troubleshooting": {
+          "$ref": "#/$defs/localFile"
+        },
+        "supported_docker_compose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "application_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "images": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "tag_source"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "tag_source": {
+                "enum": [
+                  "env",
+                  "pinned"
+                ]
+              }
+            }
+          }
+        },
+        "tested_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "recheck_interval_days": {
+          "description": "How long a check stays valid. Absent means the standard 90-day window; 30 is for an upstream that ships breaking changes often.",
+          "enum": [30, 90]
+        },
+        "tested_architectures": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "enum": [
+              "passed",
+              "failed",
+              "not_tested"
+            ]
+          }
+        },
+        "smoke_test": {
+          "enum": [
+            "full",
+            "partial",
+            "not_tested"
+          ]
+        },
+        "check_history": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/recipeCheck"
+          }
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1
+        },
+        "smoke_test_limitations": {
+          "$ref": "#/$defs/nonEmptyStrings"
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_exposure",
+        "default_bind",
+        "privileged",
+        "host_network",
+        "docker_socket",
+        "known_risks",
+        "assessment"
+      ],
+      "properties": {
+        "public_exposure": {
+          "enum": [
+            "supported",
+            "not_recommended",
+            "local_only"
+          ]
+        },
+        "default_bind": {
+          "enum": [
+            "localhost",
+            "all_interfaces",
+            "internal_network"
+          ]
+        },
+        "privileged": {
+          "type": "boolean"
+        },
+        "host_network": {
+          "type": "boolean"
+        },
+        "docker_socket": {
+          "type": "boolean"
+        },
+        "known_risks": {
+          "$ref": "#/$defs/nonEmptyStrings"
+        },
+        "assessment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "assessed_at"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "passed",
+                "warnings",
+                "blocked",
+                "not_assessed"
+              ]
+            },
+            "assessed_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date"
+            }
+          }
+        }
+      }
+    },
+    "upstream": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "release_source",
+        "repository",
+        "last_release_at",
+        "last_checked_at",
+        "stars",
+        "stars_checked_at",
+        "releases_last_year",
+        "releases_checked_at"
+      ],
+      "properties": {
+        "release_source": {
+          "enum": [
+            "github",
+            "gitlab",
+            "manual"
+          ]
+        },
+        "repository": {
+          "type": "string",
+          "minLength": 3
+        },
+        "last_release_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "last_checked_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "stars": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stars_checked_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "releases_last_year": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "releases_checked_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "updateTracking": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "releases",
+        "critical_vulnerabilities",
+        "breaking_updates",
+        "compose_changes",
+        "outdated_images"
+      ],
+      "properties": {
+        "releases": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "checked_at",
+            "latest_version"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "current",
+                "update_available",
+                "unknown"
+              ]
+            },
+            "checked_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "latest_version": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 1
+            }
+          }
+        },
+        "critical_vulnerabilities": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "checked_at",
+            "critical_count",
+            "scanner",
+            "ids"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "no_findings",
+                "findings",
+                "unknown"
+              ]
+            },
+            "checked_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "critical_count": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "scanner": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 1
+            },
+            "ids": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^CVE-[0-9]{4}-[0-9]{4,}$"
+              }
+            }
+          }
+        },
+        "breaking_updates": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "checked_at"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "compatible",
+                "review_required",
+                "incompatible",
+                "unknown"
+              ]
+            },
+            "checked_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            }
+          }
+        },
+        "compose_changes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "checked_at"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "unchanged",
+                "changed",
+                "not_tracked",
+                "unknown"
+              ]
+            },
+            "checked_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            }
+          }
+        },
+        "outdated_images": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "checked_at",
+            "images"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "current",
+                "outdated",
+                "unknown"
+              ]
+            },
+            "checked_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "images": {
+              "$ref": "#/$defs/nonEmptyStrings"
+            }
+          }
+        }
+      }
+    },
+    "updatePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "images",
+        "compose"
+      ],
+      "properties": {
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "image",
+              "provider",
+              "repository"
+            ],
+            "properties": {
+              "image": {
+                "type": "string",
+                "minLength": 1
+              },
+              "provider": {
+                "enum": [
+                  "docker_hub",
+                  "ghcr"
+                ]
+              },
+              "repository": {
+                "type": "string",
+                "pattern": "^[a-z0-9._-]+/[a-z0-9._-]+$"
+              }
+            }
+          }
+        },
+        "compose": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "url",
+                "baseline_sha256"
+              ],
+              "properties": {
+                "url": {
+                  "$ref": "#/$defs/httpUrl"
+                },
+                "baseline_sha256": {
+                  "type": "string",
+                  "pattern": "^sha256:[a-f0-9]{64}$"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "logo",
+        "screenshots",
+        "updated_at"
+      ],
+      "properties": {
+        "description": {
+          "$ref": "#/$defs/localFile"
+        },
+        "logo": {
+          "oneOf": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/localFile"
+                }
+              ],
+              "pattern": "\\.svg$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "screenshots": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "file",
+              "alt"
+            ],
+            "properties": {
+              "file": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/localFile"
+                  }
+                ],
+                "pattern": "\\.webp$"
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "uniqueItems": true
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "localFile": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*\\.\\.).+$"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+http:
+  routers:
+    actual-budget:
+      rule: Host(`budget.example.com`)
+      entryPoints:
+        - websecure
+      service: actual-budget
+      tls:
+        certResolver: letsencrypt
+  services:
+    actual-budget:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:5006

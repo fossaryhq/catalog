@@ -1,0 +1,39 @@
+name: stirling-pdf
+
+services:
+  stirling-pdf:
+    image: stirlingtools/stirling-pdf:2.14.3
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${STIRLING_PDF_PORT:-8080}:8080"
+    environment:
+      DISABLE_ADDITIONAL_FEATURES: "false"
+      SECURITY_ENABLELOGIN: "true"
+      SECURITY_INITIALLOGIN_USERNAME: ${STIRLING_PDF_INITIAL_USERNAME}
+      SECURITY_INITIALLOGIN_PASSWORD: ${STIRLING_PDF_INITIAL_PASSWORD}
+      SYSTEM_DEFAULTLOCALE: ${STIRLING_PDF_DEFAULT_LOCALE:-en-GB}
+      SYSTEM_ROOTURIPATH: "/"
+      SYSTEM_FRONTENDURL: ${STIRLING_PDF_URL}
+      SYSTEM_BACKENDURL: ${STIRLING_PDF_URL}
+      SYSTEM_CORSALLOWEDORIGINS: ${STIRLING_PDF_URL}
+      SYSTEM_GOOGLEVISIBILITY: "false"
+      SYSTEM_ENABLEANALYTICS: "false"
+      SYSTEM_ENABLEPOSTHOG: "false"
+      SYSTEM_ENABLESCARF: "false"
+      SYSTEM_ENABLEURLTOPDF: "false"
+      SYSTEMFILEUPLOADLIMIT: ${STIRLING_PDF_UPLOAD_LIMIT_MB:-250}MB
+      METRICS_ENABLED: "true"
+    volumes:
+      - ${STIRLING_PDF_DATA_PATH:-./data}/configs:/configs
+      - ${STIRLING_PDF_DATA_PATH:-./data}/customFiles:/customFiles
+      - ${STIRLING_PDF_DATA_PATH:-./data}/pipeline:/pipeline
+      - ${STIRLING_PDF_DATA_PATH:-./data}/tessdata:/usr/share/tessdata
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent http://127.0.0.1:8080/api/v1/info/status | grep -q '\"status\":\"UP\"'"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 60s

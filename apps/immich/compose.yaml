@@ -1,0 +1,70 @@
+name: immich
+
+services:
+  immich-server:
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-v3.1.0}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${IMMICH_PORT:-2283}:2283"
+    environment:
+      TZ: ${TZ:-UTC}
+      DB_HOSTNAME: database
+      DB_USERNAME: ${IMMICH_DB_USERNAME:-immich}
+      DB_PASSWORD: ${IMMICH_DB_PASSWORD}
+      DB_DATABASE_NAME: ${IMMICH_DB_DATABASE_NAME:-immich}
+      REDIS_HOSTNAME: redis
+      IMMICH_MACHINE_LEARNING_URL: http://immich-machine-learning:3003
+    volumes:
+      - ${IMMICH_UPLOAD_LOCATION:-./library}:/data
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+  immich-machine-learning:
+    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-v3.1.0}
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:-UTC}
+    volumes:
+      - immich-model-cache:/cache
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+  redis:
+    image: docker.io/valkey/valkey:9@sha256:8e8d64b405ce18f41b8e5ee20aa4687a8ed0022d1298f2ce31cdcf3a76e09411
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli ping || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+  database:
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${IMMICH_DB_USERNAME:-immich}
+      POSTGRES_PASSWORD: ${IMMICH_DB_PASSWORD}
+      POSTGRES_DB: ${IMMICH_DB_DATABASE_NAME:-immich}
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+    volumes:
+      - immich-database:/var/lib/postgresql/data
+    shm_size: 128mb
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+volumes:
+  immich-database:
+    name: ${IMMICH_DB_VOLUME:-immich-database}
+  immich-model-cache:
+    name: ${IMMICH_MODEL_CACHE_VOLUME:-immich-model-cache}

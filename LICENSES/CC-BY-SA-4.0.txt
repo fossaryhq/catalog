@@ -1,0 +1,12 @@
+Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+
+The canonical legal code for this license is published by Creative Commons:
+
+https://creativecommons.org/licenses/by-sa/4.0/legalcode.en
+
+License summary:
+
+https://creativecommons.org/licenses/by-sa/4.0/
+
+The license notice and attribution requirements for this repository are
+defined in ../LICENSE.md.

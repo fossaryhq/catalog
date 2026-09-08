@@ -1,0 +1,15 @@
+# Only the control panel is published. DNS port 53 does not pass through an HTTP proxy.
+http:
+  routers:
+    adguard-home:
+      rule: Host(`dns.example.com`)
+      entryPoints:
+        - websecure
+      service: adguard-home
+      tls:
+        certResolver: letsencrypt
+  services:
+    adguard-home:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:3000

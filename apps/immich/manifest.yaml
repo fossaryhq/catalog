@@ -1,0 +1,222 @@
+schema_version: 6
+publication_status: published
+
+slug: immich
+name: Immich
+tagline: Self-hosted photo library with mobile sync and semantic search
+summary: >-
+  Immich keeps your photos and videos on your own server, uploads them
+  automatically from your phone, and shows a familiar timeline with albums, a
+  map, and content-based search. This recipe brings up the server, machine
+  learning, PostgreSQL with vector search, and Valkey from one Compose file.
+
+status: active
+editorial_status: recommended
+
+links:
+  website: https://immich.app/
+  source: https://github.com/immich-app/immich
+  documentation: https://docs.immich.app/
+  issues: https://github.com/immich-app/immich/issues
+
+classification:
+  categories:
+    - Photos and video
+  tags:
+    - photos
+    - backup
+    - mobile
+    - machine-learning
+    - homelab
+  implementation_languages:
+    - TypeScript
+    - Dart
+  alternatives_to:
+    - Google Photos
+    - iCloud Photos
+    - Яндекс Диск
+
+license:
+  spdx: AGPL-3.0-only
+  kind: open_source
+  restrictions: []
+  notes: >-
+    Immich is distributed under AGPL-3.0 and is fully functional without payment.
+    The paid Immich license is voluntary support for the project and does not
+    unlock additional features.
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: true
+  ios: true
+  desktop: false
+
+auth:
+  oidc: native
+  saml: none
+  two_factor: none
+  proxy_header: false
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+  min_cpu_cores: 2
+  min_ram_mb: 6144
+  recommended_ram_mb: 8192
+  min_disk_gb: 20
+  gpu:
+    required: false
+    supported: true
+  database: postgresql
+  dependencies:
+    - PostgreSQL 14 + VectorChord
+    - Valkey 9
+
+operations:
+  install_difficulty: 3
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: partial
+  maintenance_difficulty: 3
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: true
+  update_complexity: staged_migration
+
+recipe:
+  id: immich-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: v3.1.0
+  images:
+    - name: ghcr.io/immich-app/immich-server
+      tag_source: env
+    - name: ghcr.io/immich-app/immich-machine-learning
+      tag_source: env
+    - name: docker.io/valkey/valkey
+      tag_source: pinned
+    - name: ghcr.io/immich-app/postgres
+      tag_source: pinned
+  tested_at: "2026-08-30"
+  # Immich ships breaking changes regularly (see description.md), so a check here
+  # lives 30 days instead of the standard 90.
+  recheck_interval_days: 30
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-08-30"
+      application_version: v3.1.0
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+    - Full smoke, backup, and restore passed on amd64; ARM64 remains untested.
+    - The smoke test starts the stack and checks the API, but it does not upload media or verify face recognition and smart search.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - A photo archive holds geotags, faces, and other sensitive metadata; expose it over HTTPS only and encrypt backups.
+    - "The recipe sets no CPU or memory limits: machine learning jobs can consume all server resources."
+    - The PostgreSQL password lives in the `.env` file next to the recipe; set its mode to 600 and keep it out of Git.
+    - Without a request body size limit at the reverse proxy, video uploads can fill the disk; set per-user quotas in the admin panel.
+  assessment:
+    status: warnings
+    assessed_at: "2026-08-30"
+
+upstream:
+  release_source: github
+  repository: immich-app/immich
+  last_release_at: "2026-07-29"
+  last_checked_at: "2026-08-30T22:10:06Z"
+  stars: 113011
+  stars_checked_at: "2026-08-30T22:10:06Z"
+  releases_last_year: 36
+  releases_checked_at: "2026-09-02T17:47:54Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-08-30T22:10:06Z"
+    latest_version: "v3.1.0"
+  critical_vulnerabilities:
+    status: findings
+    checked_at: "2026-08-31T04:09:15Z"
+    critical_count: 35
+    scanner: Trivy 0.74.0
+    ids:
+      - CVE-2023-45853
+      - CVE-2025-7458
+      - CVE-2026-13221
+      - CVE-2026-40393
+      - CVE-2026-42216
+      - CVE-2026-42217
+      - CVE-2026-42496
+      - CVE-2026-58016
+      - CVE-2026-59873
+      - CVE-2026-6653
+      - CVE-2026-8376
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: unchanged
+    checked_at: "2026-08-30T22:10:06Z"
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+
+update_policy:
+  # Valkey and PostgreSQL are pinned by digest and their tags do not track the
+  # application version, so only Immich's own images belong in the policy.
+  images:
+    - image: ghcr.io/immich-app/immich-server
+      provider: ghcr
+      repository: immich-app/immich-server
+    - image: ghcr.io/immich-app/immich-machine-learning
+      provider: ghcr
+      repository: immich-app/immich-machine-learning
+  compose:
+    url: https://github.com/immich-app/immich/releases/latest/download/docker-compose.yml
+    baseline_sha256: sha256:c651a8211c9ab152bf7060ba1f370737ad2b4872da788a6c8a9e7fa7d4217357
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+    - file: assets/timeline.webp
+      alt: Immich timeline with photos grouped by date in dark theme
+    - file: assets/albums.webp
+      alt: Album list with covers, capture period, and photo counts in light theme
+    - file: assets/search.webp
+      alt: Smart search results for a query about mountains and a lake, with no manual tags
+    - file: assets/asset-detail.webp
+      alt: Asset viewer with a side panel showing date, file size, and the album it appears in
+    - file: assets/admin-settings.webp
+      alt: Machine learning settings in the admin panel with smart search, duplicate detection, facial recognition, and OCR sections
+  updated_at: "2026-08-30"

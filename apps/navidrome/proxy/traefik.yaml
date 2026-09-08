@@ -1,0 +1,14 @@
+http:
+  routers:
+    navidrome:
+      rule: Host(`music.example.com`)
+      entryPoints:
+        - websecure
+      service: navidrome
+      tls:
+        certResolver: letsencrypt
+  services:
+    navidrome:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:4533

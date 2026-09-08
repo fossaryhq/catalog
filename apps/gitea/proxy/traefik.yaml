@@ -1,0 +1,14 @@
+http:
+  routers:
+    gitea:
+      rule: Host(`git.example.com`)
+      entryPoints:
+        - websecure
+      service: gitea
+      tls:
+        certResolver: letsencrypt
+  services:
+    gitea:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:3000

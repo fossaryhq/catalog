@@ -1,0 +1,11 @@
+cloud.example.com {
+  reverse_proxy 127.0.0.1:8080
+
+  request_body {
+    max_size 10GB
+  }
+
+  # Nextcloud expects these addresses at the short path.
+  redir /.well-known/carddav /remote.php/dav 301
+  redir /.well-known/caldav /remote.php/dav 301
+}

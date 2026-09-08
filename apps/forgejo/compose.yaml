@@ -1,0 +1,63 @@
+name: forgejo
+
+services:
+  forgejo:
+    image: codeberg.org/forgejo/forgejo:16.0.3-rootless
+    user: "1000:1000"
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${FORGEJO_HTTP_PORT:-3000}:3000"
+      - "127.0.0.1:${FORGEJO_SSH_PORT:-2222}:2222"
+    environment:
+      USER_UID: "1000"
+      USER_GID: "1000"
+      FORGEJO__database__DB_TYPE: postgres
+      FORGEJO__database__HOST: database:5432
+      FORGEJO__database__NAME: ${POSTGRES_DB:-forgejo}
+      FORGEJO__database__USER: ${POSTGRES_USER:-forgejo}
+      FORGEJO__database__PASSWD: ${POSTGRES_PASSWORD}
+      FORGEJO__server__DOMAIN: ${FORGEJO_DOMAIN:-git.example.com}
+      FORGEJO__server__ROOT_URL: ${FORGEJO_ROOT_URL:-https://git.example.com/}
+      FORGEJO__server__HTTP_PORT: "3000"
+      FORGEJO__server__SSH_DOMAIN: ${FORGEJO_SSH_DOMAIN:-git.example.com}
+      FORGEJO__server__SSH_PORT: ${FORGEJO_SSH_PORT:-2222}
+      FORGEJO__server__SSH_LISTEN_PORT: "2222"
+      FORGEJO__service__DISABLE_REGISTRATION: "true"
+      FORGEJO__security__INSTALL_LOCK: "true"
+    volumes:
+      - forgejo-data:/var/lib/gitea
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent http://127.0.0.1:3000/api/healthz | grep -q '\"status\": *\"pass\"'"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 60s
+
+  database:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-forgejo}
+      POSTGRES_USER: ${POSTGRES_USER:-forgejo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - forgejo-database:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  forgejo-data:
+    name: ${FORGEJO_DATA_VOLUME:-forgejo-data}
+  forgejo-database:
+    name: ${FORGEJO_DB_VOLUME:-forgejo-database}

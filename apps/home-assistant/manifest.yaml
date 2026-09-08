@@ -1,0 +1,196 @@
+schema_version: 6
+publication_status: published
+
+slug: home-assistant
+name: Home Assistant
+tagline: A smart home hub that runs without vendor clouds
+summary: >-
+  Home Assistant brings lights, sensors, air conditioners, TVs, and vacuums from
+  different vendors into one interface and runs automations on your own server
+  instead of someone else's cloud. More than two thousand integrations, a
+  dashboard with state history, an automation editor, and Android and iOS apps.
+
+status: active
+editorial_status: experimental
+
+links:
+  website: https://www.home-assistant.io/
+  source: https://github.com/home-assistant/core
+  documentation: https://www.home-assistant.io/docs/
+  issues: https://github.com/home-assistant/core/issues
+
+classification:
+  categories:
+    - Smart home
+  tags:
+    - smart-home
+    - automation
+    - iot
+    - homelab
+    - local-control
+  implementation_languages:
+    - Python
+    - TypeScript
+  alternatives_to:
+    - Google Home
+    - Amazon Alexa
+    - SmartThings
+    - Yandex Smart Home
+
+license:
+  spdx: Apache-2.0
+  kind: open_source
+  restrictions: []
+  notes: >-
+    The application itself is free and needs no subscription. The paid Nabu Casa
+    Home Assistant Cloud plan is only for remote access without your own domain
+    and for cloud voice assistants; this recipe does not use it.
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: true
+  ios: true
+  desktop: false
+
+auth:
+  oidc: plugin
+  saml: none
+  two_factor: native
+  proxy_header: false
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+  min_cpu_cores: 2
+  min_ram_mb: 1024
+  recommended_ram_mb: 2048
+  min_disk_gb: 8
+  gpu:
+    required: false
+    supported: false
+  database: sqlite
+  dependencies: []
+
+operations:
+  install_difficulty: 3
+  installation_levels:
+    home: supported
+    vps: partial
+    reliable: unsupported
+  maintenance_difficulty: 4
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: manual_steps
+
+recipe:
+  id: home-assistant-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: 2026.8.3
+  images:
+    - name: homeassistant/home-assistant
+      tag_source: env
+  tested_at: "2026-08-31"
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-08-31"
+      application_version: 2026.8.3
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+    - Full smoke, backup, and restore passed on amd64; ARM64 remains untested.
+    - The recipe runs on an isolated Compose network, so device discovery over mDNS, SSDP, and DHCP was not tested and does not work without host networking.
+    - Bluetooth and USB Zigbee or Z-Wave adapters are not wired into the recipe and were not tested.
+    - The Container install has no Supervisor, so add-ons and in-panel updates were not tested and are unavailable.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - "A Home Assistant account controls locks, cameras, and heating: never publish the panel without HTTPS and two-factor authentication."
+    - Behind a reverse proxy Home Assistant rejects requests until use_x_forwarded_for and trusted_proxies are set in configuration.yaml; listing too wide a subnet in trusted_proxies lets an attacker spoof the client address and bypass brute-force protection.
+    - The /config directory holds access tokens, integration passwords, and the history of your home, so backup archives must be encrypted and kept off the server.
+    - "The official Container install has no Supervisor: device discovery, Bluetooth, and USB adapters need host networking, privileged mode, or device passthrough, which widens the container's rights and is not part of this recipe."
+    - Releases ship monthly and regularly contain breaking integration changes, so never update without a backup and without reading the release notes.
+  assessment:
+    status: warnings
+    assessed_at: "2026-08-31"
+
+upstream:
+  release_source: github
+  repository: home-assistant/core
+  last_release_at: "2026-08-21"
+  last_checked_at: "2026-08-31T19:49:23Z"
+  stars: 90199
+  stars_checked_at: "2026-08-31T19:49:23Z"
+  releases_last_year: 58
+  releases_checked_at: "2026-09-02T17:47:54Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-08-31T20:03:43Z"
+    latest_version: 2026.8.3
+  critical_vulnerabilities:
+    status: findings
+    checked_at: "2026-08-31T20:05:23Z"
+    critical_count: 2
+    scanner: Trivy 0.74.0
+    ids:
+      - CVE-2025-68121
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: current
+    checked_at: "2026-08-31T20:03:43Z"
+    images: []
+
+update_policy:
+  images:
+    - image: homeassistant/home-assistant
+      provider: docker_hub
+      repository: homeassistant/home-assistant
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+    - file: assets/dashboard.webp
+      alt: Home Assistant dashboard with rooms, light switches, a thermostat, and a temperature chart in dark theme
+    - file: assets/automation.webp
+      alt: Automation editor with a sunset trigger, a condition, and two light-on actions in light theme
+    - file: assets/history.webp
+      alt: State history with temperature charts for two rooms and outdoors plus living room humidity in light theme
+    - file: assets/areas.webp
+      alt: List of rooms in the home with the number of entities assigned to each in dark theme
+  updated_at: "2026-08-31"

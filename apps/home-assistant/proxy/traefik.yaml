@@ -1,0 +1,17 @@
+# Home Assistant rejects proxied requests until configuration.yaml sets
+# use_x_forwarded_for and lists this proxy's address in trusted_proxies.
+# Traefik upgrades WebSocket connections on its own; nothing to configure.
+http:
+  routers:
+    home-assistant:
+      rule: Host(`home.example.com`)
+      entryPoints:
+        - websecure
+      service: home-assistant
+      tls:
+        certResolver: letsencrypt
+  services:
+    home-assistant:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8123

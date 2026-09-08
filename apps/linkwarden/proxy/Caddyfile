@@ -1,0 +1,7 @@
+links.example.com {
+  reverse_proxy 127.0.0.1:3000
+}
+
+saved.example.net {
+  reverse_proxy 127.0.0.1:3000
+}

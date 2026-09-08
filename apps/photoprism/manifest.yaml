@@ -1,0 +1,189 @@
+schema_version: 6
+publication_status: published
+
+slug: photoprism
+name: PhotoPrism
+tagline: A private photo library with search, maps, and face recognition
+summary: >-
+  PhotoPrism indexes photos and videos on your own server, groups them by date,
+  place, and people, reads metadata, and provides browser-based search. This
+  recipe uses MariaDB, keeps originals locally, and exposes the web interface on
+  localhost only.
+
+status: active
+editorial_status: experimental
+
+links:
+  website: https://www.photoprism.app/
+  source: https://github.com/photoprism/photoprism
+  documentation: https://docs.photoprism.app/
+  issues: https://github.com/photoprism/photoprism/issues
+
+classification:
+  categories:
+    - Photos and video
+  tags:
+    - photos
+    - gallery
+    - machine-learning
+    - metadata
+    - maps
+  implementation_languages:
+    - Go
+    - JavaScript
+  alternatives_to:
+    - Google Photos
+    - iCloud Photos
+    - Яндекс Диск
+
+license:
+  spdx: AGPL-3.0-only
+  kind: open_source
+  restrictions:
+    - PhotoPrism trademark and brand assets are covered by additional terms in the upstream license.
+  notes: >-
+    The Community Edition is distributed under GNU AGPL 3. Upstream adds separate
+    terms for the PhotoPrism trademark and brand assets to the license text; paid
+    editions use a different license.
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: false
+
+auth:
+  oidc: native
+  saml: none
+  two_factor: native
+  proxy_header: false
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+  min_cpu_cores: 2
+  min_ram_mb: 4096
+  recommended_ram_mb: 8192
+  min_disk_gb: 10
+  gpu:
+    required: false
+    supported: true
+  database: mariadb
+  dependencies:
+    - MariaDB 12.3.2
+
+operations:
+  install_difficulty: 3
+  installation_levels:
+    home: partial
+    vps: partial
+    reliable: partial
+  maintenance_difficulty: 3
+  backup_supported: true
+  restore_tested: false
+  healthcheck: true
+  reverse_proxy_required: true
+  update_complexity: manual_steps
+
+recipe:
+  id: photoprism-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: "260728"
+  images:
+    - name: photoprism/photoprism
+      tag_source: env
+    - name: mariadb
+      tag_source: pinned
+  tested_at: "2026-09-03"
+  tested_architectures:
+    amd64: passed
+    arm64: passed
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-09-03"
+      application_version: "260728"
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: passed
+      smoke_test: full
+      restore_tested: false
+  license: MIT
+  smoke_test_limitations:
+    - The full HTTP smoke test passed on amd64 and arm64.
+    - Media indexing, face recognition, backup, and restore have not passed practical tests.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - A photo library contains faces, geotags, and other sensitive metadata; encrypt the disk and off-server backups.
+    - Built-in HTTP does not protect traffic before the reverse proxy; public access is acceptable only through HTTPS.
+    - Indexing untrusted images, RAW files, and videos exercises external decoders and may exhaust CPU, RAM, or disk.
+    - Administrator, MariaDB, and MariaDB root passwords live in `.env`; set mode 600 and keep the file out of Git.
+  assessment:
+    status: not_assessed
+    assessed_at: null
+
+upstream:
+  # PhotoPrism tags releases by date with a commit suffix (260728-bbde8f452),
+  # which no SemVer comparison can order. Reviewed by hand.
+  release_source: manual
+  repository: photoprism/photoprism
+  last_release_at: "2026-07-28"
+  last_checked_at: "2026-09-01T16:30:00Z"
+  stars: 40129
+  stars_checked_at: "2026-09-01T16:30:00Z"
+  releases_last_year: 5
+  releases_checked_at: "2026-09-02T17:47:54Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-09-01T16:30:00Z"
+    latest_version: "260728"
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+
+update_policy:
+  images:
+    - image: photoprism/photoprism
+      provider: docker_hub
+      repository: photoprism/photoprism
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots: []
+  updated_at: "2026-09-01"

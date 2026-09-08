@@ -1,0 +1,71 @@
+name: miniflux
+
+services:
+  miniflux:
+    image: miniflux/miniflux:2.3.3
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${MINIFLUX_PORT:-8080}:8080"
+    environment:
+      # Миграции идемпотентны и выполняются при каждом старте, поэтому обновление
+      # образа не требует отдельной команды.
+      # Migrations are idempotent and run on every start, so an image update
+      # needs no separate command.
+      RUN_MIGRATIONS: "1"
+      CREATE_ADMIN: "1"
+      ADMIN_USERNAME: ${MINIFLUX_ADMIN_USER:-minifluxadmin}
+      ADMIN_PASSWORD: ${MINIFLUX_ADMIN_PASSWORD}
+      DATABASE_URL: postgres://${MINIFLUX_DB_USER:-miniflux}:${MINIFLUX_DB_PASSWORD}@database/${MINIFLUX_DB_NAME:-miniflux}?sslmode=disable
+      BASE_URL: ${MINIFLUX_BASE_URL:-https://reader.example.com}
+      POLLING_FREQUENCY: ${MINIFLUX_POLLING_FREQUENCY:-60}
+      POLLING_PARSING_ERROR_LIMIT: ${MINIFLUX_POLLING_PARSING_ERROR_LIMIT:-3}
+      CLEANUP_ARCHIVE_READ_DAYS: ${MINIFLUX_CLEANUP_ARCHIVE_READ_DAYS:-60}
+      # Только loopback: запросы приходят через мост Docker с адреса шлюза, а он
+      # в список не входит, поэтому X-Forwarded-* и AUTH_PROXY_HEADER не
+      # действуют, пока сеть моста не добавлена сюда сознательно. Пустое
+      # значение Miniflux отвергает.
+      # Loopback only: requests arrive over the Docker bridge from the gateway
+      # address, which is not in the list, so X-Forwarded-* and
+      # AUTH_PROXY_HEADER stay inert until the bridge network is added here on
+      # purpose. Miniflux rejects an empty value.
+      TRUSTED_REVERSE_PROXY_NETWORKS: ${MINIFLUX_TRUSTED_PROXY_NETWORKS:-127.0.0.1/8}
+      METRICS_COLLECTOR: "0"
+      LOG_FORMAT: text
+      LOG_LEVEL: ${MINIFLUX_LOG_LEVEL:-info}
+      TZ: ${MINIFLUX_TIME_ZONE:-Etc/UTC}
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://127.0.0.1:8080/healthcheck || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 60s
+
+  database:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${MINIFLUX_DB_NAME:-miniflux}
+      POSTGRES_USER: ${MINIFLUX_DB_USER:-miniflux}
+      POSTGRES_PASSWORD: ${MINIFLUX_DB_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+      TZ: ${MINIFLUX_TIME_ZONE:-Etc/UTC}
+    volumes:
+      - miniflux-database:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${MINIFLUX_DB_USER:-miniflux} -d ${MINIFLUX_DB_NAME:-miniflux}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 60s
+
+volumes:
+  miniflux-database:
+    name: ${MINIFLUX_DB_VOLUME:-miniflux-database}

@@ -1,0 +1,14 @@
+http:
+  routers:
+    freshrss:
+      rule: Host(`rss.example.com`)
+      entryPoints:
+        - websecure
+      service: freshrss
+      tls:
+        certResolver: letsencrypt
+  services:
+    freshrss:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8080

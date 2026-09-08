@@ -1,0 +1,103 @@
+name: seafile
+
+services:
+  seafile:
+    image: seafileltd/seafile-mc:13.0.25
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_started
+    ports:
+      - "127.0.0.1:${SEAFILE_PORT:-8000}:80"
+    environment:
+      SEAFILE_MYSQL_DB_HOST: db
+      SEAFILE_MYSQL_DB_PORT: "3306"
+      SEAFILE_MYSQL_DB_USER: ${SEAFILE_DB_USER:-seafile}
+      SEAFILE_MYSQL_DB_PASSWORD: ${SEAFILE_DB_PASSWORD}
+      INIT_SEAFILE_MYSQL_ROOT_PASSWORD: ${SEAFILE_DB_ROOT_PASSWORD}
+      SEAFILE_MYSQL_DB_CCNET_DB_NAME: ccnet_db
+      SEAFILE_MYSQL_DB_SEAFILE_DB_NAME: seafile_db
+      SEAFILE_MYSQL_DB_SEAHUB_DB_NAME: seahub_db
+      # Учётная запись администратора создаётся только при первом запуске, пока
+      # база пуста; позже переменные не действуют.
+      # The administrator account is created on the first start only, while the
+      # database is empty; later the variables have no effect.
+      INIT_SEAFILE_ADMIN_EMAIL: ${SEAFILE_ADMIN_EMAIL:-admin@example.com}
+      INIT_SEAFILE_ADMIN_PASSWORD: ${SEAFILE_ADMIN_PASSWORD}
+      # Имя хоста и протокол попадают в ссылки, письма и настройки клиентов, а
+      # HTTPS завершает внешний прокси, а не этот контейнер.
+      # Hostname and protocol end up in links, e-mail, and client settings; TLS
+      # is terminated by the external proxy, not by this container.
+      SEAFILE_SERVER_HOSTNAME: ${SEAFILE_SERVER_HOSTNAME:-files.example.com}
+      SEAFILE_SERVER_PROTOCOL: ${SEAFILE_SERVER_PROTOCOL:-https}
+      SITE_ROOT: /
+      NON_ROOT: "false"
+      JWT_PRIVATE_KEY: ${SEAFILE_JWT_PRIVATE_KEY}
+      SEAFILE_LOG_TO_STDOUT: "true"
+      ENABLE_GO_FILESERVER: "true"
+      # SeaDoc, сервер уведомлений и AI-модуль — отдельные контейнеры, которых в
+      # этом рецепте нет, поэтому они выключены, а не сломаны.
+      # SeaDoc, the notification server, and the AI module are separate
+      # containers this recipe does not ship, so they are off rather than broken.
+      ENABLE_SEADOC: "false"
+      ENABLE_NOTIFICATION_SERVER: "false"
+      ENABLE_SEAFILE_AI: "false"
+      CACHE_PROVIDER: redis
+      REDIS_HOST: cache
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: ${SEAFILE_CACHE_PASSWORD}
+      TIME_ZONE: ${SEAFILE_TIME_ZONE:-Etc/UTC}
+    volumes:
+      - seafile-data:/shared
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent --output /dev/null http://127.0.0.1:80/accounts/login/"]
+      interval: 30s
+      timeout: 10s
+      retries: 20
+      start_period: 300s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 120s
+
+  db:
+    image: mariadb:10.11.19
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${SEAFILE_DB_ROOT_PASSWORD}
+      MYSQL_LOG_CONSOLE: "true"
+      MARIADB_AUTO_UPGRADE: "1"
+      TZ: ${SEAFILE_TIME_ZONE:-Etc/UTC}
+    volumes:
+      - seafile-database:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--mariadbupgrade", "--innodb_initialized"]
+      interval: 20s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 60s
+
+  cache:
+    image: valkey/valkey:9.0.6-alpine
+    restart: unless-stopped
+    command: ["/bin/sh", "-c", "exec valkey-server --requirepass \"$$VALKEY_PASSWORD\" --save '' --appendonly no"]
+    environment:
+      VALKEY_PASSWORD: ${SEAFILE_CACHE_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli -a \"$$VALKEY_PASSWORD\" ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+volumes:
+  seafile-data:
+    name: ${SEAFILE_DATA_VOLUME:-seafile-data}
+  seafile-database:
+    name: ${SEAFILE_DB_VOLUME:-seafile-database}

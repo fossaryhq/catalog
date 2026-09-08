@@ -1,0 +1,76 @@
+name: n8n
+
+services:
+  n8n:
+    image: n8nio/n8n:${N8N_VERSION:-2.36.9}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${N8N_PORT:-5678}:5678"
+    environment:
+      TZ: ${TZ:-UTC}
+      # Default time zone for the Schedule and Cron nodes.
+      GENERIC_TIMEZONE: ${TZ:-UTC}
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: database
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${N8N_DB_NAME:-n8n}
+      DB_POSTGRESDB_USER: ${N8N_DB_USER:-n8n}
+      DB_POSTGRESDB_PASSWORD: ${N8N_DB_PASSWORD}
+      # The credential encryption key. Never change it: against an existing
+      # database a new key makes every stored credential unreadable.
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+      # Webhooks and the links in the interface need the external address.
+      N8N_HOST: ${N8N_PUBLIC_HOST:-localhost}
+      N8N_PORT: 5678
+      N8N_PROTOCOL: ${N8N_PROTOCOL:-http}
+      WEBHOOK_URL: ${N8N_WEBHOOK_URL:-}
+      N8N_EDITOR_BASE_URL: ${N8N_WEBHOOK_URL:-}
+      # The session cookie is only sent over HTTPS or on localhost. Turn this
+      # off only for plain HTTP access inside a trusted network.
+      N8N_SECURE_COOKIE: ${N8N_SECURE_COOKIE:-true}
+      N8N_PROXY_HOPS: ${N8N_PROXY_HOPS:-0}
+      N8N_DIAGNOSTICS_ENABLED: ${N8N_DIAGNOSTICS:-false}
+      N8N_VERSION_NOTIFICATIONS_ENABLED: ${N8N_VERSION_NOTIFICATIONS:-false}
+      # Without pruning the execution history grows without bound.
+      EXECUTIONS_DATA_PRUNE: "true"
+      EXECUTIONS_DATA_MAX_AGE: ${N8N_EXECUTIONS_MAX_AGE_HOURS:-336}
+    volumes:
+      - n8n-data:/home/node/.n8n
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://127.0.0.1:5678/healthz || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+  database:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${N8N_DB_NAME:-n8n}
+      POSTGRES_USER: ${N8N_DB_USER:-n8n}
+      POSTGRES_PASSWORD: ${N8N_DB_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+      TZ: ${TZ:-UTC}
+    volumes:
+      - n8n-database:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${N8N_DB_USER:-n8n} -d ${N8N_DB_NAME:-n8n}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+volumes:
+  n8n-data:
+    name: ${N8N_DATA_VOLUME:-n8n-data}
+  n8n-database:
+    name: ${N8N_DB_VOLUME:-n8n-database}

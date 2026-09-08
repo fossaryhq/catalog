@@ -1,0 +1,178 @@
+schema_version: 6
+publication_status: published
+
+slug: forgejo
+name: Forgejo
+tagline: A self-hosted Git service for code, issues, and collaboration
+summary: >-
+  Forgejo hosts Git repositories, pull requests, issues, wikis, and package
+  registries on your own server. This recipe uses the rootless image and
+  PostgreSQL, disables registration, and binds web and SSH to localhost by
+  default.
+
+status: active
+editorial_status: experimental
+
+links:
+  website: https://forgejo.org/
+  source: https://codeberg.org/forgejo/forgejo
+  documentation: https://forgejo.org/docs/latest/
+  issues: https://codeberg.org/forgejo/forgejo/issues
+
+classification:
+  categories:
+    - Development
+  tags:
+    - git
+    - code-hosting
+    - collaboration
+    - devops
+  implementation_languages:
+    - Go
+  alternatives_to:
+    - GitHub
+    - GitLab
+    - Bitbucket
+
+license:
+  spdx: GPL-3.0-or-later
+  kind: open_source
+  restrictions: []
+  notes: null
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: false
+
+auth:
+  oidc: native
+  saml: none
+  two_factor: native
+  proxy_header: true
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+  min_cpu_cores: 1
+  min_ram_mb: 512
+  recommended_ram_mb: 1024
+  min_disk_gb: 5
+  gpu:
+    required: false
+    supported: false
+  database: postgresql
+  dependencies: []
+
+operations:
+  install_difficulty: 3
+  installation_levels:
+    home: partial
+    vps: partial
+    reliable: partial
+  maintenance_difficulty: 3
+  backup_supported: true
+  restore_tested: false
+  healthcheck: true
+  reverse_proxy_required: true
+  update_complexity: manual_steps
+
+recipe:
+  id: forgejo-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: 16.0.3
+  images:
+    - name: codeberg.org/forgejo/forgejo
+      tag_source: pinned
+    - name: postgres
+      tag_source: pinned
+  tested_at: "2026-09-03"
+  tested_architectures:
+    amd64: passed
+    arm64: passed
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-09-03"
+      application_version: 16.0.3
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: passed
+      smoke_test: full
+      restore_tested: false
+  license: MIT
+  smoke_test_limitations:
+    - The full smoke test passed on amd64 and arm64; the backup and restore procedures have not passed a practical restore test.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - A Git service stores source code, SSH keys, tokens, and webhooks; public web access requires HTTPS, timely updates, and strong account protection.
+    - Public SSH increases the attack surface and is bound to localhost in this recipe; expose it deliberately and restrict it with a firewall.
+    - Forgejo Actions is not configured; connecting a runner and executing untrusted workflows requires a separate isolation model.
+  assessment:
+    status: not_assessed
+    assessed_at: null
+
+upstream:
+  release_source: manual
+  repository: forgejo/forgejo
+  last_release_at: "2026-08-20"
+  last_checked_at: "2026-09-01T00:21:34Z"
+  stars: 5411
+  stars_checked_at: "2026-09-01T00:21:34Z"
+  releases_last_year: 38
+  releases_checked_at: "2026-09-02T17:47:54Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-09-01T00:21:34Z"
+    latest_version: "16.0.3"
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+
+update_policy:
+  # The Forgejo image is published only on codeberg.org, which the policy does not
+  # support (docker_hub and ghcr only), and the PostgreSQL tag does not track the
+  # application version, so nothing here can be tracked automatically.
+  images: []
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots: []
+  updated_at: "2026-09-01"

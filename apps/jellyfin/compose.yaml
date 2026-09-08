@@ -1,0 +1,27 @@
+name: jellyfin
+
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:${JELLYFIN_VERSION:-10.11.11}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${JELLYFIN_PORT:-8096}:8096"
+    environment:
+      TZ: ${TZ:-UTC}
+      JELLYFIN_PublishedServerUrl: ${JELLYFIN_PUBLISHED_URL:-http://127.0.0.1:8096}
+    volumes:
+      - jellyfin-config:/config
+      - jellyfin-cache:/cache
+      - type: bind
+        source: ${JELLYFIN_MEDIA_LOCATION:-./media}
+        target: /media
+        read_only: true
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+volumes:
+  jellyfin-config:
+    name: ${JELLYFIN_CONFIG_VOLUME:-jellyfin-config}
+  jellyfin-cache:
+    name: ${JELLYFIN_CACHE_VOLUME:-jellyfin-cache}

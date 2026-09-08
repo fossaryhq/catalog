@@ -1,0 +1,31 @@
+name: home-assistant
+
+services:
+  home-assistant:
+    image: homeassistant/home-assistant:${HOMEASSISTANT_VERSION:-2026.8.3}
+    restart: unless-stopped
+    ports:
+      # The panel is published on localhost only; anything external goes through
+      # a reverse proxy or a VPN. For a trusted LAN put one specific server
+      # address in HOMEASSISTANT_BIND, never 0.0.0.0 on a VPS. The port inside
+      # the container is always 8123.
+      - "${HOMEASSISTANT_BIND:-127.0.0.1}:${HOMEASSISTANT_PORT:-8123}:8123"
+    environment:
+      TZ: ${TZ:-UTC}
+    volumes:
+      - home-assistant-config:/config
+    healthcheck:
+      # /manifest.json is served without authentication both before and after
+      # onboarding, which makes it a usable readiness probe.
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8123/manifest.json >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 6
+      start_period: 120s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 60s
+
+volumes:
+  home-assistant-config:
+    name: ${HOMEASSISTANT_CONFIG_VOLUME:-home-assistant-config}

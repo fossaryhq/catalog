@@ -1,0 +1,195 @@
+schema_version: 6
+publication_status: published
+
+slug: navidrome
+name: Navidrome
+tagline: Your own music streaming service for a file collection
+summary: >-
+  Navidrome turns a folder of music into a personal streaming service: it reads
+  tags and artwork, remembers your listening history, and serves the collection
+  to the browser and to dozens of mobile apps through the Subsonic API. One
+  container, an SQLite database, no subscription.
+
+status: active
+editorial_status: recommended
+
+links:
+  website: https://www.navidrome.org/
+  source: https://github.com/navidrome/navidrome
+  documentation: https://www.navidrome.org/docs/
+  issues: https://github.com/navidrome/navidrome/issues
+
+classification:
+  categories:
+    - Music
+  tags:
+    - music
+    - subsonic
+    - streaming
+    - homelab
+  implementation_languages:
+    - Go
+    - JavaScript
+  alternatives_to:
+    - Spotify
+    - Apple Music
+    - Яндекс Музыка
+
+license:
+  spdx: GPL-3.0-only
+  kind: open_source
+  restrictions: []
+  notes: >-
+    The project ships no mobile apps of its own: clients are third-party and work
+    through the Subsonic API. The server and web interface are entirely free
+    software with no paid features.
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: true
+  ios: true
+  desktop: true
+
+auth:
+  oidc: none
+  saml: none
+  two_factor: none
+  proxy_header: true
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+    - armv7
+  min_cpu_cores: 1
+  min_ram_mb: 256
+  recommended_ram_mb: 512
+  min_disk_gb: 2
+  gpu:
+    required: false
+    supported: false
+  database: sqlite
+  dependencies: []
+
+operations:
+  install_difficulty: 1
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: unsupported
+  maintenance_difficulty: 2
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: true
+  update_complexity: in_place
+
+recipe:
+  id: navidrome-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: v0.63.2
+  images:
+    - name: deluan/navidrome
+      tag_source: env
+  tested_at: "2026-08-31"
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+    armv7: not_tested
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-08-31"
+      application_version: v0.63.2
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+    - Full smoke, backup, and restore passed on amd64; ARM64 and ARMv7 remain untested.
+    - The smoke test starts the server and checks the API, but it does not scan a library or verify transcoding.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - "Whoever opens the web interface first creates the administrator: do not expose the port until that account exists."
+    - The container runs as root, as in the upstream image; set `user:` and adjust volume ownership yourself to reduce the risk.
+    - The Subsonic API authenticates clients with a password-derived token, and some clients still send the password in clear text, so publish the server over HTTPS only.
+    - Anonymous usage statistics are disabled in this recipe; enabling them sends data about your instance to the developers.
+  assessment:
+    status: warnings
+    assessed_at: "2026-08-31"
+
+upstream:
+  release_source: github
+  repository: navidrome/navidrome
+  last_release_at: "2026-07-11"
+  last_checked_at: "2026-08-31T04:17:35Z"
+  stars: 23239
+  stars_checked_at: "2026-08-31T04:17:35Z"
+  releases_last_year: 12
+  releases_checked_at: "2026-09-02T17:47:54Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-08-31T04:17:35Z"
+    latest_version: "v0.63.2"
+  critical_vulnerabilities:
+    status: no_findings
+    checked_at: "2026-08-31T08:36:38Z"
+    critical_count: 0
+    scanner: Trivy 0.74.0
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: current
+    checked_at: "2026-08-31T08:36:38Z"
+    images: []
+
+update_policy:
+  images:
+    - image: deluan/navidrome
+      provider: docker_hub
+      repository: deluan/navidrome
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+    - file: assets/albums.webp
+      alt: Navidrome album grid with artwork and artists in dark theme
+    - file: assets/album.webp
+      alt: Album page with the track list, durations, and a play button in light theme
+    - file: assets/player.webp
+      alt: Player with the current track, artwork, and the play queue
+    - file: assets/songs.webp
+      alt: Song list with artist, album, duration, and rating columns
+    - file: assets/artists.webp
+      alt: Artist list with album counts, track counts, and library size
+  updated_at: "2026-08-31"

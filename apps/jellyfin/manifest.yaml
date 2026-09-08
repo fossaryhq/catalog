@@ -1,0 +1,195 @@
+schema_version: 6
+publication_status: published
+
+slug: jellyfin
+name: Jellyfin
+tagline: Your own media server for movies, series, and music
+summary: >-
+  Jellyfin turns a home server into a media library: it finds your files, pulls
+  in artwork and descriptions, remembers where you stopped, and streams to a TV,
+  a phone, and the browser. Fully free software — no subscription, no account,
+  no mandatory cloud.
+
+status: active
+editorial_status: recommended
+
+links:
+  website: https://jellyfin.org/
+  source: https://github.com/jellyfin/jellyfin
+  documentation: https://jellyfin.org/docs/
+  issues: https://github.com/jellyfin/jellyfin/issues
+
+classification:
+  categories:
+    - Media servers
+  tags:
+    - media-server
+    - movies
+    - music
+    - transcoding
+    - homelab
+  implementation_languages:
+    - C#
+  alternatives_to:
+    - Plex
+    - Emby
+
+license:
+  spdx: GPL-2.0-only
+  kind: open_source
+  restrictions: []
+  notes: >-
+    Jellyfin is entirely free software: there are no paid features, no
+    subscription, and no vendor account requirement. The project is a fork of Emby
+    from before it moved to a closed license.
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: true
+  ios: true
+  desktop: true
+
+auth:
+  oidc: plugin
+  saml: plugin
+  two_factor: plugin
+  proxy_header: false
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+  min_cpu_cores: 2
+  min_ram_mb: 1024
+  recommended_ram_mb: 4096
+  min_disk_gb: 5
+  gpu:
+    required: false
+    supported: true
+  database: sqlite
+  dependencies: []
+
+operations:
+  install_difficulty: 2
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: unsupported
+  maintenance_difficulty: 2
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: true
+  update_complexity: staged_migration
+
+recipe:
+  id: jellyfin-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: v10.11.11
+  images:
+    - name: jellyfin/jellyfin
+      tag_source: env
+  tested_at: "2026-08-30"
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-08-30"
+      application_version: v10.11.11
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+    - Full smoke, backup, and restore passed on amd64; ARM64 remains untested.
+    - The smoke test starts the server and checks the API, but it does not play media or verify transcoding.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - "The first-run setup wizard is not password protected: do not expose the port until the administrator account exists."
+    - The container runs as root, as in the upstream instructions; set `user:` and adjust directory ownership yourself to reduce the risk.
+    - "Transcoding is CPU heavy: a single 4K stream can consume the whole server, so limit how many people you give public access to."
+    - DLNA and local network autodiscovery need host networking and are disabled in this recipe; enabling them removes the container's network isolation.
+  assessment:
+    status: warnings
+    assessed_at: "2026-08-30"
+
+upstream:
+  release_source: github
+  repository: jellyfin/jellyfin
+  last_release_at: "2026-06-06"
+  last_checked_at: "2026-08-30T22:46:56Z"
+  stars: 56375
+  stars_checked_at: "2026-08-30T22:46:56Z"
+  releases_last_year: 12
+  releases_checked_at: "2026-09-02T17:47:54Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-08-30T22:46:56Z"
+    latest_version: "v10.11.11"
+  critical_vulnerabilities:
+    status: findings
+    checked_at: "2026-08-31T04:09:15Z"
+    critical_count: 4
+    scanner: Trivy 0.74.0
+    ids:
+      - CVE-2026-13221
+      - CVE-2026-42496
+      - CVE-2026-6653
+      - CVE-2026-8376
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: current
+    checked_at: "2026-08-30T22:46:56Z"
+    images: []
+
+update_policy:
+  images:
+    - image: jellyfin/jellyfin
+      provider: docker_hub
+      repository: jellyfin/jellyfin
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+    - file: assets/home.webp
+      alt: Jellyfin home screen with the media library, continue watching, and recently added movies in dark theme
+    - file: assets/library.webp
+      alt: Movie library grid with artwork, release years, and a watched marker in light theme
+    - file: assets/movie.webp
+      alt: Movie page with poster, description, genres, video details, and the cast and crew list
+    - file: assets/player.webp
+      alt: Built-in web player with the control bar, playback progress, and remaining time
+    - file: assets/dashboard.webp
+      alt: Admin dashboard with the server version, libraries, connected devices, and the activity log
+  updated_at: "2026-08-30"

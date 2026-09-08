@@ -1,0 +1,38 @@
+name: actual-budget
+
+services:
+  actual:
+    image: actualbudget/actual-server:26.9.0
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${ACTUAL_PORT:-5006}:5006"
+    environment:
+      # Пароль сервера задаётся в браузере при первом открытии, поэтому в
+      # окружении секретов нет.
+      # The server password is set in the browser on the first visit, so no
+      # secret lives in the environment.
+      ACTUAL_LOGIN_METHOD: ${ACTUAL_LOGIN_METHOD:-password}
+      # Явный список закрывает вход по заголовку и OpenID, пока их не включили
+      # осознанно: по умолчанию Actual разрешает все три способа.
+      # The explicit list keeps header and OpenID logins closed until they are
+      # enabled on purpose: Actual allows all three by default.
+      ACTUAL_ALLOWED_LOGIN_METHODS: ${ACTUAL_ALLOWED_LOGIN_METHODS:-password}
+      ACTUAL_UPLOAD_FILE_SYNC_SIZE_LIMIT_MB: ${ACTUAL_UPLOAD_FILE_SYNC_SIZE_LIMIT_MB:-20}
+      ACTUAL_UPLOAD_SYNC_ENCRYPTED_FILE_SYNC_SIZE_LIMIT_MB: ${ACTUAL_UPLOAD_SYNC_ENCRYPTED_FILE_SYNC_SIZE_LIMIT_MB:-50}
+      ACTUAL_UPLOAD_FILE_SIZE_LIMIT_MB: ${ACTUAL_UPLOAD_FILE_SIZE_LIMIT_MB:-20}
+      TZ: ${ACTUAL_TIME_ZONE:-Etc/UTC}
+    volumes:
+      - actual-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "node scripts/health-check.js"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 60s
+
+volumes:
+  actual-data:
+    name: ${ACTUAL_DATA_VOLUME:-actual-data}

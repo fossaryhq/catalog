@@ -1,0 +1,189 @@
+schema_version: 6
+publication_status: published
+
+slug: actual-budget
+name: Actual Budget
+tagline: Envelope budgeting that syncs between your own devices
+summary: >-
+  Actual Budget assigns every rouble or dollar to a category for the month
+  ahead, imports transactions from files or bank integrations, and keeps a full
+  local copy of the budget in each browser and desktop client. The server in
+  this recipe is the sync endpoint that merges those copies and stores the file
+  in SQLite.
+
+status: active
+editorial_status: experimental
+
+links:
+  website: https://actualbudget.org/
+  source: https://github.com/actualbudget/actual
+  documentation: https://actualbudget.org/docs/
+  issues: https://github.com/actualbudget/actual/issues
+
+classification:
+  categories:
+    - Personal finance
+  tags:
+    - budget
+    - finance
+    - envelope-budgeting
+    - local-first
+    - sync
+  implementation_languages:
+    - TypeScript
+  alternatives_to:
+    - YNAB
+    - Quicken
+    - Monarch Money
+
+license:
+  spdx: MIT
+  kind: open_source
+  restrictions: []
+  notes: null
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: true
+
+auth:
+  oidc: native
+  saml: none
+  two_factor: none
+  proxy_header: true
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+  min_cpu_cores: 1
+  min_ram_mb: 512
+  recommended_ram_mb: 1024
+  min_disk_gb: 2
+  gpu:
+    required: false
+    supported: false
+  database: sqlite
+  dependencies: []
+
+operations:
+  install_difficulty: 1
+  installation_levels:
+    home: partial
+    vps: partial
+    reliable: partial
+  maintenance_difficulty: 2
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: true
+  update_complexity: in_place
+
+recipe:
+  id: actual-budget-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: 26.9.0
+  images:
+    - name: actualbudget/actual-server
+      tag_source: pinned
+  tested_at: "2026-09-03"
+  tested_architectures:
+    amd64: passed
+    arm64: passed
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-09-03"
+      application_version: 26.9.0
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: passed
+      smoke_test: full
+      restore_tested: true
+    - tested_at: "2026-09-02"
+      application_version: 26.9.0
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: partial
+      restore_tested: false
+  license: MIT
+  smoke_test_limitations:
+    - The full application smoke test passed on amd64 and arm64.
+    - A practical backup and restore test passed on amd64; restore was not tested on arm64.
+    - Budget synchronisation between clients, end-to-end encryption, and bank integrations are not exercised by the smoke test.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - Until the server password is set in the browser, anyone who reaches the address can claim the instance; bootstrap it immediately after the first start.
+    - Budget files are stored unencrypted unless end-to-end encryption is enabled per budget inside the application, and they land unencrypted in every backup.
+    - ACTUAL_ALLOWED_LOGIN_METHODS is narrowed to password on purpose; allowing the header method behind a proxy that does not strip the header would let a request authenticate itself.
+    - The whole budget is a handful of SQLite files in one volume, so anyone with access to the volume or an archive reads every transaction.
+  assessment:
+    status: not_assessed
+    assessed_at: null
+
+upstream:
+  release_source: github
+  repository: actualbudget/actual
+  last_release_at: "2026-09-01"
+  last_checked_at: "2026-09-02T19:40:00Z"
+  stars: 28528
+  stars_checked_at: "2026-09-02T19:40:00Z"
+  releases_last_year: 17
+  releases_checked_at: "2026-09-02T19:40:00Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-09-02T19:40:00Z"
+    latest_version: 26.9.0
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+
+update_policy:
+  images:
+    - image: actualbudget/actual-server
+      provider: docker_hub
+      repository: actualbudget/actual-server
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots: []
+  updated_at: "2026-09-02"

@@ -1,0 +1,196 @@
+schema_version: 6
+publication_status: published
+
+slug: vaultwarden
+name: Vaultwarden
+tagline: A lightweight Bitwarden-compatible password manager server
+summary: >-
+  Vaultwarden stores passwords, secure notes, attachments, and shared
+  collections on your own server and works with official Bitwarden clients. A
+  single container and a local Docker volume with SQLite are enough for a small
+  deployment.
+
+status: active
+editorial_status: recommended
+
+links:
+  website: https://github.com/dani-garcia/vaultwarden
+  source: https://github.com/dani-garcia/vaultwarden
+  documentation: https://github.com/dani-garcia/vaultwarden/wiki
+  issues: https://github.com/dani-garcia/vaultwarden/issues
+
+classification:
+  categories:
+    - Password managers
+  tags:
+    - passwords
+    - bitwarden
+    - security
+    - families
+  implementation_languages:
+    - Rust
+  alternatives_to:
+    - Bitwarden Cloud
+    - 1Password
+    - LastPass
+
+license:
+  spdx: AGPL-3.0-only
+  kind: open_source
+  restrictions: []
+  notes: >-
+    Vaultwarden is not associated with Bitwarden, Inc.; compatibility issues
+    should be reported to Vaultwarden rather than official Bitwarden support.
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: true
+  ios: true
+  desktop: true
+
+auth:
+  oidc: native
+  saml: none
+  two_factor: native
+  proxy_header: false
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+    - armv7
+  min_cpu_cores: 1
+  min_ram_mb: 256
+  recommended_ram_mb: 512
+  min_disk_gb: 1
+  gpu:
+    required: false
+    supported: false
+  database: sqlite
+  dependencies: []
+
+operations:
+  install_difficulty: 2
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: unsupported
+  maintenance_difficulty: 3
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: true
+  update_complexity: in_place
+
+recipe:
+  id: vaultwarden-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: 1.37.2
+  images:
+    - name: vaultwarden/server
+      tag_source: env
+  tested_at: "2026-08-30"
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+    armv7: not_tested
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-08-30"
+      application_version: 1.37.2
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+    - Full smoke and restore passed on amd64; ARM64 and ARMv7 are untested.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - A password vault is the highest-value target on the server; serve it over HTTPS only, and encrypt every backup, because the archive is the vault.
+    - Registration and invitations are off by default. Creating the first account means turning sign-ups on for a moment; turn them off again straight away, or anyone who finds the URL gets an account.
+    - The /admin panel is off because the recipe sets no ADMIN_TOKEN; enabling it needs an Argon2id token hash and a path restriction at the reverse proxy.
+  assessment:
+    status: warnings
+    assessed_at: "2026-08-30"
+
+upstream:
+  release_source: github
+  repository: dani-garcia/vaultwarden
+  last_release_at: "2026-08-22"
+  last_checked_at: "2026-08-30T16:59:45Z"
+  stars: 66501
+  stars_checked_at: "2026-08-30T16:59:45Z"
+  releases_last_year: 13
+  releases_checked_at: "2026-09-02T17:47:54Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-08-30T16:59:45Z"
+    latest_version: "1.37.2"
+  critical_vulnerabilities:
+    status: findings
+    checked_at: "2026-08-31T04:09:15Z"
+    critical_count: 7
+    scanner: Trivy 0.74.0
+    ids:
+      - CVE-2026-13221
+      - CVE-2026-42496
+      - CVE-2026-44172
+      - CVE-2026-49261
+      - CVE-2026-8376
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: current
+    checked_at: "2026-08-30T16:59:45Z"
+    images: []
+
+update_policy:
+  images:
+    - image: vaultwarden/server
+      provider: docker_hub
+      repository: vaultwarden/server
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+    - file: assets/vault.webp
+      alt: Vaultwarden vault with a list of items in dark theme
+    - file: assets/item.webp
+      alt: Item view with the username, password, and website in light theme
+    - file: assets/generator.webp
+      alt: Password generator with length and character set options
+    - file: assets/two-step-login.webp
+      alt: Two-step login settings with an authenticator app, passkey, and Duo
+    - file: assets/admin-diagnostics.webp
+      alt: Admin panel with versions, database, and instance check results
+  updated_at: "2026-08-30"

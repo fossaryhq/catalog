@@ -1,0 +1,14 @@
+http:
+  routers:
+    vaultwarden:
+      rule: Host(`vault.example.com`)
+      entryPoints:
+        - websecure
+      service: vaultwarden
+      tls:
+        certResolver: letsencrypt
+  services:
+    vaultwarden:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8000

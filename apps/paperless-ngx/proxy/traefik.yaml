@@ -1,0 +1,14 @@
+http:
+  routers:
+    paperless-ngx:
+      rule: Host(`paperless.example.com`)
+      entryPoints:
+        - websecure
+      service: paperless-ngx
+      tls:
+        certResolver: letsencrypt
+  services:
+    paperless-ngx:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8000

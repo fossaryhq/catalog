@@ -1,0 +1,176 @@
+schema_version: 6
+publication_status: published
+
+slug: gitea
+name: Gitea
+tagline: A lightweight Git service for repositories, issues, and collaboration
+summary: >-
+  Gitea hosts Git repositories, pull requests, issues, wikis, and package
+  registries on your own server. This recipe uses the official image and
+  PostgreSQL, disables open registration, and binds web and SSH to localhost.
+
+status: active
+editorial_status: experimental
+
+links:
+  website: https://about.gitea.com/
+  source: https://github.com/go-gitea/gitea
+  documentation: https://docs.gitea.com/
+  issues: https://github.com/go-gitea/gitea/issues
+
+classification:
+  categories:
+    - Development
+  tags:
+    - git
+    - code-hosting
+    - collaboration
+    - devops
+  implementation_languages:
+    - Go
+  alternatives_to:
+    - GitHub
+    - GitLab
+    - Bitbucket
+
+license:
+  spdx: MIT
+  kind: open_source
+  restrictions: []
+  notes: null
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: false
+
+auth:
+  oidc: native
+  saml: none
+  two_factor: native
+  proxy_header: true
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+  min_cpu_cores: 1
+  min_ram_mb: 512
+  recommended_ram_mb: 1024
+  min_disk_gb: 5
+  gpu:
+    required: false
+    supported: false
+  database: postgresql
+  dependencies: []
+
+operations:
+  install_difficulty: 3
+  installation_levels:
+    home: partial
+    vps: partial
+    reliable: partial
+  maintenance_difficulty: 3
+  backup_supported: true
+  restore_tested: false
+  healthcheck: true
+  reverse_proxy_required: true
+  update_complexity: manual_steps
+
+recipe:
+  id: gitea-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: 1.27.3
+  images:
+    - name: docker.gitea.com/gitea
+      tag_source: pinned
+    - name: postgres
+      tag_source: pinned
+  tested_at: "2026-09-03"
+  tested_architectures:
+    amd64: passed
+    arm64: passed
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-09-03"
+      application_version: 1.27.3
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: passed
+      smoke_test: full
+      restore_tested: false
+  license: MIT
+  smoke_test_limitations:
+    - The full smoke test passed on amd64 and arm64; backup and restore have not passed a practical restore test.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - A Git service stores source code, SSH keys, tokens, and webhooks; public web access requires HTTPS, timely updates, and strong account protection.
+    - Public SSH increases the attack surface and is bound to localhost in this recipe; expose it deliberately and restrict it with a firewall.
+    - Gitea Actions and a runner are not configured; executing untrusted workflows requires a separate isolation model.
+  assessment:
+    status: not_assessed
+    assessed_at: null
+
+upstream:
+  release_source: github
+  repository: go-gitea/gitea
+  last_release_at: "2026-08-29"
+  last_checked_at: "2026-09-01T16:15:41Z"
+  stars: 57748
+  stars_checked_at: "2026-09-01T16:15:41Z"
+  releases_last_year: 17
+  releases_checked_at: "2026-09-02T17:47:54Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-09-01T16:15:41Z"
+    latest_version: "1.27.3"
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+
+update_policy:
+  # The recipe uses Gitea's current official docker.gitea.com registry, which
+  # catalogctl cannot query, and PostgreSQL has an independent version.
+  images: []
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots: []
+  updated_at: "2026-09-01"

@@ -1,0 +1,14 @@
+http:
+  routers:
+    seafile:
+      rule: Host(`files.example.com`)
+      entryPoints:
+        - websecure
+      service: seafile
+      tls:
+        certResolver: letsencrypt
+  services:
+    seafile:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8000

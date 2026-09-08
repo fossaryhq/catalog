@@ -1,0 +1,4 @@
+# Only the control panel is published. DNS port 53 does not pass through an HTTP proxy.
+dns.example.com {
+  reverse_proxy 127.0.0.1:3000
+}

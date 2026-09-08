@@ -1,0 +1,87 @@
+name: paperless-ngx
+
+services:
+  webserver:
+    image: paperlessngx/paperless-ngx:3.1.2
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+      broker:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${PAPERLESS_PORT:-8000}:8000"
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_DBENGINE: postgresql
+      PAPERLESS_DBHOST: database
+      PAPERLESS_DBPORT: "5432"
+      PAPERLESS_DBNAME: ${PAPERLESS_DB_NAME:-paperless}
+      PAPERLESS_DBUSER: ${PAPERLESS_DB_USER:-paperless}
+      PAPERLESS_DBPASS: ${PAPERLESS_DB_PASSWORD}
+      PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY}
+      PAPERLESS_URL: ${PAPERLESS_URL:-https://paperless.example.com}
+      PAPERLESS_TIME_ZONE: ${PAPERLESS_TIME_ZONE:-Etc/UTC}
+      PAPERLESS_OCR_LANGUAGE: ${PAPERLESS_OCR_LANGUAGE:-eng}
+      PAPERLESS_OCR_LANGUAGES: ${PAPERLESS_OCR_LANGUAGES:-eng}
+      PAPERLESS_ACCOUNT_ALLOW_SIGNUPS: "false"
+    volumes:
+      - paperless-data:/usr/src/paperless/data
+      - paperless-media:/usr/src/paperless/media
+      - paperless-export:/usr/src/paperless/export
+      - paperless-consume:/usr/src/paperless/consume
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent --output /dev/null http://127.0.0.1:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 90s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 60s
+
+  database:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${PAPERLESS_DB_NAME:-paperless}
+      POSTGRES_USER: ${PAPERLESS_DB_USER:-paperless}
+      POSTGRES_PASSWORD: ${PAPERLESS_DB_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+    volumes:
+      - paperless-database:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PAPERLESS_DB_USER:-paperless} -d ${PAPERLESS_DB_NAME:-paperless}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 60s
+
+  broker:
+    image: valkey/valkey:9-alpine
+    restart: unless-stopped
+    volumes:
+      - paperless-broker:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  paperless-data:
+    name: ${PAPERLESS_DATA_VOLUME:-paperless-data}
+  paperless-media:
+    name: ${PAPERLESS_MEDIA_VOLUME:-paperless-media}
+  paperless-export:
+    name: ${PAPERLESS_EXPORT_VOLUME:-paperless-export}
+  paperless-consume:
+    name: ${PAPERLESS_CONSUME_VOLUME:-paperless-consume}
+  paperless-database:
+    name: ${PAPERLESS_DB_VOLUME:-paperless-database}
+  paperless-broker:
+    name: ${PAPERLESS_BROKER_VOLUME:-paperless-broker}
