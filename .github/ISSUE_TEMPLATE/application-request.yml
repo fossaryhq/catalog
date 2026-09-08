@@ -1,0 +1,70 @@
+name: Suggest an application
+description: Propose an application for a future catalog recipe.
+title: "[Application]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A suggestion is not a promise of inclusion. Applications need a maintained self-hosted release, a versioned container image, and enough official documentation to build and verify a safe recipe.
+
+  - type: input
+    id: name
+    attributes:
+      label: Application name
+    validations:
+      required: true
+
+  - type: input
+    id: repository
+    attributes:
+      label: Official repository
+      placeholder: https://github.com/owner/project
+    validations:
+      required: true
+
+  - type: input
+    id: documentation
+    attributes:
+      label: Self-hosting documentation
+      placeholder: https://example.com/docs/self-hosting
+    validations:
+      required: true
+
+  - type: input
+    id: image
+    attributes:
+      label: Official container image
+      placeholder: ghcr.io/owner/project:1.2.3
+    validations:
+      required: true
+
+  - type: textarea
+    id: value
+    attributes:
+      label: Why should it be included?
+      description: Explain the use case and what proprietary or hosted service it may replace.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: Are you willing to prepare the catalog entry?
+      options:
+        - Yes
+        - No
+        - I need guidance
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: The application can be self-hosted without a required paid license.
+          required: true
+        - label: I searched existing issues and catalog entries first.
+          required: true
+        - label: I agree to follow the Code of Conduct.
+          required: true
