@@ -1,0 +1,37 @@
+name: Notify Fossary
+
+on:
+  workflow_run:
+    workflows:
+      - Catalog checks
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    name: Request catalog sync
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-24.04
+    env:
+      SYNC_TOKEN: ${{ secrets.FOSSARY_SYNC_TOKEN }}
+      CATALOG_SHA: ${{ github.event.workflow_run.head_sha }}
+    steps:
+      - name: Dispatch private integration
+        run: |
+          if [ -z "$SYNC_TOKEN" ]; then
+            echo "::notice::FOSSARY_SYNC_TOKEN is not configured; skipping private integration."
+            exit 0
+          fi
+
+          curl --fail-with-body \
+            --request POST \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer $SYNC_TOKEN" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/fossaryhq/fossary/dispatches \
+            --data "{\"event_type\":\"catalog-updated\",\"client_payload\":{\"sha\":\"$CATALOG_SHA\"}}"
