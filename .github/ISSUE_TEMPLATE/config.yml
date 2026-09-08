@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a vulnerability
+    url: https://github.com/fossaryhq/catalog/security/advisories/new
+    about: Report security issues privately. Do not include vulnerability details in a public issue.
+  - name: Use the Fossary catalog
+    url: https://fossary.com
+    about: Browse, compare, and deploy applications from the published catalog.

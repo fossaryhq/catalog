@@ -1,0 +1,64 @@
+name: Report a catalog problem
+description: Report incorrect data, documentation, assets, or a recipe that no longer works.
+title: "[Catalog]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include passwords, tokens, private keys, personal data, or vulnerability details. Use private vulnerability reporting for security issues.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Problem type
+      options:
+        - Incorrect catalog data
+        - Broken or outdated recipe
+        - Documentation or translation
+        - Logo or screenshot
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: application
+    attributes:
+      label: Application
+      description: Enter the application name or catalog slug.
+      placeholder: uptime-kuma
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong?
+      description: Describe the observed and expected result. Include safe reproduction steps when relevant.
+    validations:
+      required: true
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: Sources
+      description: Link official documentation, releases, repositories, or container images supporting the correction.
+      placeholder: https://example.com/official-documentation
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: For recipe failures, include the OS, architecture, Docker and Compose versions, and sanitized logs.
+      render: text
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I removed credentials, personal data, and other sensitive information.
+          required: true
+        - label: I checked that this has not already been reported.
+          required: true
+        - label: I agree to follow the Code of Conduct.
+          required: true
