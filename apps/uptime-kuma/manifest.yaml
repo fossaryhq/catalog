@@ -248,13 +248,11 @@ content:
   logo: assets/logo.svg
   screenshots:
     - file: assets/dashboard.webp
-      alt: Uptime Kuma dashboard showing a monitor summary and an event feed in dark theme
+      alt: Uptime Kuma dashboard showing monitor groups and a response chart in dark theme
     - file: assets/monitor.webp
       alt: A single monitor with its heartbeat history and response time chart in light theme
     - file: assets/add-monitor.webp
       alt: The add-monitor form with check type, interval, and HTTP options
     - file: assets/status-page.webp
       alt: A public status page listing services and their current availability
-    - file: assets/notifications.webp
-      alt: Telegram notification setup with the bot token and chat ID fields
-  updated_at: "2026-08-30"
+  updated_at: "2026-09-10"
