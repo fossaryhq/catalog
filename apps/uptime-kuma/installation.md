@@ -14,6 +14,11 @@ docker compose version
 
 ### 2. Prepare the files and variables
 
+These steps describe the downloadable recipe, which uses a named Docker volume.
+If you used the configuration generator instead, follow the `README.md` in that
+bundle: it already contains `.env`, uses your selected data directory, and its
+restore command requires `-y`.
+
 Put `compose.yaml`, `.env.example`, `backup.sh`, `restore.sh`, and `proxy/` in a
 directory of their own:
 
@@ -48,8 +53,20 @@ yet.
 ssh -L 3001:127.0.0.1:3001 user@server.example
 ```
 
-Open `http://localhost:3001`, create the administrator, and put the password in a
-password manager. There is no recovery flow if you lose it.
+Open `http://localhost:3001`. On **Which database would you like to use?**, select
+**SQLite** and click **Next**. This recipe uses SQLite; do not select Embedded
+MariaDB or an external database for this configuration. Then create the
+administrator and put the password in a password manager.
+
+Click **Add New Monitor**, keep **HTTP(s)**, enter a friendly name and the full
+URL of a service you operate, then click **Save**. The default interval is 60
+seconds. Wait for an **Up** heartbeat and check its response time before adding
+more monitors. An HTTP check establishes reachability, not that every feature
+of the monitored service works.
+
+To share availability, open **Status Pages → New Status Page**, choose a title
+and slug, then add the monitors you want to publish and save. Open the resulting
+`/status/<slug>` address in a private browser window to verify the public view.
 
 ### Local network
 
@@ -104,6 +121,10 @@ docker compose ps
 
 The script takes a safety copy of the current data first, so a restore from the
 wrong archive is recoverable.
+
+After the container is healthy, sign in again and check the monitor names,
+targets, heartbeat history, and the public status page. A running container alone
+does not confirm that the expected data was restored.
 
 ### Update
 
