@@ -26,11 +26,11 @@ services:
         --default-user ${FRESHRSS_ADMIN_USER:-freshrssadmin}
         --disable-update
         --environment production
-        --language en
+        --language ${FRESHRSS_LANGUAGE:-en}
       FRESHRSS_USER: >-
         --api-password ${FRESHRSS_ADMIN_API_PASSWORD}
         --email ${FRESHRSS_ADMIN_EMAIL:-admin@example.com}
-        --language en
+        --language ${FRESHRSS_LANGUAGE:-en}
         --password ${FRESHRSS_ADMIN_PASSWORD}
         --user ${FRESHRSS_ADMIN_USER:-freshrssadmin}
     volumes:

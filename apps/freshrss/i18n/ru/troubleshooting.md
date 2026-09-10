@@ -1,3 +1,20 @@
+### После успешного первого запуска нет ни одного пользователя
+
+На 32-битном железе — armv7 — первый запуск заканчивается в логах строкой
+`❌ FreshRSS error during the creation of a user!` после TypeError
+`FreshRSS_Category::_error(): Argument #1 ($value) must be of type int|bool,
+string given`. PostgreSQL отдаёт 32-битному PHP целочисленные столбцы строками,
+FreshRSS 1.29.1 их отклоняет, и администратор так и не создаётся. Контейнер при
+этом проходит healthcheck, а `/i/` отвечает, поэтому проблему видно только так:
+
+```bash
+docker compose exec freshrss cli/list-users.php
+```
+
+Перезапуск не помогает: из-за частичной записи entrypoint сообщает
+`username already exists`, и учётная запись остаётся нерабочей. Запускайте этот
+рецепт на amd64 или arm64.
+
 ### FreshRSS не становится healthy
 
 ```bash

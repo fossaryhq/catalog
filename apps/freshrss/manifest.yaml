@@ -88,14 +88,14 @@ operations:
     reliable: partial
   maintenance_difficulty: 2
   backup_supported: true
-  restore_tested: false
+  restore_tested: true
   healthcheck: true
   reverse_proxy_required: true
   update_complexity: manual_steps
 
 recipe:
   id: freshrss-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
@@ -107,13 +107,22 @@ recipe:
       tag_source: pinned
     - name: postgres
       tag_source: pinned
-  tested_at: "2026-09-03"
+  tested_at: "2026-09-10"
   tested_architectures:
     amd64: passed
     arm64: passed
-    armv7: passed
+    armv7: failed
   smoke_test: full
   check_history:
+    - tested_at: "2026-09-10"
+      application_version: 1.29.1
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: passed
+        armv7: failed
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-03"
       application_version: 1.29.1
       recipe_version: 1
@@ -125,8 +134,9 @@ recipe:
       restore_tested: false
   license: MIT
   smoke_test_limitations:
-    - The full HTTP smoke test passed on amd64, arm64, and armv7.
-    - Backup, restore, and PostgreSQL migration procedures have not passed a practical restore test.
+    - The full smoke test, including the backup and restore round trip, passed on amd64 and arm64.
+    - On armv7 the recipe fails — 32-bit PHP receives the PostgreSQL integer columns as strings, FreshRSS 1.29.1 rejects them with a TypeError in FreshRSS_Category::_error(), and no user is ever created. The container still reports healthy, so only an account check catches it.
+    - The PostgreSQL major-version migration has not been carried out; only the same-major restore is covered.
 
 security:
   public_exposure: supported
@@ -186,5 +196,15 @@ update_policy:
 content:
   description: description.md
   logo: assets/logo.svg
-  screenshots: []
-  updated_at: "2026-09-01"
+  screenshots:
+    - file: assets/stream.webp
+      alt: The main stream with categories, unread counters, and starred articles
+    - file: assets/article.webp
+      alt: An article opened in the reading pane with its feed, author, and date in dark theme
+    - file: assets/subscriptions.webp
+      alt: Subscription management with feeds grouped into categories
+    - file: assets/feed-settings.webp
+      alt: Per-feed settings with the feed URL, its category, and the last update times
+    - file: assets/statistics.webp
+      alt: Main statistics with read, unread, and favourite counts and the busiest feeds in dark theme
+  updated_at: "2026-09-10"
