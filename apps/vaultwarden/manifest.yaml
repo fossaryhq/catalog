@@ -91,7 +91,7 @@ operations:
 
 recipe:
   id: vaultwarden-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
@@ -101,13 +101,22 @@ recipe:
   images:
     - name: vaultwarden/server
       tag_source: env
-  tested_at: "2026-08-30"
+  tested_at: "2026-09-10"
   tested_architectures:
     amd64: passed
     arm64: not_tested
     armv7: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-09-10"
+      application_version: 1.37.2
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-08-30"
       application_version: 1.37.2
       recipe_version: 1
@@ -193,4 +202,4 @@ content:
       alt: Two-step login settings with an authenticator app, passkey, and Duo
     - file: assets/admin-diagnostics.webp
       alt: Admin panel with versions, database, and instance check results
-  updated_at: "2026-08-30"
+  updated_at: "2026-09-10"

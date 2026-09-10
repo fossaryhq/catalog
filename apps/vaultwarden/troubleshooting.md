@@ -11,10 +11,14 @@ both HTTP service and a database connection.
 
 ### Web vault reports an insecure context
 
-The remote web vault requires HTTPS for Web Crypto APIs. Confirm that
-`VAULTWARDEN_DOMAIN` starts with `https://`, the certificate serves the full
-chain, and the proxy forwards `Host` and `X-Forwarded-Proto`. Plain HTTP is
-acceptable only through local `localhost` during initial setup.
+The message is "Insecure URL not allowed. All URLs must use HTTPS." The web
+vault checks the scheme of every address it calls and rejects plain HTTP from
+anywhere, `localhost` included — the page loads, and the first request that
+needs the server fails. Confirm that you opened an `https://` address, that
+`VAULTWARDEN_DOMAIN` starts with `https://` and matches it, that the certificate
+serves the full chain, and that the proxy forwards `Host` and
+`X-Forwarded-Proto`. On a LAN with no public domain, issue a local certificate
+(Caddy's `tls internal`, or `mkcert`) and trust its authority on the device.
 
 ### Clients do not synchronize immediately
 

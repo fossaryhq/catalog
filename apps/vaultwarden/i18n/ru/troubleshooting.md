@@ -11,10 +11,14 @@ docker inspect --format '{{json .State.Health}}' "$(docker compose ps -q vaultwa
 
 ### Web vault сообщает о небезопасном контексте
 
-Удалённый web vault требует HTTPS для Web Crypto API. Проверьте, что
-`VAULTWARDEN_DOMAIN` начинается с `https://`, сертификат содержит полную цепочку,
-а reverse proxy передаёт `Host` и `X-Forwarded-Proto`. HTTP допустим только через
-локальный `localhost` во время первоначальной настройки.
+Сообщение — «Insecure URL not allowed. All URLs must use HTTPS.» Web vault
+проверяет схему каждого адреса, к которому обращается, и отклоняет обычный HTTP
+откуда угодно, включая `localhost`: страница открывается, а первый же запрос к
+серверу завершается ошибкой. Проверьте, что вы открыли адрес `https://`, что
+`VAULTWARDEN_DOMAIN` начинается с `https://` и совпадает с ним, что сертификат
+содержит полную цепочку, а reverse proxy передаёт `Host` и `X-Forwarded-Proto`.
+В LAN без публичного домена выпустите локальный сертификат (`tls internal` у
+Caddy или `mkcert`) и доверьте его удостоверяющему центру на устройстве.
 
 ### Клиенты не синхронизируются мгновенно
 
