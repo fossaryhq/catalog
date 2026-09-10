@@ -20,6 +20,6 @@ docker run --rm \
   -v "${volume}:/source:ro" \
   -v "${backup_dir}:/backup" \
   alpine:3.22 \
-  tar -C /source -czf "/backup/vaultwarden-${timestamp}.tar.gz" .
+  sh -c "umask 077 && tar -C /source -czf '/backup/vaultwarden-${timestamp}.tar.gz' ."
 
 echo "Backup created: $backup_dir/vaultwarden-${timestamp}.tar.gz"
