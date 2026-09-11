@@ -60,6 +60,23 @@ container environment. Self-registration is disabled. Do not expose the service
 before creating the administrator. Inspect it with `docker compose ps` and
 `docker compose logs --tail=100 webserver`.
 
+Documents reach the archive two ways: **Upload documents** in the web interface,
+and the consume folder the container watches. This recipe keeps that folder in
+the named volume `paperless-consume`, so nothing on the host writes into it
+directly — which is also what lets `backup.sh` archive it. A scanner or a
+synchronized directory needs a bind mount instead of the volume in
+`compose.yaml`:
+
+```yaml
+    volumes:
+      - /srv/paperless/consume:/usr/src/paperless/consume
+```
+
+Create that directory for the container user first — it runs as uid 1000:
+`sudo install -d -o 1000 -g 1000 /srv/paperless/consume`. From then on the
+consume folder is outside the backup: `backup.sh` archives the volume named in
+`.env`, not a host path, so add the directory to the host backup instead.
+
 ### VPS deployment
 
 <!-- coverage:deployment-vps -->
@@ -117,8 +134,10 @@ unconsumed files, `.env`, and Compose into one tar. The export contains document
 thumbnails, metadata, users, and an exact data snapshot, but **does not contain
 API tokens**; issue new tokens after restore. Changes started during export may
 not belong to one consistent snapshot, so do not ingest documents or edit
-metadata during the operation. The archive contains documents and secrets:
-encrypt it, keep an off-server copy, and test restores.
+metadata during the operation. The archive contains every document and the
+secrets in `.env`, so the script writes it `0600` inside a `0700` directory;
+keep those permissions when you copy it, encrypt it, keep an off-server copy,
+and test restores.
 
 ### Restore
 
@@ -137,8 +156,17 @@ docker compose exec webserver document_sanity_checker
 The script first exports the state about to be replaced, removes the volumes,
 starts an empty installation, and runs `document_importer`. The archived
 `configuration.env` remains a reference for manual comparison and does not
-replace active `.env`. This procedure has not passed a practical restore test;
-test a copy on another server first. Issue new API tokens after import.
+replace active `.env`.
+
+The round trip is part of `smoke-test.sh`, so every scheduled run of this recipe
+consumes a page, backs up, deletes the document, restores, and checks that the
+document and its recognized text came back, `document_sanity_checker` included.
+What that does not cover is the size of your own archive or an import into a
+different Paperless-ngx version, so run a restore on a separate server once
+before you rely on it. API tokens are not part of the export: every one of them
+stops working after the import and has to be issued again. After restoring, sign
+in and check the documents, tags, correspondents, and saved views — a healthy
+container proves the service started, not that the archive came back.
 
 ### Update Paperless-ngx
 

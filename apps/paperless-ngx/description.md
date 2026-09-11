@@ -14,8 +14,9 @@ support Office and email ingestion that requires those services.
 
 ### Security and recipe boundaries
 
-The full HTTP smoke test has passed on amd64; document export and restore remain
-untested in practice. Paperless-ngx does not encrypt documents or recognized text at rest;
+The full smoke test has passed on amd64, and the document export and import
+round trip runs inside it: a page is consumed, backed up, deleted, restored, and
+checked for its recognized text. arm64 remains untested. Paperless-ngx does not encrypt documents or recognized text at rest;
 sensitive archives need disk encryption and encrypted off-server backups. OCR,
 Ghostscript, and image handlers process untrusted files that can exhaust
 resources or attack parsers. The web port binds to localhost, while PostgreSQL

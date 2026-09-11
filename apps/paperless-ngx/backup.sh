@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# The archive carries every document, the exported users and .env itself, so
+# nothing this script writes may be readable by another account on the server.
+umask 077
+
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$script_dir"
 if [[ ! -f .env ]]; then
