@@ -1,0 +1,100 @@
+name: Share an installation result
+description: Report how a recipe worked on your own server, whether it succeeded or failed.
+title: "[Result]: "
+labels:
+  - installation-result
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A result is useful either way: a recipe that worked tells us the instructions hold, and one that did not tells us where they break. Do not include passwords, tokens, private keys, personal data, or vulnerability details. Use private vulnerability reporting for security issues.
+
+  - type: input
+    id: application
+    attributes:
+      label: Application
+      description: Enter the application name or catalog slug.
+      placeholder: uptime-kuma
+    validations:
+      required: true
+
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Outcome
+      options:
+        - Running — I reached the first login
+        - Running — but I had to deviate from the instructions
+        - Stuck partway
+        - Did not work at all
+    validations:
+      required: true
+
+  - type: dropdown
+    id: method
+    attributes:
+      label: How did you install it?
+      options:
+        - Generated configuration bundle (ZIP)
+        - Generated install.sh
+        - Manually, following the installation guide
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: deployment
+    attributes:
+      label: Where did you deploy it?
+      options:
+        - Local network, no domain
+        - Public server, IP address only
+        - Public server with a domain and HTTPS
+    validations:
+      required: true
+
+  - type: textarea
+    id: story
+    attributes:
+      label: What happened?
+      description: Describe what you did and, for anything short of a clean first login, the step where it went wrong and what the error said.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: data
+    attributes:
+      label: Did you try backup and restore?
+      options:
+        - Both, and the restore worked
+        - Both, and the restore failed
+        - Backup only
+        - Neither
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Server
+      description: Architecture, operating system, RAM, disk, and the output of `docker compose version`. Include sanitized logs for a failure.
+      render: text
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Recipe context
+      description: The application page fills this in for you. Leave it as it arrived.
+      render: text
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I removed credentials, personal data, and other sensitive information.
+          required: true
+        - label: I ran this myself and am reporting what actually happened.
+          required: true
+        - label: I agree to follow the Code of Conduct.
+          required: true
