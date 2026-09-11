@@ -3,6 +3,22 @@
 Contributions that improve an existing entry or add a well-researched
 self-hosted application are welcome.
 
+## Opening an issue
+
+Three forms cover what the catalog needs to hear: a catalog problem (wrong
+data, a broken recipe, documentation, an asset), an application suggestion, and
+an installation result.
+
+An installation result is worth reporting when it went well, too. A recipe is
+written and smoke-tested on a handful of machines, and a report from a
+different server is the only evidence that its instructions hold anywhere else
+— so "it worked, here is what I ran it on" is a useful issue. The application
+page on [fossary.com](https://fossary.com) prefills the recipe context for you.
+
+Security issues go through private vulnerability reporting instead, as
+described in [SECURITY.md](SECURITY.md); do not put vulnerability details in a
+public issue.
+
 ## Before opening a pull request
 
 1. Read the [application requirements](docs/app-requirements.md),

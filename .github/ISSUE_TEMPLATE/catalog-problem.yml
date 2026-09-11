@@ -51,6 +51,13 @@ body:
       description: For recipe failures, include the OS, architecture, Docker and Compose versions, and sanitized logs.
       render: text
 
+  - type: textarea
+    id: context
+    attributes:
+      label: Recipe context
+      description: The application page fills this in for you. Leave it as it arrived.
+      render: text
+
   - type: checkboxes
     id: checks
     attributes:
