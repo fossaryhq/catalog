@@ -13,8 +13,9 @@ and PostgreSQL use separate persistent volumes.
 
 ### Security and recipe boundaries
 
-The full HTTP smoke test has passed on amd64, arm64, and armv7; backup and
-restore remain untested in practice. The server fetches submitted feed URLs and can reach internal
+The full smoke test, backup and restore included, has passed on amd64 and
+arm64. On armv7 the recipe does not work at all: 32-bit PHP and this PostgreSQL
+never finish creating a user. The server fetches submitted feed URLs and can reach internal
 addresses, so this recipe is only for trusted users. FreshRSS 1.29.1 has no
 `INTERNAL_HOST_ALLOWLIST` option; the recipe neither invents it nor permits `*`.
 Untrusted users require a separate outbound network policy. Web binds to

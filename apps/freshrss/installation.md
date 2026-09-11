@@ -2,7 +2,11 @@
 
 Use Ubuntu 22.04+ or Debian 12+ with Docker Engine and Compose v2.24+. Allocate
 at least 1 CPU, 512 MB RAM, and 2 GB disk; 1 GB RAM plus room for article history
-and backups is recommended. The official image declares amd64, arm64, and armv7.
+and backups is recommended. The official image declares amd64, arm64, and armv7,
+but this recipe works on 64-bit only: on armv7 its PostgreSQL returns integer
+columns as strings to 32-bit PHP and FreshRSS 1.29.1 never finishes creating a
+user. See "No user exists after a successful first start" in the troubleshooting
+notes.
 
 ```bash
 docker --version
@@ -39,6 +43,7 @@ Every `.env` variable:
 - `FRESHRSS_ADMIN_EMAIL` is the initial administrator email;
 - `FRESHRSS_DB_PASSWORD` is the required independent PostgreSQL password;
 - `FRESHRSS_DB_NAME` and `FRESHRSS_DB_USER` are the database and role names, changed only before the first start;
+- `FRESHRSS_LANGUAGE` is the interface language the first run creates the installation and the administrator with, `en` by default; every user changes it later under Configuration → Display;
 - `FRESHRSS_TIME_ZONE` is an IANA time zone;
 - `FRESHRSS_CRON_MIN` selects built-in cron minutes; `13,43` refreshes twice per hour without joining the minute-zero spike;
 - `FRESHRSS_TRUSTED_PROXY` controls trust in forwarded client-IP and external-auth headers; the safe default is `0`, never a broad network;
@@ -60,8 +65,8 @@ docker compose exec freshrss cli/list-users.php
 ```
 
 On an empty data volume, `FRESHRSS_INSTALL` creates a production PostgreSQL
-configuration with `form` auth, anonymous access disabled, API enabled, English
-as the interface language, and the exact base URL. `FRESHRSS_USER` creates the administrator.
+configuration with `form` auth, anonymous access disabled, API enabled,
+`FRESHRSS_LANGUAGE` as the interface language, and the exact base URL. `FRESHRSS_USER` creates the administrator.
 Changing these variables after initialization does not modify the existing user.
 
 ### VPS deployment
@@ -114,8 +119,9 @@ The script stops FreshRSS and its built-in cron, keeps PostgreSQL available for
 native `pg_dump`, archives complete data and extensions plus `.env` and Compose,
 then restarts the app. This is a consistent full backup. OPML is insufficient:
 it omits articles, users, feed credentials, refresh frequency, user agents, and
-XPath scraping rules. Encrypt the archive, copy it off the server, and test
-restores regularly.
+XPath scraping rules. The archive carries `.env` alongside the database, so the
+script writes it `0600` in a `0700` directory; keep that when you copy it. Encrypt
+the archive, copy it off the server, and test restores regularly.
 
 ### Restore
 
@@ -131,8 +137,15 @@ docker compose exec freshrss cli/health.php
 
 The script first backs up the state being replaced, recreates all three volumes,
 restores the native dump, and starts FreshRSS. The archived `configuration.env`
-is retained for comparison only. This procedure has not passed a practical
-restore test; test it on a separate server first.
+is retained for comparison only.
+
+The round trip is part of `smoke-test.sh`, so every scheduled run of this recipe
+creates a second user, backs up, deletes that user, restores, and checks that
+`cli/list-users.php` lists it again. What that does not cover is your own data
+volume and its size, so run a restore on a separate server once before you rely
+on it. After restoring, sign in and check the feeds, categories, favourites, and
+read history: a healthy container proves the service started, not that the
+expected articles came back.
 
 ### Update FreshRSS
 

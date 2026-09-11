@@ -1,3 +1,21 @@
+### No user exists after a successful first start
+
+On 32-bit hardware — armv7 — the logs end the first run with
+`❌ FreshRSS error during the creation of a user!` after a
+`FreshRSS_Category::_error(): Argument #1 ($value) must be of type int|bool,
+string given` TypeError. PostgreSQL hands its integer columns to 32-bit PHP as
+strings and FreshRSS 1.29.1 rejects them, so the administrator is never created.
+The container still passes its healthcheck and `/i/` still answers, which is why
+only `cli/list-users.php` shows the problem:
+
+```bash
+docker compose exec freshrss cli/list-users.php
+```
+
+A restart does not repair it. The partial record makes the entrypoint report
+`username already exists`, so the account stays unusable. Run this recipe on
+amd64 or arm64.
+
 ### FreshRSS does not become healthy
 
 ```bash
