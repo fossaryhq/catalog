@@ -50,15 +50,46 @@ curl --fail --silent --show-error \
   --connect-timeout 3 --max-time 30 \
   "http://${published}/account/needs-bootstrap" | grep --quiet '"bootstrapped":false'
 
-# Restore must bring back data from the persistent SQLite volume.
-container_id="$("${compose[@]}" ps --quiet actual)"
-docker exec "$container_id" touch /data/fossary-restore-check
+# A server password turns the instance from an empty shell into one that holds
+# state: the hash lands in account.sqlite next to the sessions, which is exactly
+# what an archive of /data has to bring back.
+curl --fail --silent --show-error \
+  --connect-timeout 3 --max-time 30 \
+  --header 'Content-Type: application/json' \
+  --data '{"password":"fossary-smoke-password"}' \
+  "http://${published}/account/bootstrap" | grep --quiet '"token"'
+curl --fail --silent --show-error \
+  --connect-timeout 3 --max-time 30 \
+  "http://${published}/account/needs-bootstrap" | grep --quiet '"bootstrapped":true'
+
 bash "$app_dir/backup.sh"
 archives=("$backup_dir"/actual-budget-*.tar)
 test -f "${archives[0]}"
-docker exec "$container_id" rm /data/fossary-restore-check
+# The archive holds every budget file and the password hash, so it must not be
+# readable by another account on the server.
+test "$(stat -c %a "${archives[0]}")" = 600
+
+# Removing the volume is the only honest way to prove a restore: a marker file
+# deleted inside a living container says nothing about the volume itself.
+"${compose[@]}" down --volumes --remove-orphans --timeout 60
+"${compose[@]}" up --detach --wait --wait-timeout 600
+published="$("${compose[@]}" port actual 5006)"
+curl --fail --silent --show-error \
+  --retry 20 --retry-all-errors --retry-delay 3 \
+  --connect-timeout 3 --max-time 30 \
+  "http://${published}/account/needs-bootstrap" | grep --quiet '"bootstrapped":false'
+
 bash "$app_dir/restore.sh" "${archives[0]}"
-container_id="$("${compose[@]}" ps --quiet actual)"
-docker exec "$container_id" test -f /data/fossary-restore-check
+published="$("${compose[@]}" port actual 5006)"
+curl --fail --silent --show-error \
+  --retry 20 --retry-all-errors --retry-delay 3 \
+  --connect-timeout 3 --max-time 30 \
+  "http://${published}/account/needs-bootstrap" | grep --quiet '"bootstrapped":true'
+# The password itself has to work again, not only the flag that says one exists.
+curl --fail --silent --show-error \
+  --connect-timeout 3 --max-time 30 \
+  --header 'Content-Type: application/json' \
+  --data '{"password":"fossary-smoke-password"}' \
+  "http://${published}/account/login" | grep --quiet '"token"'
 
 echo "Actual Budget smoke test passed on $published"

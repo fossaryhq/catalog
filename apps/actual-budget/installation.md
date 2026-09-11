@@ -93,8 +93,10 @@ chmod +x backup.sh restore.sh
 
 The script stops the server, archives the whole `/data` volume, and stores `.env`
 and `compose.yaml` next to it. Stopping matters: a live SQLite file can be
-captured mid-write. The archive holds every budget file and the server password
-hash, so encrypt it and copy it off the server. Actual also writes its own
+captured mid-write. The archive holds every budget file, the server password
+hash, and `.env` itself, so the script writes it `0600` inside a `0700`
+directory; keep those permissions when you copy it, encrypt it, and keep the
+copy off the server. Actual also writes its own
 periodic copies inside the volume and the desktop client keeps local backups;
 neither is a substitute for an off-server archive.
 
@@ -111,11 +113,16 @@ curl --fail http://127.0.0.1:5006/health
 ```
 
 The script first backs up the state being replaced, recreates the volume,
-unpacks the archive, and starts the server. Afterwards every client is ahead of
-the restored server: open each browser and desktop app, and if a client refuses
-to sync, remove its local file and download the budget from the server again.
-This procedure has not passed a practical restore test; rehearse it on a
-separate server first.
+unpacks the archive, and starts the server.
+
+The round trip is part of `smoke-test.sh`, so every scheduled run of this recipe
+sets a server password, backs up, removes the data volume outright, and checks
+after the restore that the server is bootstrapped again and that the same
+password still logs in. What it does not cover is the size of your own budget
+files or the clients: after a restore every browser and desktop app is ahead of
+the server, so open each one, and if a client refuses to sync, remove its local
+file and download the budget from the server again. Rehearse that part on a
+separate machine before you need it.
 
 ### Update Actual
 

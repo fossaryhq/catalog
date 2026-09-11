@@ -9,14 +9,18 @@ schedules are computed on the client.
 This recipe runs pinned Actual 26.9.0 as a single container with SQLite in one
 volume: `server-files` for the account database and `user-files` for the budget
 blobs. The web port binds to localhost, and only password login is enabled —
-the header and OpenID methods stay closed until an operator turns them on.
+the header and OpenID methods stay closed until an operator turns them on. The
+interface is translated by the community: the Russian one covers about half of
+the strings in 26.9.0, so parts of the screen stay in English.
 
 <!-- coverage:security-assessment -->
 
 ### Security and recipe boundaries
 
-The full application smoke test has passed on amd64 and arm64, and practical
-backup and restore have passed on amd64.
+The full application smoke test has passed on amd64 and on arm64 under
+emulation, and it now contains the backup and restore round trip itself: the
+data volume is removed outright and the server password has to log in again
+afterwards.
 The server password is set in the browser on the first visit, so the recipe
 holds no secret of its own — which also means the first person to reach an
 unprotected instance owns it. Put HTTPS in front of it before the first visit
