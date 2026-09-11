@@ -90,7 +90,7 @@ operations:
 
 recipe:
   id: actual-budget-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
@@ -100,12 +100,20 @@ recipe:
   images:
     - name: actualbudget/actual-server
       tag_source: pinned
-  tested_at: "2026-09-03"
+  tested_at: "2026-09-11"
   tested_architectures:
     amd64: passed
     arm64: passed
   smoke_test: full
   check_history:
+    - tested_at: "2026-09-11"
+      application_version: 26.9.0
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: passed
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-03"
       application_version: 26.9.0
       recipe_version: 1
@@ -124,8 +132,8 @@ recipe:
       restore_tested: false
   license: MIT
   smoke_test_limitations:
-    - The full application smoke test passed on amd64 and arm64.
-    - A practical backup and restore test passed on amd64; restore was not tested on arm64.
+    - The full application smoke test, including the backup and restore round trip, passed on amd64 and on arm64 under emulation.
+    - "The restore is checked against a volume that was actually removed: the server password and the budget files come back and the password logs in again."
     - Budget synchronisation between clients, end-to-end encryption, and bank integrations are not exercised by the smoke test.
 
 security:
@@ -185,5 +193,15 @@ update_policy:
 content:
   description: description.md
   logo: assets/logo.svg
-  screenshots: []
-  updated_at: "2026-09-02"
+  screenshots:
+    - file: assets/budget.webp
+      alt: The budget for September with every category assigned and nothing left to budget
+    - file: assets/accounts.webp
+      alt: The combined transaction list of all accounts with payees, categories, and cleared marks
+    - file: assets/reports.webp
+      alt: The reports dashboard with income, expenses, net worth, and cash flow widgets in dark theme
+    - file: assets/cashflow.webp
+      alt: The cash flow report for the month with income and expense bars over the running balance in dark theme
+    - file: assets/settings.webp
+      alt: Settings with the client and server versions, themes, number and date formats, and the interface language
+  updated_at: "2026-09-11"

@@ -26,17 +26,20 @@ the old volume still holds the budget.
 
 ### The server password is lost
 
-There is no reset command. Stop the server, delete `account.sqlite` from
-`server-files`, and bootstrap again — the budget files in `user-files` survive:
+The image ships a reset script. It reads the password from a terminal, so run it
+without `-T`:
 
 ```bash
-docker compose stop actual
-docker run --rm -v actual-data:/data alpine:3.22 rm -f /data/server-files/account.sqlite
-docker compose start actual
+docker compose exec actual node /app/scripts/reset-password.js
 ```
 
-Take a backup first. If the budget itself is end-to-end encrypted, its own
-encryption password is separate and cannot be recovered this way.
+It asks for the new password twice and answers `Password changed!`. Budget files,
+the user record, and the OpenID configuration are left alone; every browser and
+desktop client that was signed in has to sign in again. Deleting
+`account.sqlite` from `server-files` also forces a new bootstrap, but it throws
+away the same records the script keeps — treat it as the last resort, after a
+backup. If the budget itself is end-to-end encrypted, its own encryption
+password is separate and neither route recovers it.
 
 ### A client refuses to sync or reports a conflict
 

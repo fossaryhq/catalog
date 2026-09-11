@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# The archive carries every budget file, the server password hash and .env
+# itself, so nothing this script writes may be readable by another account on
+# the server.
+umask 077
+
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$script_dir"
 env_file="${FOSSARY_ENV_FILE:-$script_dir/.env}"
