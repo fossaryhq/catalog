@@ -85,14 +85,14 @@ operations:
     reliable: partial
   maintenance_difficulty: 3
   backup_supported: true
-  restore_tested: false
+  restore_tested: true
   healthcheck: true
   reverse_proxy_required: true
   update_complexity: manual_steps
 
 recipe:
   id: paperless-ngx-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
@@ -106,12 +106,20 @@ recipe:
       tag_source: pinned
     - name: valkey/valkey
       tag_source: pinned
-  tested_at: "2026-09-03"
+  tested_at: "2026-09-11"
   tested_architectures:
     amd64: passed
     arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-09-11"
+      application_version: 3.1.2
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-03"
       application_version: 3.1.2
       recipe_version: 1
@@ -122,8 +130,9 @@ recipe:
       restore_tested: false
   license: MIT
   smoke_test_limitations:
-    - The full HTTP smoke test passed on amd64; arm64 remains untested because of WSL/QEMU host limitations.
-    - The document_exporter, document_importer, and restore procedures have not passed a practical restore test.
+    - The full smoke test, including the document_exporter and document_importer round trip, passed on amd64; arm64 remains untested because of WSL/QEMU host limitations.
+    - The restore was checked against the same Paperless-ngx version and the same PostgreSQL major; an import into another version and a PostgreSQL major upgrade are not covered.
+    - The export omits API tokens, so every token has to be issued again after an import; the round trip confirms it.
 
 security:
   public_exposure: supported
@@ -182,5 +191,15 @@ update_policy:
 content:
   description: description.md
   logo: assets/logo.svg
-  screenshots: []
-  updated_at: "2026-09-01"
+  screenshots:
+    - file: assets/dashboard.webp
+      alt: The dashboard with saved views, recently added documents, and archive statistics
+    - file: assets/documents.webp
+      alt: The document list as cards with tags, document type, date, and archive serial number
+    - file: assets/document.webp
+      alt: An open document with correspondent, type, tags, and archive serial number beside the page preview in dark theme
+    - file: assets/content.webp
+      alt: The recognized text of a scanned notice beside the image of the page it was read from
+    - file: assets/tags.webp
+      alt: Tag management with matching mode, document counts, and colours in dark theme
+  updated_at: "2026-09-11"

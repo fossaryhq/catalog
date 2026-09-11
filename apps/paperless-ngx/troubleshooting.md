@@ -53,6 +53,18 @@ Check the format, volume permissions, free disk, and RAM. Tika and Gotenberg are
 not included, so this stack cannot process Office and email files that require
 them.
 
+### An archive serial number is rejected as already taken
+
+```
+Document with this Archive Serial Number already exists in the trash.
+```
+
+Deleting a document moves it to the trash and it keeps its archive serial number
+there for the retention period, so the number stays taken while the document is
+nowhere in the list. Open **Trash** in the sidebar and delete that document
+permanently, then assign the number again. The same applies to a document that
+is consumed a second time after the first copy was deleted.
+
 ### The reverse proxy returns 502
 
 On the host, run `curl -I http://127.0.0.1:8000/`. Then inspect the upstream,
