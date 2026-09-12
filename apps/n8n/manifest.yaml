@@ -91,7 +91,7 @@ operations:
     reliable: partial
   maintenance_difficulty: 3
   backup_supported: true
-  restore_tested: false
+  restore_tested: true
   healthcheck: true
   reverse_proxy_required: false
   update_complexity: staged_migration
@@ -110,14 +110,23 @@ recipe:
       tag_source: env
     - name: postgres
       tag_source: pinned
-  tested_at: "2026-08-31"
+  tested_at: "2026-09-11"
   tested_architectures:
-    amd64: not_tested
+    amd64: passed
     arm64: not_tested
-  smoke_test: not_tested
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-09-11"
+      application_version: 2.36.9
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - "No isolated run has been performed on any architecture yet, so the published recipe remains unverified."
+    - Full smoke, backup, and restore passed on amd64; ARM64 remains untested.
     - The external sandboxed task runner and the Redis-backed queue are not part of the recipe and were not tested.
 
 security:
