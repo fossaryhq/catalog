@@ -100,12 +100,20 @@ recipe:
       tag_source: pinned
     - name: postgres
       tag_source: pinned
-  tested_at: "2026-09-03"
+  tested_at: "2026-09-20"
   tested_architectures:
     amd64: passed
-    arm64: passed
+    arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-09-20"
+      application_version: 16.0.3
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: false
     - tested_at: "2026-09-03"
       application_version: 16.0.3
       recipe_version: 1
@@ -116,7 +124,8 @@ recipe:
       restore_tested: false
   license: MIT
   smoke_test_limitations:
-    - The full smoke test passed on amd64 and arm64; the backup and restore procedures have not passed a practical restore test.
+    - The full smoke test passed on amd64 in the latest run; arm64 passed the same recipe version on 2026-09-03 and has not been re-tested since.
+    - The backup and restore procedures have not passed a practical restore test.
 
 security:
   public_exposure: supported
@@ -174,5 +183,15 @@ update_policy:
 content:
   description: description.md
   logo: assets/logo.svg
-  screenshots: []
+  screenshots:
+    - file: assets/dashboard.webp
+      alt: Signed-in dashboard with the contribution calendar, a feed of recent pushes, issues and a release, and the repository list beside it
+    - file: assets/repository.webp
+      alt: Repository page in dark theme with the branch, commit and tag counts, the file list with each file's last commit, the clone address, and the rendered README below
+    - file: assets/issues.webp
+      alt: Issue list with five open issues and one closed, each with its colour-coded label, milestone and author
+    - file: assets/pull-request.webp
+      alt: Pull request in dark theme showing the changed file with five added lines highlighted in the diff, and the review controls above it
+    - file: assets/commits.webp
+      alt: Commit history of the main branch with the author, short hash, message, release tag and date of each commit
   updated_at: "2026-09-01"
