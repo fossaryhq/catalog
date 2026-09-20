@@ -102,12 +102,20 @@ recipe:
       tag_source: pinned
     - name: postgres
       tag_source: pinned
-  tested_at: "2026-09-03"
+  tested_at: "2026-09-20"
   tested_architectures:
     amd64: passed
-    arm64: passed
+    arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-09-20"
+      application_version: 2.3.3
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-03"
       application_version: 2.3.3
       recipe_version: 1
@@ -126,8 +134,8 @@ recipe:
       restore_tested: false
   license: MIT
   smoke_test_limitations:
-    - The full application smoke test passed on amd64 and arm64.
-    - A practical backup and restore test passed on amd64; restore was not tested on arm64.
+    - Full smoke, backup, and restore passed on amd64 in the latest run.
+    - arm64 passed the same recipe version on 2026-09-03 and has not been re-tested since.
     - Feed polling, the Google Reader and Fever APIs, OAuth2 sign-in, and passkeys are not exercised by the smoke test.
 
 security:
@@ -189,5 +197,15 @@ update_policy:
 content:
   description: description.md
   logo: assets/logo.svg
-  screenshots: []
+  screenshots:
+    - file: assets/unread.webp
+      alt: Unread list with articles from the Debian, Rust, and Fedora feeds, each showing its category, source, and reading time in light theme
+    - file: assets/entry.webp
+      alt: An article opened in the reader with the full text from the feed, its author and source, the original link, and the unstar, share, and download actions in dark theme
+    - file: assets/feeds.webp
+      alt: Subscription list with each feed's category, unread count, host, and the time of the last and next check
+    - file: assets/categories.webp
+      alt: Categories screen with three categories, their unread counts, and how many feeds each holds in dark theme
+    - file: assets/settings.webp
+      alt: Settings page with the account credentials, reading speed, the rule for marking entries read, and the interface language
   updated_at: "2026-09-02"
