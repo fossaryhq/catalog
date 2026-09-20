@@ -113,11 +113,18 @@ recipe:
       tag_source: pinned
     - name: valkey/valkey
       tag_source: pinned
-  tested_at: "2026-09-03"
+  tested_at: "2026-09-20"
   tested_architectures:
     amd64: passed
   smoke_test: full
   check_history:
+    - tested_at: "2026-09-20"
+      application_version: 13.0.25
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-03"
       application_version: 13.0.25
       recipe_version: 1
@@ -201,5 +208,15 @@ update_policy:
 content:
   description: description.md
   logo: assets/logo.svg
-  screenshots: []
+  screenshots:
+    - file: assets/libraries.webp
+      alt: The list of libraries with the size and last change of each, and the sections for libraries shared with this account and with everyone
+    - file: assets/files.webp
+      alt: Inside a library, with two folders and two PDF documents, the folder tree beside them and the trash, history and settings of the library
+    - file: assets/photos.webp
+      alt: A library of photographs listed with thumbnails, file sizes and the time each was last changed
+    - file: assets/file.webp
+      alt: One photograph open in the built-in viewer, with the zoom, download, sharing and comment controls above it
+    - file: assets/admin.webp
+      alt: System administration showing the edition and version, the number of libraries and files, storage used, devices and accounts
   updated_at: "2026-09-02"
