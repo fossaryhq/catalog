@@ -995,7 +995,7 @@
         },
         "screenshots": {
           "type": "array",
-          "minItems": 0,
+          "minItems": 3,
           "maxItems": 5,
           "items": {
             "type": "object",
