@@ -107,12 +107,20 @@ recipe:
       tag_source: env
     - name: mariadb
       tag_source: pinned
-  tested_at: "2026-09-03"
+  tested_at: "2026-09-20"
   tested_architectures:
     amd64: passed
-    arm64: passed
+    arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-09-20"
+      application_version: "260728"
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: false
     - tested_at: "2026-09-03"
       application_version: "260728"
       recipe_version: 1
@@ -123,7 +131,7 @@ recipe:
       restore_tested: false
   license: MIT
   smoke_test_limitations:
-    - The full HTTP smoke test passed on amd64 and arm64.
+    - The full HTTP smoke test passed on amd64 in the latest run; arm64 passed the same recipe version on 2026-09-03 and has not been re-tested since.
     - Media indexing, face recognition, backup, and restore have not passed practical tests.
 
 security:
@@ -185,5 +193,15 @@ update_policy:
 content:
   description: description.md
   logo: assets/logo.svg
-  screenshots: []
+  screenshots:
+    - file: assets/library.webp
+      alt: Photo library in dark theme showing a grid of photographs with their titles, formats, sizes and file names, two of them starred as favourites
+    - file: assets/photo.webp
+      alt: One photograph open in the viewer with its title beneath it and the controls for details, zoom, slideshow, full screen and editing above
+    - file: assets/list.webp
+      alt: The same library as a list in light theme, with the date each photograph was taken and the camera read from its metadata
+    - file: assets/albums.webp
+      alt: Albums page in light theme with two albums, each showing its cover, its name and how many pictures it holds
+    - file: assets/settings.webp
+      alt: Settings in dark theme with the theme, interface language and time zone, and the switches for albums, people, labels, sharing and the file browser
   updated_at: "2026-09-01"
