@@ -10,10 +10,10 @@ Every application needs:
 
 - a clear short and long description in English and in every supported locale;
 - what it is for, who it suits, and the cloud services it replaces;
-- a local `.svg` logo (square viewBox, mark only, no editor leftovers) and up to
-  five local `.webp` screenshots from different screens and in different themes,
-  each with a translated `alt`; three to five is the standard a page is written
-  towards, and the floor is lifted only until the MVP catalog is filled;
+- a local `.svg` logo (square viewBox, mark only, no editor leftovers) and three
+  to five local `.webp` screenshots from different screens and, where the
+  application has more than one, in different themes, each with a translated
+  `alt`;
 - the languages the application is implemented in, spelled as GitHub Linguist does;
 - the application licence, its kind, its restrictions, and a separate recipe licence;
 - minimum CPU, RAM, and disk, recommended RAM, GPU, the datastore the recipe
@@ -148,7 +148,7 @@ proxy/Caddyfile
 proxy/nginx.conf
 proxy/traefik.yaml
 assets/<logo>.svg
-assets/<screenshot>.webp  # up to 5, none required while the catalog fills up
+assets/<screenshot>.webp  # three to five, each declared in the manifest
 ```
 
 The integration validator defines the set of required locales and asks for
