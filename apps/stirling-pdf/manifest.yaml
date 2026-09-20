@@ -109,12 +109,20 @@ recipe:
   images:
     - name: stirlingtools/stirling-pdf
       tag_source: pinned
-  tested_at: "2026-09-03"
+  tested_at: "2026-09-20"
   tested_architectures:
     amd64: passed
     arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-09-20"
+      application_version: 2.14.3
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: false
     - tested_at: "2026-09-03"
       application_version: 2.14.3
       recipe_version: 1
@@ -186,5 +194,15 @@ update_policy:
 content:
   description: description.md
   logo: assets/logo.svg
-  screenshots: []
+  screenshots:
+    - file: assets/tools.webp
+      alt: Workspace with three PDF documents shown as page previews, the file list beside them and the tool panel with merge, compare, compress, convert and OCR on the right
+    - file: assets/viewer.webp
+      alt: One document open in the built-in viewer with the page navigation, zoom and annotation controls around it
+    - file: assets/merge.webp
+      alt: The merge tool with three files selected, the order they will be joined in, and the options for signatures and a table of contents
+    - file: assets/compress.webp
+      alt: The compress tool with the quality method chosen, a quality slider and the options for greyscale, fast web viewing and line art
+    - file: assets/convert.webp
+      alt: The convert tool with the source and target formats to choose between, applied to the documents in the workspace
   updated_at: "2026-09-01"
