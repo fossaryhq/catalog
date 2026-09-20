@@ -105,12 +105,20 @@ recipe:
       tag_source: pinned
     - name: getmeili/meilisearch
       tag_source: pinned
-  tested_at: "2026-09-03"
+  tested_at: "2026-09-20"
   tested_architectures:
     amd64: passed
     arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-09-20"
+      application_version: v2.16.2
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: false
     - tested_at: "2026-09-03"
       application_version: v2.16.2
       recipe_version: 1
@@ -184,5 +192,15 @@ update_policy:
 content:
   description: description.md
   logo: assets/logo.svg
-  screenshots: []
+  screenshots:
+    - file: assets/dashboard.webp
+      alt: Dashboard in light theme with counts of links, collections and tags, and the four most recent bookmarks showing the previews Linkwarden saved
+    - file: assets/collection.webp
+      alt: One collection in dark theme with three saved pages, each with its preview, the site it came from and the date it was kept
+    - file: assets/links.webp
+      alt: Every bookmark in one grid with previews, source sites, collections and the icons of the formats preserved for each
+    - file: assets/reader.webp
+      alt: A bookmark's own page in dark theme with its tag, the reader's note, and the four preserved formats — webpage, screenshot, PDF and readable copy
+    - file: assets/settings.webp
+      alt: Account settings with the display name, username and interface language, and the import, export and account deletion controls
   updated_at: "2026-09-01"
