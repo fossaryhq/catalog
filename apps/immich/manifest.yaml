@@ -101,7 +101,7 @@ recipe:
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: v3.1.0
+  application_version: v3.2.2
   images:
     - name: ghcr.io/immich-app/immich-server
       tag_source: env
@@ -111,7 +111,7 @@ recipe:
       tag_source: pinned
     - name: ghcr.io/immich-app/postgres
       tag_source: pinned
-  tested_at: "2026-09-20"
+  tested_at: "2026-09-21"
   # Immich ships breaking changes regularly (see description.md), so a check here
   # lives 30 days instead of the standard 90.
   recheck_interval_days: 30
@@ -120,6 +120,14 @@ recipe:
     arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-09-21"
+      application_version: v3.2.2
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-20"
       application_version: v3.1.0
       recipe_version: 1
@@ -159,22 +167,22 @@ security:
 upstream:
   release_source: github
   repository: immich-app/immich
-  last_release_at: "2026-07-29"
-  last_checked_at: "2026-08-30T22:10:06Z"
-  stars: 113011
-  stars_checked_at: "2026-08-30T22:10:06Z"
+  last_release_at: "2026-09-15"
+  last_checked_at: "2026-09-21T07:21:38Z"
+  stars: 114700
+  stars_checked_at: "2026-09-21T07:21:38Z"
   releases_last_year: 36
-  releases_checked_at: "2026-09-02T17:47:54Z"
+  releases_checked_at: "2026-09-21T07:21:38Z"
 
 update_tracking:
   releases:
     status: current
-    checked_at: "2026-08-30T22:10:06Z"
-    latest_version: "v3.1.0"
+    checked_at: "2026-09-21T07:21:38Z"
+    latest_version: "v3.2.2"
   critical_vulnerabilities:
     status: findings
-    checked_at: "2026-08-31T04:09:15Z"
-    critical_count: 35
+    checked_at: "2026-09-21T07:25:00Z"
+    critical_count: 29
     scanner: Trivy 0.74.0
     ids:
       - CVE-2023-45853
@@ -186,17 +194,18 @@ update_tracking:
       - CVE-2026-42496
       - CVE-2026-58016
       - CVE-2026-59873
+      - CVE-2026-63374
       - CVE-2026-6653
       - CVE-2026-8376
   breaking_updates:
-    status: unknown
-    checked_at: null
+    status: compatible
+    checked_at: "2026-09-21T07:20:00Z"
   compose_changes:
     status: unchanged
-    checked_at: "2026-08-30T22:10:06Z"
+    checked_at: "2026-09-21T07:21:38Z"
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-09-21T07:25:00Z"
     images: []
 
 update_policy:
@@ -211,7 +220,7 @@ update_policy:
       repository: immich-app/immich-machine-learning
   compose:
     url: https://github.com/immich-app/immich/releases/latest/download/docker-compose.yml
-    baseline_sha256: sha256:c651a8211c9ab152bf7060ba1f370737ad2b4872da788a6c8a9e7fa7d4217357
+    baseline_sha256: sha256:fa98c3eb0884b0b88aaee11a9c9acb8cfb17a0f495d12c21358deb6d3e8a546b
 
 content:
   description: description.md
