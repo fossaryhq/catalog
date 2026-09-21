@@ -10,10 +10,17 @@ backup_dir="$(mktemp -d)"
 data_root="$(mktemp -d)"
 data_location="$data_root/data"
 mkdir "$data_location"
+# The version the recipe pins, read from the file that pins it. The check below
+# proves the running instance reports that version; a second copy of the number
+# here just meant the smoke test failed on the next update until someone worked
+# out which of the two was stale.
+version="$(sed -n 's/^NEXTCLOUD_VERSION=//p' "$app_dir/.env.example" | head -n 1)"
+test -n "$version"
 
 # The data directory belongs to www-data inside the container.
 docker run --rm -v "${data_location}:/d" alpine:3.22 chown -R 33:33 /d
 
+export NEXTCLOUD_VERSION="$version"
 export NEXTCLOUD_PORT=0
 export NEXTCLOUD_DATA_LOCATION="$data_location"
 export NEXTCLOUD_HTML_VOLUME="$html_volume"
@@ -91,7 +98,7 @@ python3 -c 'import json,sys
 d = json.load(open(sys.argv[1]))
 assert d["installed"] is True, d
 assert d["maintenance"] is False, d
-assert d["versionstring"] == "34.0.3", d' "$response"
+assert d["versionstring"] == sys.argv[2], d' "$response" "$version"
 
 # Background jobs run in their own container rather than in AJAX mode. The mode
 # is recorded on the first cron.php run, which the cron container does every five
