@@ -2,7 +2,7 @@ name: nextcloud
 
 services:
   app:
-    image: nextcloud:${NEXTCLOUD_VERSION:-34.0.3}-apache
+    image: nextcloud:${NEXTCLOUD_VERSION:-35.0.0}-apache
     restart: unless-stopped
     ports:
       - "127.0.0.1:${NEXTCLOUD_PORT:-8080}:80"
@@ -42,7 +42,7 @@ services:
   # Background jobs. Without a dedicated cron container Nextcloud falls back to
   # AJAX mode and only runs them while somebody has the interface open.
   cron:
-    image: nextcloud:${NEXTCLOUD_VERSION:-34.0.3}-apache
+    image: nextcloud:${NEXTCLOUD_VERSION:-35.0.0}-apache
     restart: unless-stopped
     entrypoint: /cron.sh
     environment:

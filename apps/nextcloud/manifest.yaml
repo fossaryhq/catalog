@@ -103,7 +103,7 @@ recipe:
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: v34.0.3
+  application_version: v35.0.0
   images:
     - name: nextcloud
       tag_source: env
@@ -111,13 +111,22 @@ recipe:
       tag_source: pinned
     - name: valkey/valkey
       tag_source: pinned
-  tested_at: "2026-09-11"
+  tested_at: "2026-09-21"
   tested_architectures:
     amd64: passed
     arm64: not_tested
     armv7: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-09-21"
+      application_version: v35.0.0
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-11"
       application_version: v34.0.3
       recipe_version: 1
@@ -159,45 +168,37 @@ security:
 upstream:
   release_source: github
   repository: nextcloud/server
-  last_release_at: "2026-08-13"
-  last_checked_at: "2026-08-31T09:31:23Z"
-  stars: 36647
-  stars_checked_at: "2026-08-31T09:31:23Z"
-  releases_last_year: 37
-  releases_checked_at: "2026-09-02T17:47:54Z"
+  last_release_at: "2026-09-15"
+  last_checked_at: "2026-09-21T07:05:00Z"
+  stars: 36872
+  stars_checked_at: "2026-09-21T07:05:00Z"
+  releases_last_year: 34
+  releases_checked_at: "2026-09-21T07:05:00Z"
 
 update_tracking:
   releases:
     status: current
-    checked_at: "2026-08-31T09:31:23Z"
-    latest_version: "v34.0.3"
+    checked_at: "2026-09-21T07:05:00Z"
+    latest_version: "v35.0.0"
   critical_vulnerabilities:
     status: findings
-    checked_at: "2026-08-31T09:47:38Z"
-    critical_count: 32
+    checked_at: "2026-09-21T07:03:00Z"
+    critical_count: 4
     scanner: Trivy 0.74.0
     ids:
-      - CVE-2026-13221
-      - CVE-2026-20884
-      - CVE-2026-24450
-      - CVE-2026-24660
       - CVE-2026-42216
       - CVE-2026-42217
-      - CVE-2026-42496
       - CVE-2026-43185
-      - CVE-2026-56372
-      - CVE-2026-58016
       - CVE-2026-6653
-      - CVE-2026-8376
   breaking_updates:
-    status: unknown
-    checked_at: null
+    status: compatible
+    checked_at: "2026-09-21T07:00:00Z"
   compose_changes:
     status: not_tracked
     checked_at: null
   outdated_images:
     status: current
-    checked_at: "2026-08-31T09:47:38Z"
+    checked_at: "2026-09-21T07:03:00Z"
     images: []
 
 update_policy:
