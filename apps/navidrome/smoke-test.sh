@@ -7,9 +7,16 @@ volume="${NAVIDROME_DATA_VOLUME:-${project}-data}"
 response="$(mktemp)"
 backup_dir="$(mktemp -d)"
 music_location="$(mktemp -d)"
+# The version the recipe pins, read from the file that pins it. The check below
+# proves the running server reports that version; a second copy of the number
+# here just meant the smoke test failed on the next update until someone worked
+# out which of the two was stale.
+version="$(sed -n 's/^NAVIDROME_VERSION=//p' "$app_dir/.env.example" | head -n 1)"
+test -n "$version"
 
 mkdir -p "$music_location/Demo"
 
+export NAVIDROME_VERSION="$version"
 export NAVIDROME_PORT=0
 export NAVIDROME_MUSIC_LOCATION="$music_location"
 export NAVIDROME_DATA_VOLUME="$volume"
@@ -73,7 +80,7 @@ curl --fail --silent --show-error --location \
   --connect-timeout 3 --max-time 30 \
   --output "$response" "http://${published}/rest/ping?v=1.16.1&c=fossary-smoke&f=json"
 grep --fixed-strings --quiet '"type":"navidrome"' "$response"
-grep --fixed-strings --quiet '"serverVersion":"0.63.2' "$response"
+grep --fixed-strings --quiet "\"serverVersion\":\"${version}" "$response"
 
 # The media library is mounted read-only.
 if docker exec "$container_id" sh -c 'touch /music/fossary-write-check' 2>/dev/null; then

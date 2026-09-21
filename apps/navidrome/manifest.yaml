@@ -99,17 +99,26 @@ recipe:
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: v0.63.2
+  application_version: v0.64.0
   images:
     - name: deluan/navidrome
       tag_source: env
-  tested_at: "2026-09-11"
+  tested_at: "2026-09-21"
   tested_architectures:
     amd64: passed
     arm64: not_tested
     armv7: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-09-21"
+      application_version: v0.64.0
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-11"
       application_version: v0.63.2
       recipe_version: 1
@@ -151,33 +160,33 @@ security:
 upstream:
   release_source: github
   repository: navidrome/navidrome
-  last_release_at: "2026-07-11"
-  last_checked_at: "2026-08-31T04:17:35Z"
-  stars: 23239
-  stars_checked_at: "2026-08-31T04:17:35Z"
-  releases_last_year: 12
-  releases_checked_at: "2026-09-02T17:47:54Z"
+  last_release_at: "2026-09-12"
+  last_checked_at: "2026-09-21T06:51:50Z"
+  stars: 23698
+  stars_checked_at: "2026-09-21T06:51:50Z"
+  releases_last_year: 13
+  releases_checked_at: "2026-09-21T06:51:50Z"
 
 update_tracking:
   releases:
     status: current
-    checked_at: "2026-08-31T04:17:35Z"
-    latest_version: "v0.63.2"
+    checked_at: "2026-09-21T06:51:50Z"
+    latest_version: "v0.64.0"
   critical_vulnerabilities:
     status: no_findings
-    checked_at: "2026-08-31T08:36:38Z"
+    checked_at: "2026-09-21T06:55:00Z"
     critical_count: 0
     scanner: Trivy 0.74.0
     ids: []
   breaking_updates:
-    status: unknown
-    checked_at: null
+    status: compatible
+    checked_at: "2026-09-21T06:52:00Z"
   compose_changes:
     status: not_tracked
     checked_at: null
   outdated_images:
     status: current
-    checked_at: "2026-08-31T08:36:38Z"
+    checked_at: "2026-09-21T06:55:00Z"
     images: []
 
 update_policy:
