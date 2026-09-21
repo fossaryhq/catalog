@@ -1,0 +1,112 @@
+name: Recipe smoke tests
+
+# A recipe is proved by starting it, not by parsing it. Every app here ships a
+# smoke-test.sh that brings the stack up on real images, asks the application
+# itself whether it is alive, and — where the recipe has them — runs its backup
+# and restore. That check belongs in this repository: the recipes live here, and
+# a broken one should be caught before it is vendored anywhere else.
+#
+# Starting containers is expensive, so a pull request only tests the recipes its
+# diff touches. The whole catalog runs weekly and on demand.
+on:
+  pull_request:
+    paths:
+      - "apps/**"
+      - ".github/workflows/smoke.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/**"
+      - ".github/workflows/smoke.yml"
+  schedule:
+    - cron: "17 3 * * 3"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: recipe-smoke-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  select:
+    name: Select recipes
+    runs-on: ubuntu-24.04
+    outputs:
+      apps: ${{ steps.select.outputs.apps }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The selection compares two revisions, so it needs the history.
+          fetch-depth: 0
+
+      - name: Select recipes to test
+        id: select
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          base=""
+          case "$EVENT_NAME" in
+            pull_request) base="$BASE_SHA" ;;
+            push)
+              # A branch's first push and a force-push arrive with a zero
+              # `before`: there is nothing to compare against, so everything runs.
+              if [[ ! "$PUSH_BEFORE" =~ ^0+$ ]]; then base="$PUSH_BEFORE"; fi
+              ;;
+          esac
+
+          known="$(find apps -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort)"
+
+          if [[ -z $base ]]; then
+            selected="$known"
+          else
+            files="$(git diff --name-only "$base" "$HEAD_SHA")"
+            if grep -qx '.github/workflows/smoke.yml' <<<"$files"; then
+              # A change to this file decides how a test runs, not which recipe
+              # it runs against, so the answer is all of them.
+              selected="$known"
+            else
+              # A slug the diff names but the catalog no longer has was deleted,
+              # and there is nothing left to start.
+              selected="$(sed -n 's|^apps/\([^/]*\)/.*|\1|p' <<<"$files" | sort -u | comm -12 - <(printf '%s\n' "$known"))"
+            fi
+          fi
+
+          apps="$(printf '%s\n' "$selected" | sed '/^$/d' | jq --raw-input --slurp --compact-output 'split("\n") | map(select(length > 0))')"
+          echo "apps=$apps" >> "$GITHUB_OUTPUT"
+          echo "Recipes to test: $apps" >> "$GITHUB_STEP_SUMMARY"
+
+  amd64:
+    name: Smoke ${{ matrix.app }} (amd64)
+    needs: select
+    if: needs.select.outputs.apps != '[]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      # One failing recipe must not hide the state of the others.
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        app: ${{ fromJSON(needs.select.outputs.apps) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Run recipe smoke test
+        run: bash "apps/${{ matrix.app }}/smoke-test.sh"
+
+      # Disk space is a common reason a multi-service recipe fails, so what is
+      # left of it is visible in the log of the job that failed.
+      - name: Report disk usage
+        if: always()
+        run: |
+          df -h / | tail -1
+          docker system df
