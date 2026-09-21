@@ -2,7 +2,7 @@ name: navidrome
 
 services:
   navidrome:
-    image: deluan/navidrome:${NAVIDROME_VERSION:-0.63.2}
+    image: deluan/navidrome:${NAVIDROME_VERSION:-0.64.0}
     restart: unless-stopped
     ports:
       - "127.0.0.1:${NAVIDROME_PORT:-4533}:4533"
