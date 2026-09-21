@@ -8,7 +8,15 @@ model_cache_volume="${IMMICH_MODEL_CACHE_VOLUME:-${project}-model-cache}"
 response="$(mktemp)"
 backup_dir="$(mktemp -d)"
 upload_location="$(mktemp -d)"
+# The version the recipe pins, read from the file that pins it. The check below
+# proves the server reports that version; a second copy of the number here just
+# meant the smoke test failed on the next update until someone worked out which
+# of the two was stale.
+version="$(sed -n 's/^IMMICH_VERSION=//p' "$app_dir/.env.example" | head -n 1)"
+test -n "$version"
+IFS=. read -r major minor patch <<<"${version#v}"
 
+export IMMICH_VERSION="$version"
 export IMMICH_PORT=0
 export IMMICH_UPLOAD_LOCATION="$upload_location"
 export IMMICH_DB_VOLUME="$db_volume"
@@ -77,7 +85,7 @@ grep --fixed-strings --quiet "pong" "$response"
 curl --fail --silent --show-error --location \
   --connect-timeout 3 --max-time 30 \
   --output "$response" "http://${published}/api/server/version"
-grep --fixed-strings --quiet '"major":3,"minor":1,"patch":0' "$response"
+grep --fixed-strings --quiet "\"major\":${major},\"minor\":${minor},\"patch\":${patch}" "$response"
 
 # Verify that backup and restore preserve both the database and the library files.
 docker exec "$server_id" touch /data/fossary-restore-check

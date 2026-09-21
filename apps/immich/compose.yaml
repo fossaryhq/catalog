@@ -2,7 +2,7 @@ name: immich
 
 services:
   immich-server:
-    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-v3.1.0}
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-v3.2.2}
     restart: unless-stopped
     ports:
       - "127.0.0.1:${IMMICH_PORT:-2283}:2283"
@@ -26,7 +26,7 @@ services:
     stop_grace_period: 30s
 
   immich-machine-learning:
-    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-v3.1.0}
+    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-v3.2.2}
     restart: unless-stopped
     environment:
       TZ: ${TZ:-UTC}
@@ -37,10 +37,12 @@ services:
     stop_grace_period: 30s
 
   redis:
-    image: docker.io/valkey/valkey:9@sha256:8e8d64b405ce18f41b8e5ee20aa4687a8ed0022d1298f2ce31cdcf3a76e09411
+    image: docker.io/valkey/valkey:9@sha256:70739f85ad2ee01a726a965584a0f94895f01b0c60b3cc8b0aeef11eaa6888cf
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "valkey-cli ping || exit 1"]
+      # `ping` alone exits 0 while the server answers with an error, so the
+      # reply itself is what the check reads — upstream changed this too.
+      test: ["CMD-SHELL", "valkey-cli ping | grep -q PONG || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 10
