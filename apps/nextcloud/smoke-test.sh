@@ -102,9 +102,26 @@ assert d["versionstring"] == sys.argv[2], d' "$response" "$version"
 
 # Background jobs run in their own container rather than in AJAX mode. The mode
 # is recorded on the first cron.php run, which the cron container does every five
-# minutes; here we run it once so the test does not have to wait.
-"${compose[@]}" exec -T -u www-data app php -f /var/www/html/cron.php
-test "$(occ config:app:get core backgroundjobs_mode | tr -d '\r\n')" = cron
+# minutes; here we run it too so the test does not have to wait for it.
+#
+# Both processes register the same job classes on that first run, and when they
+# overlap one of them loses the insert: `duplicate key value violates unique
+# constraint "class_index"`, and cron.php exits non-zero having done its work.
+# What matters is the mode the instance ends up in, so the nudge is repeated
+# until the mode is the answer rather than asserted on one exit code.
+deadline=$((SECONDS + 300))
+while :; do
+  "${compose[@]}" exec -T -u www-data app php -f /var/www/html/cron.php || true
+  mode="$(occ config:app:get core backgroundjobs_mode | tr -d '\r\n')"
+  if [[ $mode == cron ]]; then
+    break
+  fi
+  if ((SECONDS >= deadline)); then
+    echo "backgroundjobs_mode is '$mode' after 300s, expected cron" >&2
+    exit 1
+  fi
+  sleep 10
+done
 
 # Redis file locking is required for clients working in parallel.
 occ config:system:get memcache.locking | grep --fixed-strings --quiet 'Redis'
