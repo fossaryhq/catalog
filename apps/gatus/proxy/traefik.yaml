@@ -1,0 +1,14 @@
+http:
+  routers:
+    gatus:
+      rule: Host(`status.example.com`)
+      entryPoints:
+        - websecure
+      service: gatus
+      tls:
+        certResolver: letsencrypt
+  services:
+    gatus:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8080

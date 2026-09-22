@@ -1,0 +1,22 @@
+name: gatus
+
+services:
+  gatus:
+    image: twinproduction/gatus:${GATUS_VERSION:-v5.36.0}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${GATUS_PORT:-8080}:8080"
+    environment:
+      GATUS_CONFIG_PATH: /config/config.yaml
+      GATUS_USERNAME: ${GATUS_USERNAME:?Set GATUS_USERNAME in .env}
+      GATUS_PASSWORD_BCRYPT_BASE64: ${GATUS_PASSWORD_BCRYPT_BASE64:?Set GATUS_PASSWORD_BCRYPT_BASE64 in .env}
+    volumes:
+      - ${GATUS_CONFIG_DIR:-./config}:/config:ro
+      - gatus-data:/data
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 20s
+
+volumes:
+  gatus-data:
+    name: ${GATUS_DATA_VOLUME:-gatus-data}
