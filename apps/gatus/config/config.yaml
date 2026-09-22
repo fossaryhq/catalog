@@ -1,0 +1,28 @@
+storage:
+  type: sqlite
+  path: /data/data.db
+  maximum-number-of-results: 100
+  maximum-number-of-events: 50
+
+security:
+  basic:
+    username: "${GATUS_USERNAME}"
+    password-bcrypt-base64: "${GATUS_PASSWORD_BCRYPT_BASE64}"
+
+ui:
+  title: Service status | Gatus
+  header: Service status
+  dashboard-heading: Infrastructure health
+  dashboard-subheading: Checks run from this server
+  dark-mode: true
+  default-sort-by: group
+
+endpoints:
+  - name: Gatus health
+    group: Internal
+    url: http://127.0.0.1:8080/health
+    interval: 10s
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY].status == UP"
+      - "[RESPONSE_TIME] < 500"

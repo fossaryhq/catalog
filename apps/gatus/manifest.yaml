@@ -1,0 +1,186 @@
+schema_version: 6
+publication_status: draft
+
+slug: gatus
+name: Gatus
+tagline: Configuration-driven uptime checks and status dashboard
+summary: >-
+  Gatus runs HTTP, TCP, DNS, ICMP, and certificate checks from a YAML
+  configuration, evaluates explicit conditions, and displays their history on a
+  status dashboard. This recipe keeps results in SQLite, protects the dashboard
+  with Basic Auth, and needs one small container.
+
+status: active
+editorial_status: experimental
+
+links:
+  website: https://gatus.io/
+  source: https://github.com/TwiN/gatus
+  documentation: https://github.com/TwiN/gatus/blob/v5.36.0/README.md
+  issues: https://github.com/TwiN/gatus/issues
+
+classification:
+  categories:
+    - Monitoring
+  tags:
+    - uptime
+    - status-page
+    - configuration-as-code
+    - notifications
+  implementation_languages:
+    - Go
+  alternatives_to:
+    - UptimeRobot
+    - Better Uptime
+    - Pingdom
+
+license:
+  spdx: Apache-2.0
+  kind: open_source
+  restrictions: []
+  notes: null
+
+localization:
+  ui_languages:
+    - en
+  docs_languages:
+    - en
+
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: false
+
+auth:
+  oidc: native
+  saml: none
+  two_factor: none
+  proxy_header: false
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+    - armv7
+  min_cpu_cores: 1
+  min_ram_mb: 128
+  recommended_ram_mb: 256
+  min_disk_gb: 1
+  gpu:
+    required: false
+    supported: false
+  database: sqlite
+  dependencies: []
+
+operations:
+  install_difficulty: 2
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: unsupported
+  maintenance_difficulty: 2
+  backup_supported: true
+  restore_tested: true
+  healthcheck: false
+  reverse_proxy_required: false
+  update_complexity: in_place
+
+recipe:
+  id: gatus-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: v5.36.0
+  images:
+    - name: twinproduction/gatus
+      tag_source: env
+  tested_at: "2026-09-22"
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+    armv7: not_tested
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-09-22"
+      application_version: v5.36.0
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+    - Full smoke and restore passed on amd64; ARM64 and ARMv7 are untested.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - Gatus makes outbound requests to operator-defined targets; someone who can change config.yaml can probe services reachable from the container network.
+    - Basic Auth and alerting credentials are supplied through the local .env file; keep it out of Git, set mode 600, and encrypt off-server backups.
+    - The official container runs as root by default, although this recipe grants no extra capabilities, host networking, or host mounts.
+  assessment:
+    status: warnings
+    assessed_at: "2026-09-22"
+
+upstream:
+  release_source: github
+  repository: TwiN/gatus
+  last_release_at: "2026-05-19"
+  last_checked_at: "2026-09-22T05:47:39Z"
+  stars: 12128
+  stars_checked_at: "2026-09-22T05:47:39Z"
+  releases_last_year: 18
+  releases_checked_at: "2026-09-22T05:47:39Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-09-22T05:47:39Z"
+    latest_version: v5.36.0
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: unchanged
+    checked_at: "2026-09-22T05:47:39Z"
+  outdated_images:
+    status: current
+    checked_at: "2026-09-22T05:47:39Z"
+    images: []
+
+update_policy:
+  images:
+    - image: twinproduction/gatus
+      provider: docker_hub
+      repository: twinproduction/gatus
+  compose:
+    url: https://raw.githubusercontent.com/TwiN/gatus/master/.examples/docker-compose-sqlite-storage/compose.yaml
+    baseline_sha256: sha256:eb6f31d1e5a39e84028387f8600de9b266c5377c5fb0a68d97c5eaafa4bb89f5
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+    - file: assets/dashboard.webp
+      alt: Gatus dashboard grouping healthy infrastructure and public service checks in dark mode
+    - file: assets/endpoint-details.webp
+      alt: Endpoint detail view with successful conditions and a response-time history chart
+    - file: assets/announcements.webp
+      alt: Gatus status dashboard showing an operational announcement above monitored services
+  updated_at: "2026-09-22"
