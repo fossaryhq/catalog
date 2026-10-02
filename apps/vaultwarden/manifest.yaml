@@ -157,30 +157,24 @@ upstream:
 update_tracking:
   releases:
     status: update_available
-    checked_at: "2026-10-02T07:41:48.089Z"
+    checked_at: "2026-10-02T14:32:44.459Z"
     latest_version: "1.37.3"
   critical_vulnerabilities:
-    status: findings
-    checked_at: "2026-08-31T04:09:15Z"
-    critical_count: 7
-    scanner: Trivy 0.74.0
-    ids:
-      - CVE-2026-13221
-      - CVE-2026-42496
-      - CVE-2026-44172
-      - CVE-2026-49261
-      - CVE-2026-8376
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
   breaking_updates:
     status: unknown
     checked_at: null
   compose_changes:
-    status: not_tracked
+    status: unknown
     checked_at: null
   outdated_images:
-    status: current
-    checked_at: "2026-08-30T16:59:45Z"
+    status: unknown
+    checked_at: null
     images: []
-
 update_policy:
   images:
     - image: vaultwarden/server

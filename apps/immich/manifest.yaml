@@ -177,37 +177,24 @@ upstream:
 update_tracking:
   releases:
     status: update_available
-    checked_at: "2026-10-02T07:41:48.089Z"
+    checked_at: "2026-10-02T14:32:44.459Z"
     latest_version: "v3.2.4"
   critical_vulnerabilities:
-    status: findings
-    checked_at: "2026-09-21T07:25:00Z"
-    critical_count: 29
-    scanner: Trivy 0.74.0
-    ids:
-      - CVE-2023-45853
-      - CVE-2025-7458
-      - CVE-2026-13221
-      - CVE-2026-40393
-      - CVE-2026-42216
-      - CVE-2026-42217
-      - CVE-2026-42496
-      - CVE-2026-58016
-      - CVE-2026-59873
-      - CVE-2026-63374
-      - CVE-2026-6653
-      - CVE-2026-8376
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
   breaking_updates:
-    status: compatible
-    checked_at: "2026-09-21T07:20:00Z"
+    status: unknown
+    checked_at: null
   compose_changes:
-    status: unchanged
-    checked_at: "2026-09-21T07:21:38Z"
+    status: unknown
+    checked_at: null
   outdated_images:
-    status: current
-    checked_at: "2026-09-21T07:25:00Z"
+    status: unknown
+    checked_at: null
     images: []
-
 update_policy:
   # Valkey and PostgreSQL are pinned by digest and their tags do not track the
   # application version, so only Immich's own images belong in the policy.
