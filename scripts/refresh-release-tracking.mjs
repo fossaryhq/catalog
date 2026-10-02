@@ -37,6 +37,19 @@ function catalogVersion(recipeVersion, releaseTag) {
     : releaseTag.replace(/^v/i, "");
 }
 
+function resetDependentTracking(source) {
+  const replacements = [
+    ["critical_vulnerabilities", "breaking_updates", "    status: unknown\n    checked_at: null\n    critical_count: null\n    scanner: null\n    ids: []\n"],
+    ["breaking_updates", "compose_changes", "    status: unknown\n    checked_at: null\n"],
+    ["compose_changes", "outdated_images", "    status: unknown\n    checked_at: null\n"],
+    ["outdated_images", "update_policy", "    status: unknown\n    checked_at: null\n    images: []\n"],
+  ];
+  return replacements.reduce(
+    (updated, [field, nextField, values]) => updated.replace(new RegExp(`^  ${field}:\\n[\\s\\S]*?(?=^${nextField}:|^  ${nextField}:)`, "m"), `  ${field}:\n${values}`),
+    source,
+  );
+}
+
 export function updateManifest(source, tagName, checkedAt) {
   const recipe = /^recipe:\n[\s\S]*?(?=^upstream:)/m.exec(source)?.[0];
   const upstream = /^upstream:\n[\s\S]*?(?=^update_tracking:)/m.exec(source)?.[0];
@@ -52,7 +65,8 @@ export function updateManifest(source, tagName, checkedAt) {
   const previousVersion = release ? valueIn(release, "latest_version", "    ") : null;
   // A successful unchanged check is useful in the workflow log, but must not
   // create a daily metadata-only pull request.
-  if (previousStatus === status && previousVersion === latestVersion) {
+  const reset = status === "update_available" ? resetDependentTracking(source) : source;
+  if (previousStatus === status && previousVersion === latestVersion && reset === source) {
     return { repository, changed: false, source };
   }
   const replacement = `$1$2${status}$3\"${checkedAt}\"$4\"${latestVersion}\"`;
@@ -60,7 +74,8 @@ export function updateManifest(source, tagName, checkedAt) {
     /(^update_tracking:\n[\s\S]*?^  releases:\n)(    status: )[^\n]+(\n    checked_at: )[^\n]+(\n    latest_version: )[^\n]+/m,
     replacement,
   );
-  return updated === source ? { repository, changed: false, source } : { repository, changed: true, source: updated };
+  const cleared = status === "update_available" ? resetDependentTracking(updated) : updated;
+  return cleared === source ? { repository, changed: false, source } : { repository, changed: true, source: cleared };
 }
 
 async function latestRelease(repository) {
