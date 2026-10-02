@@ -33,7 +33,7 @@ jobs:
 
       - name: Open or refresh review pull request
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.FOSSARY_RELEASE_TRACKING_TOKEN }}
         run: |
           set -euo pipefail
           if git diff --quiet; then
@@ -47,6 +47,10 @@ jobs:
           git add apps/*/manifest.yaml
           git commit -m "chore: refresh release tracking"
           git push --force origin "$branch"
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::notice::Set FOSSARY_RELEASE_TRACKING_TOKEN (Contents: read/write; Pull requests: read/write) to open the review PR automatically."
+            exit 0
+          fi
           if ! gh pr list --head "$branch" --state open --json number --jq 'length > 0' | grep -qx true; then
             gh pr create --base main --head "$branch" \
               --title "chore: refresh release tracking" \
