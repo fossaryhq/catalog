@@ -65,7 +65,8 @@ export function updateManifest(source, tagName, checkedAt) {
   const previousVersion = release ? valueIn(release, "latest_version", "    ") : null;
   // A successful unchanged check is useful in the workflow log, but must not
   // create a daily metadata-only pull request.
-  if (previousStatus === status && previousVersion === latestVersion) {
+  const reset = status === "update_available" ? resetDependentTracking(source) : source;
+  if (previousStatus === status && previousVersion === latestVersion && reset === source) {
     return { repository, changed: false, source };
   }
   const replacement = `$1$2${status}$3\"${checkedAt}\"$4\"${latestVersion}\"`;
