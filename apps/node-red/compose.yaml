@@ -1,0 +1,29 @@
+name: node-red
+
+services:
+  node-red:
+    image: nodered/node-red:${NODE_RED_VERSION:-5.0.7-24}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${NODE_RED_PORT:-1880}:1880"
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+      NODE_RED_ADMIN_USERNAME: ${NODE_RED_ADMIN_USERNAME:?Set NODE_RED_ADMIN_USERNAME in .env}
+      NODE_RED_ADMIN_PASSWORD_HASH: ${NODE_RED_ADMIN_PASSWORD_HASH:?Set NODE_RED_ADMIN_PASSWORD_HASH in .env}
+      NODE_RED_CREDENTIAL_SECRET: ${NODE_RED_CREDENTIAL_SECRET:?Set NODE_RED_CREDENTIAL_SECRET in .env}
+    volumes:
+      - node-red-data:/data
+      - ${NODE_RED_SETTINGS_FILE:-./config/settings.js}:/data/settings.js:ro
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:1880/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 45s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+volumes:
+  node-red-data:
+    name: ${NODE_RED_DATA_VOLUME:-node-red-data}
