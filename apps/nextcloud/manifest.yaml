@@ -178,29 +178,24 @@ upstream:
 update_tracking:
   releases:
     status: update_available
-    checked_at: "2026-10-02T07:41:48.089Z"
+    checked_at: "2026-10-02T14:32:44.459Z"
     latest_version: "v35.0.1"
   critical_vulnerabilities:
-    status: findings
-    checked_at: "2026-09-21T07:03:00Z"
-    critical_count: 4
-    scanner: Trivy 0.74.0
-    ids:
-      - CVE-2026-42216
-      - CVE-2026-42217
-      - CVE-2026-43185
-      - CVE-2026-6653
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
   breaking_updates:
-    status: compatible
-    checked_at: "2026-09-21T07:00:00Z"
+    status: unknown
+    checked_at: null
   compose_changes:
-    status: not_tracked
+    status: unknown
     checked_at: null
   outdated_images:
-    status: current
-    checked_at: "2026-09-21T07:03:00Z"
+    status: unknown
+    checked_at: null
     images: []
-
 update_policy:
   # PostgreSQL and Valkey are pinned independently of the Nextcloud version, so
   # only the main image belongs in the policy.

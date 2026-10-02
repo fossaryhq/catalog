@@ -145,7 +145,7 @@ upstream:
 update_tracking:
   releases:
     status: update_available
-    checked_at: "2026-10-02T07:41:48.089Z"
+    checked_at: "2026-10-02T14:32:44.459Z"
     latest_version: "v5.37.0"
   critical_vulnerabilities:
     status: unknown
@@ -157,13 +157,12 @@ update_tracking:
     status: unknown
     checked_at: null
   compose_changes:
-    status: unchanged
-    checked_at: "2026-09-22T05:47:39Z"
+    status: unknown
+    checked_at: null
   outdated_images:
-    status: current
-    checked_at: "2026-09-22T05:47:39Z"
+    status: unknown
+    checked_at: null
     images: []
-
 update_policy:
   images:
     - image: twinproduction/gatus
