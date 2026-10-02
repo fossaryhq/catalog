@@ -10,8 +10,8 @@ const headers = {
   ...(process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {}),
 };
 
-function valueIn(section, key) {
-  return new RegExp(`^  ${key}:\\s*(.+?)\\s*$`, "m").exec(section)?.[1]?.replace(/^['"]|['"]$/g, "") ?? null;
+function valueIn(section, key, indent = "  ") {
+  return new RegExp(`^${indent}${key}:\\s*(.+?)\\s*$`, "m").exec(section)?.[1]?.replace(/^['"]|['"]$/g, "") ?? null;
 }
 
 function comparable(version) {
@@ -31,6 +31,12 @@ export function compareVersions(left, right) {
   return 0;
 }
 
+function catalogVersion(recipeVersion, releaseTag) {
+  return /^v/i.test(recipeVersion)
+    ? releaseTag.replace(/^v/i, "v")
+    : releaseTag.replace(/^v/i, "");
+}
+
 export function updateManifest(source, tagName, checkedAt) {
   const recipe = /^recipe:\n[\s\S]*?(?=^upstream:)/m.exec(source)?.[0];
   const upstream = /^upstream:\n[\s\S]*?(?=^update_tracking:)/m.exec(source)?.[0];
@@ -39,16 +45,17 @@ export function updateManifest(source, tagName, checkedAt) {
   const repository = valueIn(upstream, "repository");
   const comparison = current ? compareVersions(current, tagName) : null;
   if (!repository || comparison === null) return null;
+  const latestVersion = catalogVersion(current, tagName);
   const status = comparison < 0 ? "update_available" : "current";
-  const release = /^update_tracking:\n[\s\S]*?^  releases:\n[\s\S]*?(?=^  \S|^\S|$)/m.exec(source)?.[0];
-  const previousStatus = release ? valueIn(release, "status") : null;
-  const previousVersion = release ? valueIn(release, "latest_version") : null;
+  const release = /^update_tracking:\n[\s\S]*?^  releases:\n[\s\S]*?(?=^  \S|^\S)/m.exec(source)?.[0];
+  const previousStatus = release ? valueIn(release, "status", "    ") : null;
+  const previousVersion = release ? valueIn(release, "latest_version", "    ") : null;
   // A successful unchanged check is useful in the workflow log, but must not
   // create a daily metadata-only pull request.
-  if (previousStatus === status && previousVersion === tagName) {
+  if (previousStatus === status && previousVersion === latestVersion) {
     return { repository, changed: false, source };
   }
-  const replacement = `$1$2${status}$3\"${checkedAt}\"$4\"${tagName}\"`;
+  const replacement = `$1$2${status}$3\"${checkedAt}\"$4\"${latestVersion}\"`;
   const updated = source.replace(
     /(^update_tracking:\n[\s\S]*?^  releases:\n)(    status: )[^\n]+(\n    checked_at: )[^\n]+(\n    latest_version: )[^\n]+/m,
     replacement,
