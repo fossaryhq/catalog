@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Node-RED">
+  <path fill="#8f0000" d="M0 0h256v256H0z"/>
+  <path fill="#fff" d="M47 81h54v18H65v58h36v18H47V81zm108 0h54v94h-54v-18h36V99h-36V81zm-46 18h38v18h-38V99zm0 40h38v18h-38v-18z"/>
+</svg>

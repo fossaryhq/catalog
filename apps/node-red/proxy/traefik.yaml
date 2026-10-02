@@ -1,0 +1,13 @@
+http:
+  routers:
+    node-red:
+      rule: Host(`flows.example.com`)
+      entryPoints: [websecure]
+      service: node-red
+      tls:
+        certResolver: letsencrypt
+  services:
+    node-red:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:1880

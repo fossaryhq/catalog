@@ -1,0 +1,189 @@
+schema_version: 6
+publication_status: draft
+
+slug: node-red
+name: Node-RED
+tagline: Low-code flows for automation, APIs, and connected devices
+summary: >-
+  Node-RED is a visual programming environment for connecting devices, APIs,
+  and online services. Build event-driven flows in a browser, extend them with
+  JavaScript and community nodes, and run the result on your own server. This
+  recipe protects the editor with a password and keeps flows and credentials in
+  a persistent volume.
+
+status: active
+editorial_status: experimental
+
+links:
+  website: https://nodered.org/
+  source: https://github.com/node-red/node-red
+  documentation: https://nodered.org/docs/
+  issues: https://github.com/node-red/node-red/issues
+
+classification:
+  categories:
+    - Automation
+  tags:
+    - workflow
+    - automation
+    - iot
+    - low-code
+    - api
+  implementation_languages:
+    - JavaScript
+  alternatives_to:
+    - Zapier
+    - IFTTT
+    - Make
+
+license:
+  spdx: Apache-2.0
+  kind: open_source
+  restrictions: []
+  notes: null
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+    - ru
+
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: false
+
+auth:
+  oidc: none
+  saml: none
+  two_factor: none
+  proxy_header: false
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+    - armv7
+  min_cpu_cores: 1
+  min_ram_mb: 256
+  recommended_ram_mb: 512
+  min_disk_gb: 2
+  gpu:
+    required: false
+    supported: false
+  database: none
+  dependencies: []
+
+operations:
+  install_difficulty: 2
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: partial
+  maintenance_difficulty: 2
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: in_place
+
+recipe:
+  id: node-red-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: 5.0.7
+  images:
+    - name: nodered/node-red
+      tag_source: env
+  tested_at: "2026-10-03"
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+    armv7: not_tested
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-10-03"
+      application_version: 5.0.7
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+    - Full smoke and restore passed on amd64; ARM64 and ARMv7 are untested.
+    - The smoke flow verifies the editor API and runtime; third-party palette nodes and external integrations are not tested.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - Anyone with editor credentials can deploy arbitrary JavaScript through Function nodes and install third-party palette packages, which run with the container's permissions.
+    - Flows may contain API tokens and passwords. NODE_RED_CREDENTIAL_SECRET and the backup archive are needed to decrypt them, so protect .env and off-server backups like passwords.
+    - The editor controls every configured webhook and integration. Keep it behind HTTPS, use a unique password, and do not expose port 1880 directly.
+  assessment:
+    status: warnings
+    assessed_at: "2026-10-03"
+
+upstream:
+  release_source: github
+  repository: node-red/node-red
+  last_release_at: "2026-09-08"
+  last_checked_at: "2026-10-03T00:00:00Z"
+  stars: 23701
+  stars_checked_at: "2026-10-03T00:00:00Z"
+  releases_last_year: 30
+  releases_checked_at: "2026-10-03T00:00:00Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-10-03T00:00:00Z"
+    latest_version: 5.0.7
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: current
+    checked_at: "2026-10-03T00:00:00Z"
+    images: []
+
+update_policy:
+  images:
+    - image: nodered/node-red
+      provider: docker_hub
+      repository: nodered/node-red
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+    - file: assets/editor.webp
+      alt: Node-RED editor with the flow explorer, node palette, and a workflow canvas
+    - file: assets/flow.webp
+      alt: Node-RED workflow editor with the Morning briefing flow selected
+    - file: assets/palette.webp
+      alt: Node-RED editor showing the built-in palette beside a workflow canvas
+  updated_at: "2026-10-03"
