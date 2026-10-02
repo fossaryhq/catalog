@@ -38,10 +38,15 @@ function catalogVersion(recipeVersion, releaseTag) {
 }
 
 function resetDependentTracking(source) {
+  // Compose changes cannot be checked when the manifest does not give us a
+  // Compose update policy.  Keep that state as an explicit `not_tracked`
+  // answer; `unknown` would claim that a check is pending even though none
+  // can be performed.
+  const composeStatus = /^  compose:\s*null\s*$/m.test(source) ? "not_tracked" : "unknown";
   const replacements = [
     ["critical_vulnerabilities", "breaking_updates", "    status: unknown\n    checked_at: null\n    critical_count: null\n    scanner: null\n    ids: []\n"],
     ["breaking_updates", "compose_changes", "    status: unknown\n    checked_at: null\n"],
-    ["compose_changes", "outdated_images", "    status: unknown\n    checked_at: null\n"],
+    ["compose_changes", "outdated_images", `    status: ${composeStatus}\n    checked_at: null\n`],
     ["outdated_images", "update_policy", "    status: unknown\n    checked_at: null\n    images: []\n"],
   ];
   return replacements.reduce(
