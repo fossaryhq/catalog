@@ -177,9 +177,9 @@ upstream:
 
 update_tracking:
   releases:
-    status: current
-    checked_at: "2026-09-21T07:05:00Z"
-    latest_version: "v35.0.0"
+    status: update_available
+    checked_at: "2026-10-02T07:30:17.872Z"
+    latest_version: "v35.0.1"
   critical_vulnerabilities:
     status: findings
     checked_at: "2026-09-21T07:03:00Z"
