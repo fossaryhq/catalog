@@ -1,0 +1,54 @@
+name: Refresh release tracking
+
+on:
+  schedule:
+    - cron: "23 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: release-tracking
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Discover upstream releases
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/refresh-release-tracking.mjs
+
+      - name: Validate refreshed manifests
+        run: |
+          pipx run check-jsonschema==0.33.3 \
+            --schemafile schemas/app-manifest.schema.json \
+            apps/*/manifest.yaml
+
+      - name: Open or refresh review pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "No release-tracking changes."
+            exit 0
+          fi
+          branch="automation/release-tracking"
+          git config user.name "fossary release tracker"
+          git config user.email "release-tracker@users.noreply.github.com"
+          git switch --force-create "$branch"
+          git add apps/*/manifest.yaml
+          git commit -m "chore: refresh release tracking"
+          git push --force origin "$branch"
+          if ! gh pr list --head "$branch" --state open --json number --jq 'length > 0' | grep -qx true; then
+            gh pr create --base main --head "$branch" \
+              --title "chore: refresh release tracking" \
+              --body "Automated snapshot of the latest stable GitHub releases. This updates tracking metadata only; recipe versions remain unchanged until they are reviewed and smoke-tested."
+          fi
