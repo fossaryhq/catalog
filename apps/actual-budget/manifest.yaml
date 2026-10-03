@@ -163,9 +163,9 @@ upstream:
 
 update_tracking:
   releases:
-    status: current
-    checked_at: "2026-09-02T19:40:00Z"
-    latest_version: 26.9.0
+    status: update_available
+    checked_at: "2026-10-03T09:54:42.891Z"
+    latest_version: "26.10.0"
   critical_vulnerabilities:
     status: unknown
     checked_at: null
@@ -182,7 +182,6 @@ update_tracking:
     status: unknown
     checked_at: null
     images: []
-
 update_policy:
   images:
     - image: actualbudget/actual-server
