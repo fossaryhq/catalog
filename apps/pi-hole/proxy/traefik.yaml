@@ -1,0 +1,15 @@
+# The HTTP proxy protects the panel; DNS on port 53 is separate.
+http:
+  routers:
+    pi-hole:
+      rule: Host(`dns.example.com`)
+      entryPoints:
+        - websecure
+      service: pi-hole
+      tls:
+        certResolver: letsencrypt
+  services:
+    pi-hole:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8080

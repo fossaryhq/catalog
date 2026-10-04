@@ -1,0 +1,193 @@
+schema_version: 6
+publication_status: draft
+
+slug: pi-hole
+name: Pi-hole
+tagline: Network-wide ad blocking with a self-hosted DNS server
+summary: >-
+  Pi-hole filters DNS requests for every device on a home network, including
+  TVs and phones that cannot use a browser extension. Its web dashboard shows
+  query statistics, client activity, and allow and deny lists. This recipe runs
+  the official container with persistent SQLite data, a local control panel,
+  and DNS bound to localhost until you choose a trusted LAN or VPN address.
+
+status: active
+editorial_status: experimental
+
+links:
+  website: https://pi-hole.net/
+  source: https://github.com/pi-hole/pi-hole
+  documentation: https://docs.pi-hole.net/docker/
+  issues: https://github.com/pi-hole/pi-hole/issues
+
+classification:
+  categories:
+    - Networking
+  tags:
+    - dns
+    - adblock
+    - privacy
+    - homelab
+    - filtering
+  implementation_languages:
+    - C
+    - JavaScript
+  alternatives_to:
+    - NextDNS
+    - AdGuard DNS
+    - Cloudflare Gateway
+
+license:
+  spdx: EUPL-1.2
+  kind: open_source
+  restrictions: []
+  notes: >-
+    Pi-hole Core, FTL, and the web interface use EUPL-1.2. The container also
+    bundles third-party components under their own licences. The recipe itself
+    is MIT-licensed.
+
+localization:
+  ui_languages:
+    - en
+  docs_languages:
+    - en
+    - ru
+
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: false
+
+auth:
+  oidc: none
+  saml: none
+  two_factor: none
+  proxy_header: false
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+    - armv7
+  min_cpu_cores: 1
+  min_ram_mb: 512
+  recommended_ram_mb: 1024
+  min_disk_gb: 2
+  gpu:
+    required: false
+    supported: false
+  database: sqlite
+  dependencies: []
+
+operations:
+  install_difficulty: 3
+  installation_levels:
+    home: supported
+    vps: partial
+    reliable: unsupported
+  maintenance_difficulty: 2
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: in_place
+
+recipe:
+  id: pi-hole-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: "2026.09.0"
+  images:
+    - name: pihole/pihole
+      tag_source: env
+  tested_at: "2026-10-03"
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+    armv7: not_tested
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-10-03"
+      application_version: "2026.09.0"
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+    - Full DNS, web API, backup, and restore smoke passed on amd64; ARM64 and ARMv7 are untested.
+    - DHCP, NTP, and external DNS-over-HTTPS are not enabled by this recipe and were not tested.
+
+security:
+  public_exposure: not_recommended
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - Publishing port 53 on a public address creates an open resolver that can be abused for DNS amplification; the default bind is localhost.
+    - The query database records domains requested by network clients; restrict access to the panel and set retention deliberately.
+    - A password set through .env is visible to users who can inspect the Docker container; protect .env and limit Docker access.
+    - The built-in DHCP service cannot work through this recipe's bridge network without additional network and capability changes, and is not enabled.
+  assessment:
+    status: warnings
+    assessed_at: "2026-10-03"
+
+upstream:
+  release_source: github
+  repository: pi-hole/docker-pi-hole
+  last_release_at: "2026-09-19"
+  last_checked_at: "2026-10-03T09:49:09Z"
+  stars: 11644
+  stars_checked_at: "2026-10-03T09:49:09Z"
+  releases_last_year: 15
+  releases_checked_at: "2026-10-03T09:49:09Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-10-03T09:49:09Z"
+    latest_version: "2026.09.0"
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: current
+    checked_at: "2026-10-03T09:49:09Z"
+    images: []
+
+update_policy:
+  images:
+    - image: pihole/pihole
+      provider: docker_hub
+      repository: pihole/pihole
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+    - file: assets/dashboard.webp
+      alt: Pi-hole dashboard with DNS query and blocking totals plus recent activity charts
+    - file: assets/query-log.webp
+      alt: Pi-hole query log listing client requests, domains, and blocked or allowed status
+    - file: assets/settings.webp
+      alt: Pi-hole DNS settings showing selectable upstream resolver providers
+  updated_at: "2026-10-03"

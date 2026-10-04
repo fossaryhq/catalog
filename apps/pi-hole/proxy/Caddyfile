@@ -1,0 +1,4 @@
+# The HTTP proxy protects the panel; DNS on port 53 is separate.
+dns.example.com {
+  reverse_proxy 127.0.0.1:8080
+}
