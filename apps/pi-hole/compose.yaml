@@ -1,0 +1,28 @@
+name: pi-hole
+
+services:
+  pi-hole:
+    image: pihole/pihole:${PIHOLE_VERSION:-2026.09.0}
+    hostname: pi-hole
+    restart: unless-stopped
+    ports:
+      # Publish DNS only on a named local, LAN, or VPN address. Never use a
+      # public interface: an open resolver can be abused for amplification.
+      - "${PIHOLE_DNS_BIND:-127.0.0.1}:${PIHOLE_DNS_PORT:-53}:53/tcp"
+      - "${PIHOLE_DNS_BIND:-127.0.0.1}:${PIHOLE_DNS_PORT:-53}:53/udp"
+      # The administrative panel stays on the host loopback interface.
+      - "127.0.0.1:${PIHOLE_WEB_PORT:-8080}:80/tcp"
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+      FTLCONF_webserver_api_password: ${PIHOLE_WEB_PASSWORD:?Set a unique PIHOLE_WEB_PASSWORD in .env}
+      # Required for DNS queries arriving through Docker's bridge network.
+      FTLCONF_dns_listeningMode: ALL
+    volumes:
+      - pi-hole-data:/etc/pihole
+    stop_grace_period: 30s
+    # Keep the official image's DNS healthcheck. DHCP, NTP, and its self-signed
+    # HTTPS listener are deliberately not published.
+
+volumes:
+  pi-hole-data:
+    name: ${PIHOLE_VOLUME:-pi-hole-data}
