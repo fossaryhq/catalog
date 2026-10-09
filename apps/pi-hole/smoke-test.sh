@@ -22,6 +22,21 @@ export TZ=Etc/UTC
 
 compose=(docker compose --project-name "$project" --env-file "$app_dir/.env.example" --file "$app_dir/compose.yaml")
 
+wait_for_blocked_dns() {
+  # FTL reloads deny-list changes asynchronously; CLI success does not mean
+  # the DNS worker has applied the new entry yet.
+  for attempt in {1..30}; do
+    if docker exec "$container_id" dig +time=1 +tries=1 +short @127.0.0.1 "$blocked_host" A > "$response" \
+      && grep -Fxq '0.0.0.0' "$response"; then
+      return 0
+    fi
+    sleep 1
+  done
+  echo "DNS did not block $blocked_host within 30 attempts; last response:" >&2
+  cat "$response" >&2
+  return 1
+}
+
 cleanup() {
   status=$?
   trap - EXIT INT TERM
@@ -69,8 +84,7 @@ grep -Fq "\"docker\":{\"local\":\"${expected_version}\"" "$response"
 
 # Prove DNS blocking using a local-only, reserved .invalid domain.
 docker exec "$container_id" pihole deny "$blocked_host"
-docker exec "$container_id" dig +short @127.0.0.1 "$blocked_host" A > "$response"
-grep -Fxq '0.0.0.0' "$response"
+wait_for_blocked_dns
 
 # Verify a whole-volume backup and restore, including both SQLite databases.
 docker exec "$container_id" touch /etc/pihole/fossary-restore-check
@@ -85,8 +99,7 @@ container_id="$("${compose[@]}" ps --quiet pi-hole)"
 docker exec "$container_id" test -f /etc/pihole/fossary-restore-check
 docker exec "$container_id" test -f /etc/pihole/pihole.toml
 docker exec "$container_id" test -f /etc/pihole/gravity.db
-docker exec "$container_id" dig +short @127.0.0.1 "$blocked_host" A > "$response"
-grep -Fxq '0.0.0.0' "$response"
+wait_for_blocked_dns
 
 web="$("${compose[@]}" port pi-hole 80)"
 curl --fail --silent --show-error \
