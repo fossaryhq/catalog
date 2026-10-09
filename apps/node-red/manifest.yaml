@@ -149,9 +149,9 @@ upstream:
 
 update_tracking:
   releases:
-    status: current
-    checked_at: "2026-10-03T00:00:00Z"
-    latest_version: 5.0.7
+    status: update_available
+    checked_at: "2026-10-08T11:25:09.908Z"
+    latest_version: "5.0.8"
   critical_vulnerabilities:
     status: unknown
     checked_at: null
@@ -165,10 +165,9 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: current
-    checked_at: "2026-10-03T00:00:00Z"
+    status: unknown
+    checked_at: null
     images: []
-
 update_policy:
   images:
     - image: nodered/node-red
