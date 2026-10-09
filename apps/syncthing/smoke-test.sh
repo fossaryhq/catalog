@@ -88,7 +88,7 @@ curl --fail --silent --show-error --location \
   --connect-timeout 3 --max-time 30 \
   --header "X-API-Key: $api_key" \
   --output "$response" "http://${published}/rest/system/version"
-python3 -c 'import json,sys; assert json.load(open(sys.argv[1]))["version"] == "v2.1.3"' "$response"
+python3 -c 'import json,sys; assert json.load(open(sys.argv[1]))["version"] == "v2.1.6"' "$response"
 
 # The sync directory is writable: without that the node is useless.
 docker exec "$container_id" sh -c 'echo ok > /data/fossary-write-check'

@@ -5,11 +5,7 @@ slug: node-red
 name: Node-RED
 tagline: Low-code flows for automation, APIs, and connected devices
 summary: >-
-  Node-RED is a visual programming environment for connecting devices, APIs,
-  and online services. Build event-driven flows in a browser, extend them with
-  JavaScript and community nodes, and run the result on your own server. This
-  recipe protects the editor with a password and keeps flows and credentials in
-  a persistent volume.
+  Node-RED is a visual programming environment for connecting devices, APIs, and online services. Build event-driven flows in a browser, extend them with JavaScript and community nodes, and run the result on your own server. This recipe protects the editor with a password and keeps flows and credentials in a persistent volume.
 
 status: active
 editorial_status: experimental
@@ -92,23 +88,32 @@ operations:
 
 recipe:
   id: node-red-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: 5.0.7
+  application_version: 5.0.8
   images:
     - name: nodered/node-red
       tag_source: env
-  tested_at: "2026-10-03"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
     arm64: not_tested
     armv7: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: 5.0.8
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-10-03"
       application_version: 5.0.7
       recipe_version: 1
@@ -120,7 +125,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - Full smoke and restore passed on amd64; ARM64 and ARMv7 are untested.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 and armv7 were not tested in this run.
     - The smoke flow verifies the editor API and runtime; third-party palette nodes and external integrations are not tested.
 
 security:
@@ -149,14 +154,14 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-08T11:25:09.908Z"
-    latest_version: "5.0.8"
+    status: current
+    checked_at: "2026-10-09T13:58:07.455Z"
+    latest_version: 5.0.8
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
+    status: no_findings
+    checked_at: "2026-10-09T17:07:32.133213011+03:00"
+    critical_count: 0
+    scanner: trivy
     ids: []
   breaking_updates:
     status: unknown
@@ -165,8 +170,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-09T13:58:51Z"
     images: []
 update_policy:
   images:
@@ -185,4 +190,4 @@ content:
       alt: Node-RED workflow editor with the Morning briefing flow selected
     - file: assets/palette.webp
       alt: Node-RED editor showing the built-in palette beside a workflow canvas
-  updated_at: "2026-10-03"
+  updated_at: "2026-10-09"

@@ -4,7 +4,7 @@ search, and preserves pages and documents for reading after the original
 disappears. Shared collections, a browser extension, and official Android and
 iOS clients are available.
 
-This recipe runs pinned Linkwarden v2.16.2 with PostgreSQL 16 and Meilisearch
+This recipe runs pinned Linkwarden v2.16.3 with PostgreSQL 16 and Meilisearch
 1.13.3. Preserved content, the database, and the search index each use persistent
 storage. The web port binds to localhost, internal services are not published,
 and preserved HTML is served from a separate origin.

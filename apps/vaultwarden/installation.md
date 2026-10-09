@@ -190,7 +190,7 @@ docker volume rm vaultwarden-data
 rm -rf ~/services/vaultwarden
 ```
 
-Sources: [official installation](https://github.com/dani-garcia/vaultwarden/blob/1.37.2/README.md),
+Sources: [official installation](https://github.com/dani-garcia/vaultwarden/blob/1.37.4/README.md),
 [configuration](https://github.com/dani-garcia/vaultwarden/wiki/Configuration-overview),
 [HTTPS](https://github.com/dani-garcia/vaultwarden/wiki/Enabling-HTTPS),
 [backup](https://github.com/dani-garcia/vaultwarden/wiki/Backing-up-your-vault), and

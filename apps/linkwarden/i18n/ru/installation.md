@@ -136,7 +136,7 @@ volumes, восстанавливает dump и запускает стек. С�
 <!-- coverage:update -->
 
 Сделайте backup, прочитайте release notes и замените точный тег
-`ghcr.io/linkwarden/linkwarden:v2.16.2` на проверенную версию. Не используйте
+`ghcr.io/linkwarden/linkwarden:v2.16.3` на проверенную версию. Не используйте
 `latest` и не обновляйте одновременно PostgreSQL либо Meilisearch:
 
 ```bash
@@ -178,5 +178,5 @@ rm -rf ~/services/linkwarden
 Источники: [self-hosting setup](https://docs.linkwarden.app/self-hosting/setup),
 [environment variables](https://docs.linkwarden.app/self-hosting/environment-variables),
 [user-content domain](https://docs.linkwarden.app/self-hosting/user-content-domain),
-[release v2.16.2](https://github.com/linkwarden/linkwarden/releases/tag/v2.16.2) и
+[release v2.16.3](https://github.com/linkwarden/linkwarden/releases/tag/v2.16.3) и
 [PostgreSQL upgrades](https://www.postgresql.org/docs/16/upgrading.html).

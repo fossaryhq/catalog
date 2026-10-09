@@ -2,7 +2,7 @@ name: n8n
 
 services:
   n8n:
-    image: n8nio/n8n:${N8N_VERSION:-2.36.9}
+    image: n8nio/n8n:${N8N_VERSION:-2.42.6}
     restart: unless-stopped
     ports:
       - "127.0.0.1:${N8N_PORT:-5678}:5678"

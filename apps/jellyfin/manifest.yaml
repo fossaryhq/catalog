@@ -5,10 +5,7 @@ slug: jellyfin
 name: Jellyfin
 tagline: Your own media server for movies, series, and music
 summary: >-
-  Jellyfin turns a home server into a media library: it finds your files, pulls
-  in artwork and descriptions, remembers where you stopped, and streams to a TV,
-  a phone, and the browser. Fully free software — no subscription, no account,
-  no mandatory cloud.
+  Jellyfin turns a home server into a media library: it finds your files, pulls in artwork and descriptions, remembers where you stopped, and streams to a TV, a phone, and the browser. Fully free software — no subscription, no account, no mandatory cloud.
 
 status: active
 editorial_status: recommended
@@ -39,9 +36,7 @@ license:
   kind: open_source
   restrictions: []
   notes: >-
-    Jellyfin is entirely free software: there are no paid features, no
-    subscription, and no vendor account requirement. The project is a fork of Emby
-    from before it moved to a closed license.
+    Jellyfin is entirely free software: there are no paid features, no subscription, and no vendor account requirement. The project is a fork of Emby from before it moved to a closed license.
 
 localization:
   ui_languages:
@@ -91,22 +86,30 @@ operations:
 
 recipe:
   id: jellyfin-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: v10.11.11
+  application_version: v12.2
   images:
     - name: jellyfin/jellyfin
       tag_source: env
-  tested_at: "2026-09-20"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
     arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: v12.2
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-20"
       application_version: v10.11.11
       recipe_version: 1
@@ -125,7 +128,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - Full smoke, backup, and restore passed on amd64; ARM64 remains untested.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 were not tested in this run.
     - The smoke test starts the server and checks the API, but it does not play media or verify transcoding.
 
 security:
@@ -155,15 +158,16 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-06T11:19:32.215Z"
-    latest_version: "v12.2"
+    status: current
+    checked_at: "2026-10-09T13:58:07.365Z"
+    latest_version: v12.2
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
-    ids: []
+    status: findings
+    checked_at: "2026-10-09T13:58:51Z"
+    critical_count: 1
+    scanner: trivy
+    ids:
+      - CVE-2026-6653
   breaking_updates:
     status: unknown
     checked_at: null
@@ -171,8 +175,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-09T13:58:51Z"
     images: []
 update_policy:
   images:
@@ -195,4 +199,4 @@ content:
       alt: Built-in web player with the control bar, playback progress, and remaining time
     - file: assets/dashboard.webp
       alt: Admin dashboard with the server version, libraries, connected devices, and the activity log
-  updated_at: "2026-08-30"
+  updated_at: "2026-10-09"

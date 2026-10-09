@@ -137,7 +137,7 @@ curl --fail http://127.0.0.1:5006/health
 docker compose logs --tail=200 actual
 ```
 
-Заменяйте точный тег `actualbudget/actual-server:26.9.0` на проверенную версию;
+Заменяйте точный тег `actualbudget/actual-server:26.10.0` на проверенную версию;
 `latest`, `edge` и `nightly` использовать нельзя. После миграции формата клиенты
 обновят свои локальные копии при следующей синхронизации, поэтому обновляйте
 настольные приложения в том же окне обслуживания.
@@ -178,4 +178,4 @@ rm -rf ~/services/actual-budget
 Источники: [установка в Docker](https://actualbudget.org/docs/install/docker),
 [конфигурация сервера](https://actualbudget.org/docs/config/),
 [резервное копирование](https://actualbudget.org/docs/backup-restore/backup) и
-[релиз v26.9.0](https://github.com/actualbudget/actual/releases/tag/v26.9.0).
+[релиз v26.10.0](https://github.com/actualbudget/actual/releases/tag/v26.10.0).

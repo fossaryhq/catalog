@@ -60,7 +60,7 @@ curl --fail --silent --show-error \
   --retry 10 --retry-all-errors --retry-delay 2 \
   --connect-timeout 3 --max-time 20 \
   --output "$response" "http://${published}/api/version"
-grep --fixed-strings --line-regexp --quiet '"1.37.2"' "$response"
+grep --fixed-strings --line-regexp --quiet '"1.37.4"' "$response"
 
 # Verify that backup and restore preserve volume data, not only container health.
 docker exec "$container_id" touch /data/fossary-restore-check

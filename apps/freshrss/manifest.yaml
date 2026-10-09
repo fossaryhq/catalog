@@ -5,10 +5,7 @@ slug: freshrss
 name: FreshRSS
 tagline: A personal RSS and Atom reader on your own server
 summary: >-
-  FreshRSS collects RSS and Atom feeds, filters articles, keeps reading history,
-  and offers APIs for third-party mobile and desktop clients. This recipe adds
-  PostgreSQL 18, scheduled feed refreshes, a deterministic first run, and a web
-  port bound safely to localhost.
+  FreshRSS collects RSS and Atom feeds, filters articles, keeps reading history, and offers APIs for third-party mobile and desktop clients. This recipe adds PostgreSQL 18, scheduled feed refreshes, a deterministic first run, and a web port bound safely to localhost.
 
 status: active
 editorial_status: experimental
@@ -40,10 +37,7 @@ license:
   kind: open_source
   restrictions: []
   notes: >-
-    Upstream calls the license GNU AGPL 3 without an explicit only/or-later
-    suffix. AGPL-3.0-only is the conservative SPDX choice here; inspect source
-    file headers and confirm the copyright holders' intent before legally
-    significant redistribution.
+    Upstream calls the license GNU AGPL 3 without an explicit only/or-later suffix. AGPL-3.0-only is the conservative SPDX choice here; inspect source file headers and confirm the copyright holders' intent before legally significant redistribution.
 
 localization:
   ui_languages:
@@ -95,25 +89,34 @@ operations:
 
 recipe:
   id: freshrss-compose
-  version: 2
+  version: 3
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: 1.29.1
+  application_version: 1.30.1
   images:
     - name: freshrss/freshrss
       tag_source: pinned
     - name: postgres
       tag_source: pinned
-  tested_at: "2026-09-10"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
-    arm64: passed
-    armv7: failed
+    arm64: not_tested
+    armv7: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: 1.30.1
+      recipe_version: 3
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-10"
       application_version: 1.29.1
       recipe_version: 2
@@ -134,8 +137,8 @@ recipe:
       restore_tested: false
   license: MIT
   smoke_test_limitations:
-    - The full smoke test, including the backup and restore round trip, passed on amd64 and arm64.
-    - On armv7 the recipe fails — 32-bit PHP receives the PostgreSQL integer columns as strings, FreshRSS 1.29.1 rejects them with a TypeError in FreshRSS_Category::_error(), and no user is ever created. The container still reports healthy, so only an account check catches it.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 and armv7 were not tested in this run.
+    - An earlier run of the 1.29.1 recipe failed on armv7 — 32-bit PHP receives the PostgreSQL integer columns as strings, FreshRSS 1.29.1 rejects them with a TypeError in FreshRSS_Category::_error(), and no user is ever created. The container still reports healthy, so only an account check catches it.
     - The PostgreSQL major-version migration has not been carried out; only the same-major restore is covered.
 
 security:
@@ -166,15 +169,16 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-06T11:19:32.215Z"
-    latest_version: "1.30.1"
+    status: current
+    checked_at: "2026-10-09T13:58:07.285Z"
+    latest_version: 1.30.1
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
-    ids: []
+    status: findings
+    checked_at: "2026-10-09T13:58:51Z"
+    critical_count: 1
+    scanner: trivy
+    ids:
+      - CVE-2026-6653
   breaking_updates:
     status: unknown
     checked_at: null
@@ -182,8 +186,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-09T13:58:51Z"
     images: []
 update_policy:
   images:
@@ -206,4 +210,4 @@ content:
       alt: Per-feed settings with the feed URL, its category, and the last update times
     - file: assets/statistics.webp
       alt: Main statistics with read, unread, and favourite counts and the busiest feeds in dark theme
-  updated_at: "2026-09-10"
+  updated_at: "2026-10-09"

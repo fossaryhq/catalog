@@ -2,7 +2,7 @@ name: actual-budget
 
 services:
   actual:
-    image: actualbudget/actual-server:26.9.0
+    image: actualbudget/actual-server:26.10.0
     restart: unless-stopped
     ports:
       - "127.0.0.1:${ACTUAL_PORT:-5006}:5006"

@@ -103,7 +103,7 @@ server first.
 <!-- coverage:update -->
 
 Back up first and read the release notes and upgrade guide. The image is pinned
-in `compose.yaml`; replace `16.0.3-rootless` with a reviewed exact version and
+in `compose.yaml`; replace `16.0.5-rootless` with a reviewed exact version and
 run `docker compose pull && docker compose up -d --wait`. A new major series
 requires manual review and `forgejo doctor check --all`.
 

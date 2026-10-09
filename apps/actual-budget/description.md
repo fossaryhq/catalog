@@ -6,19 +6,19 @@ assigned to categories for the month ahead, transactions are imported from
 files or through bank integrations you configure yourself, and reports and
 schedules are computed on the client.
 
-This recipe runs pinned Actual 26.9.0 as a single container with SQLite in one
+This recipe runs pinned Actual 26.10.0 as a single container with SQLite in one
 volume: `server-files` for the account database and `user-files` for the budget
 blobs. The web port binds to localhost, and only password login is enabled —
 the header and OpenID methods stay closed until an operator turns them on. The
 interface is translated by the community: the Russian one covers about half of
-the strings in 26.9.0, so parts of the screen stay in English.
+the strings in 26.10.0, so parts of the screen stay in English.
 
 <!-- coverage:security-assessment -->
 
 ### Security and recipe boundaries
 
-The full application smoke test has passed on amd64 and on arm64 under
-emulation, and it now contains the backup and restore round trip itself: the
+The full application smoke test passed on amd64; arm64 was not re-tested for
+this version. It includes the backup and restore round trip: the
 data volume is removed outright and the server password has to log in again
 afterwards.
 The server password is set in the browser on the first visit, so the recipe

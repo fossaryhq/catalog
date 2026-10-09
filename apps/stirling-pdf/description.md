@@ -5,7 +5,7 @@ document workflows that would otherwise send files to Adobe Acrobat Online,
 Smallpdf, or iLovePDF. An official desktop client can connect to a self-hosted
 server.
 
-The recipe runs the pinned 2.14.3 standard image with mandatory authentication
+The recipe runs the pinned 3.1.0 standard image with mandatory authentication
 and embedded H2, and the interface defaults to English — one variable switches
 it. Settings, users, and H2 persist in `/configs`; branding lives under `/customFiles`, automation under `/pipeline`,
 and OCR data under `/usr/share/tessdata`. External PostgreSQL is omitted because

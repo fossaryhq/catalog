@@ -174,7 +174,7 @@ docker volume rm gatus-data
 rm -rf ~/services/gatus
 ```
 
-Источники: [официальный запуск в Docker](https://github.com/TwiN/gatus/blob/v5.36.0/README.md#docker),
-[справочник конфигурации](https://github.com/TwiN/gatus/blob/v5.36.0/README.md#configuration),
-[хранилище](https://github.com/TwiN/gatus/blob/v5.36.0/README.md#storage) и
-[безопасность](https://github.com/TwiN/gatus/blob/v5.36.0/README.md#security).
+Источники: [официальный запуск в Docker](https://github.com/TwiN/gatus/blob/v5.37.0/README.md#docker),
+[справочник конфигурации](https://github.com/TwiN/gatus/blob/v5.37.0/README.md#configuration),
+[хранилище](https://github.com/TwiN/gatus/blob/v5.37.0/README.md#storage) и
+[безопасность](https://github.com/TwiN/gatus/blob/v5.37.0/README.md#security).

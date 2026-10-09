@@ -5,10 +5,7 @@ slug: navidrome
 name: Navidrome
 tagline: Your own music streaming service for a file collection
 summary: >-
-  Navidrome turns a folder of music into a personal streaming service: it reads
-  tags and artwork, remembers your listening history, and serves the collection
-  to the browser and to dozens of mobile apps through the Subsonic API. One
-  container, an SQLite database, no subscription.
+  Navidrome turns a folder of music into a personal streaming service: it reads tags and artwork, remembers your listening history, and serves the collection to the browser and to dozens of mobile apps through the Subsonic API. One container, an SQLite database, no subscription.
 
 status: active
 editorial_status: recommended
@@ -40,9 +37,7 @@ license:
   kind: open_source
   restrictions: []
   notes: >-
-    The project ships no mobile apps of its own: clients are third-party and work
-    through the Subsonic API. The server and web interface are entirely free
-    software with no paid features.
+    The project ships no mobile apps of its own: clients are third-party and work through the Subsonic API. The server and web interface are entirely free software with no paid features.
 
 localization:
   ui_languages:
@@ -93,23 +88,32 @@ operations:
 
 recipe:
   id: navidrome-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: v0.64.0
+  application_version: v0.64.2
   images:
     - name: deluan/navidrome
       tag_source: env
-  tested_at: "2026-09-21"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
     arm64: not_tested
     armv7: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: v0.64.2
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-21"
       application_version: v0.64.0
       recipe_version: 1
@@ -139,7 +143,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - Full smoke, backup, and restore passed on amd64; ARM64 and ARMv7 remain untested.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 and armv7 were not tested in this run.
     - The smoke test starts the server and checks the API, but it does not scan a library or verify transcoding.
 
 security:
@@ -169,14 +173,14 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-02T14:53:26.885Z"
-    latest_version: "v0.64.2"
+    status: current
+    checked_at: "2026-10-09T13:58:07.422Z"
+    latest_version: v0.64.2
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
+    status: no_findings
+    checked_at: "2026-10-09T13:58:51Z"
+    critical_count: 0
+    scanner: trivy
     ids: []
   breaking_updates:
     status: unknown
@@ -185,8 +189,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-09T13:58:51Z"
     images: []
 update_policy:
   images:
@@ -209,4 +213,4 @@ content:
       alt: Song list with artist, album, duration, and rating columns
     - file: assets/artists.webp
       alt: Artist list with album counts, track counts, and library size
-  updated_at: "2026-08-31"
+  updated_at: "2026-10-09"

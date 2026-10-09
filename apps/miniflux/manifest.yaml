@@ -5,10 +5,7 @@ slug: miniflux
 name: Miniflux
 tagline: A minimalist feed reader with the Google Reader API
 summary: >-
-  Miniflux is one Go binary and one PostgreSQL database: no plugins, no
-  recommendation feed, no account anywhere else. It reads RSS, Atom, JSON Feed,
-  and RDF, pulls the full article when a feed ships only an excerpt, and serves
-  the Google Reader and Fever APIs so existing mobile readers sync against it.
+  Miniflux is one Go binary and one PostgreSQL database: no plugins, no recommendation feed, no account anywhere else. It reads RSS, Atom, JSON Feed, and RDF, pulls the full article when a feed ships only an excerpt, and serves the Google Reader and Fever APIs so existing mobile readers sync against it.
 
 status: active
 editorial_status: experimental
@@ -102,12 +99,20 @@ recipe:
       tag_source: pinned
     - name: postgres
       tag_source: pinned
-  tested_at: "2026-09-20"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
     arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: 2.3.3
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-20"
       application_version: 2.3.3
       recipe_version: 1
@@ -134,7 +139,7 @@ recipe:
       restore_tested: false
   license: MIT
   smoke_test_limitations:
-    - Full smoke, backup, and restore passed on amd64 in the latest run.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 were not tested in this run.
     - arm64 passed the same recipe version on 2026-09-03 and has not been re-tested since.
     - Feed polling, the Google Reader and Fever APIs, OAuth2 sign-in, and passkeys are not exercised by the smoke test.
 
@@ -169,10 +174,10 @@ update_tracking:
     checked_at: "2026-09-02T19:40:00Z"
     latest_version: 2.3.3
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
+    status: no_findings
+    checked_at: "2026-10-09T13:58:51Z"
+    critical_count: 0
+    scanner: trivy
     ids: []
   breaking_updates:
     status: unknown
@@ -181,8 +186,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-09T13:58:51Z"
     images: []
 
 update_policy:

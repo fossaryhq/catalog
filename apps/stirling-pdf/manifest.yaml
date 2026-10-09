@@ -5,10 +5,7 @@ slug: stirling-pdf
 name: Stirling PDF
 tagline: More than 60 PDF tools on your own server
 summary: >-
-  Stirling PDF combines editing, conversion, OCR, compression, signing, and
-  automated PDF processing in one web interface. This recipe makes authentication
-  mandatory, uses local H2, and binds to localhost, so documents never need to
-  reach a cloud service.
+  Stirling PDF combines editing, conversion, OCR, compression, signing, and automated PDF processing in one web interface. This recipe makes authentication mandatory, uses local H2, and binds to localhost, so documents never need to reach a cloud service.
 
 status: active
 editorial_status: experimental
@@ -44,12 +41,7 @@ license:
     - Without a subscription the User License permits internal evaluation or minimal use only, and forbids production, business-critical, client-facing, and commercial use, redistribution, and circumventing the licence restrictions.
     - Upstream also advertises a free plan for up to five users; whether that widens the User License wording for production is unclear, so obtain confirmation from the rights holder before such use.
   notes: >-
-    Stirling PDF is open-core, not wholly MIT. The standard image includes parts
-    under the Stirling PDF User License, which limits production, commercial,
-    client-facing, and business-critical use without a subscription. Upstream
-    also advertises a Free tier for up to five users, but how that statement
-    modifies the narrower embedded licence is unclear; obtain confirmation from
-    the rights holder before production use.
+    Stirling PDF is open-core, not wholly MIT. The standard image includes parts under the Stirling PDF User License, which limits production, commercial, client-facing, and business-critical use without a subscription. Upstream also advertises a Free tier for up to five users, but how that statement modifies the narrower embedded licence is unclear; obtain confirmation from the rights holder before production use.
 
 localization:
   ui_languages:
@@ -99,22 +91,30 @@ operations:
 
 recipe:
   id: stirling-pdf-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: 2.14.3
+  application_version: 3.1.0
   images:
     - name: stirlingtools/stirling-pdf
       tag_source: pinned
-  tested_at: "2026-09-20"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
     arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: 3.1.0
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: false
     - tested_at: "2026-09-20"
       application_version: 2.14.3
       recipe_version: 1
@@ -133,7 +133,7 @@ recipe:
       restore_tested: false
   license: MIT
   smoke_test_limitations:
-    - The full application-level HTTP smoke test passed on amd64; arm64 remains untested because of WSL/QEMU host limitations.
+    - The application smoke test passed on amd64 on 2026-10-09. arm64 were not tested in this run.
     - Backup and restoration of H2 together with configuration, custom files, pipelines, and tessdata have not passed a practical restore test.
 
 security:
@@ -164,14 +164,14 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-06T11:19:32.215Z"
-    latest_version: "3.1.0"
+    status: current
+    checked_at: "2026-10-09T13:58:07.521Z"
+    latest_version: 3.1.0
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
+    status: no_findings
+    checked_at: "2026-10-09T13:58:51Z"
+    critical_count: 0
+    scanner: trivy
     ids: []
   breaking_updates:
     status: unknown
@@ -180,8 +180,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-09T13:58:51Z"
     images: []
 update_policy:
   images:
@@ -204,4 +204,4 @@ content:
       alt: The compress tool with the quality method chosen, a quality slider and the options for greyscale, fast web viewing and line art
     - file: assets/convert.webp
       alt: The convert tool with the source and target formats to choose between, applied to the documents in the workspace
-  updated_at: "2026-09-01"
+  updated_at: "2026-10-09"

@@ -5,10 +5,7 @@ slug: photoprism
 name: PhotoPrism
 tagline: A private photo library with search, maps, and face recognition
 summary: >-
-  PhotoPrism indexes photos and videos on your own server, groups them by date,
-  place, and people, reads metadata, and provides browser-based search. This
-  recipe uses MariaDB, keeps originals locally, and exposes the web interface on
-  localhost only.
+  PhotoPrism indexes photos and videos on your own server, groups them by date, place, and people, reads metadata, and provides browser-based search. This recipe uses MariaDB, keeps originals locally, and exposes the web interface on localhost only.
 
 status: active
 editorial_status: experimental
@@ -42,9 +39,7 @@ license:
   restrictions:
     - PhotoPrism trademark and brand assets are covered by additional terms in the upstream license.
   notes: >-
-    The Community Edition is distributed under GNU AGPL 3. Upstream adds separate
-    terms for the PhotoPrism trademark and brand assets to the license text; paid
-    editions use a different license.
+    The Community Edition is distributed under GNU AGPL 3. Upstream adds separate terms for the PhotoPrism trademark and brand assets to the license text; paid editions use a different license.
 
 localization:
   ui_languages:
@@ -95,24 +90,32 @@ operations:
 
 recipe:
   id: photoprism-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: "260728"
+  application_version: "261007"
   images:
     - name: photoprism/photoprism
       tag_source: env
     - name: mariadb
       tag_source: pinned
-  tested_at: "2026-09-20"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
     arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: "261007"
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: false
     - tested_at: "2026-09-20"
       application_version: "260728"
       recipe_version: 1
@@ -131,7 +134,7 @@ recipe:
       restore_tested: false
   license: MIT
   smoke_test_limitations:
-    - The full HTTP smoke test passed on amd64 in the latest run; arm64 passed the same recipe version on 2026-09-03 and has not been re-tested since.
+    - The application smoke test passed on amd64 on 2026-10-09. arm64 were not tested in this run.
     - Media indexing, face recognition, backup, and restore have not passed practical tests.
 
 security:
@@ -164,13 +167,13 @@ upstream:
 update_tracking:
   releases:
     status: current
-    checked_at: "2026-09-01T16:30:00Z"
-    latest_version: "260728"
+    checked_at: "2026-10-09T13:58:07.490Z"
+    latest_version: "261007"
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
+    status: no_findings
+    checked_at: "2026-10-09T13:58:51Z"
+    critical_count: 0
+    scanner: trivy
     ids: []
   breaking_updates:
     status: unknown
@@ -204,4 +207,4 @@ content:
       alt: Albums page in light theme with two albums, each showing its cover, its name and how many pictures it holds
     - file: assets/settings.webp
       alt: Settings in dark theme with the theme, interface language and time zone, and the switches for albums, people, labels, sharing and the file browser
-  updated_at: "2026-09-01"
+  updated_at: "2026-10-09"

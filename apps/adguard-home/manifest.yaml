@@ -5,10 +5,7 @@ slug: adguard-home
 name: AdGuard Home
 tagline: A DNS server that blocks ads and trackers for the whole network
 summary: >-
-  AdGuard Home replaces the router's DNS resolver and filters ads, trackers, and
-  malicious domains for every device on the network at once, including TVs and
-  phones where no blocker can be installed. One container, a web panel with
-  statistics and a query log, plus DNS-over-HTTPS and DNS-over-TLS upstreams.
+  AdGuard Home replaces the router's DNS resolver and filters ads, trackers, and malicious domains for every device on the network at once, including TVs and phones where no blocker can be installed. One container, a web panel with statistics and a query log, plus DNS-over-HTTPS and DNS-over-TLS upstreams.
 
 status: active
 editorial_status: experimental
@@ -41,9 +38,7 @@ license:
   kind: open_source
   restrictions: []
   notes: >-
-    AdGuard Home is fully free software and needs no AdGuard subscription. The
-    company's paid products (AdGuard DNS, Premium browser extensions) are
-    unrelated to this recipe.
+    AdGuard Home is fully free software and needs no AdGuard subscription. The company's paid products (AdGuard DNS, Premium browser extensions) are unrelated to this recipe.
 
 localization:
   ui_languages:
@@ -105,13 +100,22 @@ recipe:
   images:
     - name: adguard/adguardhome
       tag_source: env
-  tested_at: "2026-09-11"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
     arm64: not_tested
     armv7: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: v0.107.79
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-11"
       application_version: v0.107.79
       recipe_version: 1
@@ -132,7 +136,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - Full smoke, backup, and restore passed on amd64; ARM64 and ARMv7 remain untested.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 and armv7 were not tested in this run.
     - The DHCP server and DNS-over-HTTPS are not enabled in the recipe and were not tested.
 
 security:
@@ -167,9 +171,9 @@ update_tracking:
     latest_version: v0.107.79
   critical_vulnerabilities:
     status: no_findings
-    checked_at: "2026-08-31T18:49:53Z"
+    checked_at: "2026-10-09T13:58:51Z"
     critical_count: 0
-    scanner: Trivy 0.74.0
+    scanner: trivy
     ids: []
   breaking_updates:
     status: unknown
@@ -179,7 +183,7 @@ update_tracking:
     checked_at: null
   outdated_images:
     status: current
-    checked_at: "2026-08-31T18:49:53Z"
+    checked_at: "2026-10-09T13:58:51Z"
     images: []
 
 update_policy:

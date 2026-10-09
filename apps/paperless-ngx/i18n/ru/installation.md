@@ -142,7 +142,7 @@ export, могут не попасть в согласованный снимо�
 
 Импорт необратимо заменяет все шесть volumes. Он поддерживается только в
 полностью пустую установку **той же версии Paperless-ngx**, с теми же настройками
-путей. Проверьте тег `3.1.2`, свободное место и активный `.env`, затем:
+путей. Проверьте тег `3.3.0`, свободное место и активный `.env`, затем:
 
 ```bash
 ./restore.sh ./backups/paperless-ngx-YYYYMMDDTHHMMSSZ.tar
@@ -171,7 +171,7 @@ docker compose exec webserver document_sanity_checker
 <!-- coverage:update -->
 
 Дождитесь задач, сделайте backup и прочитайте release notes и инструкции по
-миграции. Замените только точный тег `paperlessngx/paperless-ngx:3.1.2` на
+миграции. Замените только точный тег `paperlessngx/paperless-ngx:3.3.0` на
 проверенную версию, не используйте `latest`, затем:
 
 ```bash
@@ -217,7 +217,7 @@ rm -rf ~/services/paperless-ngx
 
 Если имена volumes изменены в `.env`, подставьте их фактические значения.
 
-Источники: [configuration](https://github.com/paperless-ngx/paperless-ngx/blob/v3.1.2/docs/configuration.md),
-[backup, exporter/importer и update](https://github.com/paperless-ngx/paperless-ngx/blob/v3.1.2/docs/administration.md),
-[release 3.1.2](https://github.com/paperless-ngx/paperless-ngx/releases/tag/v3.1.2) и
+Источники: [configuration](https://github.com/paperless-ngx/paperless-ngx/blob/v3.3.0/docs/configuration.md),
+[backup, exporter/importer и update](https://github.com/paperless-ngx/paperless-ngx/blob/v3.3.0/docs/administration.md),
+[release 3.3.0](https://github.com/paperless-ngx/paperless-ngx/releases/tag/v3.3.0) и
 [PostgreSQL major upgrades](https://www.postgresql.org/docs/18/upgrading.html).

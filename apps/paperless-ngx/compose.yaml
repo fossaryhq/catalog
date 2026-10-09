@@ -2,7 +2,7 @@ name: paperless-ngx
 
 services:
   webserver:
-    image: paperlessngx/paperless-ngx:3.1.2
+    image: paperlessngx/paperless-ngx:3.3.0
     restart: unless-stopped
     depends_on:
       database:

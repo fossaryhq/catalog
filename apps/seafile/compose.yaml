@@ -2,7 +2,7 @@ name: seafile
 
 services:
   seafile:
-    image: seafileltd/seafile-mc:13.0.25
+    image: seafileltd/seafile-mc:13.0.28
     restart: unless-stopped
     depends_on:
       db:

@@ -2,7 +2,7 @@ name: node-red
 
 services:
   node-red:
-    image: nodered/node-red:${NODE_RED_VERSION:-5.0.7-24}
+    image: nodered/node-red:${NODE_RED_VERSION:-5.0.8-24}
     restart: unless-stopped
     ports:
       - "127.0.0.1:${NODE_RED_PORT:-1880}:1880"
