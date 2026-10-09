@@ -168,4 +168,4 @@ Sources: [Docker Compose](https://docs.photoprism.app/getting-started/docker-com
 [configuration](https://docs.photoprism.app/getting-started/config-options/),
 [backup](https://docs.photoprism.app/getting-started/advanced/backups/),
 [updates](https://docs.photoprism.app/getting-started/updates/), and
-[release 260728](https://github.com/photoprism/photoprism/releases/tag/260728-bbde8f452).
+[release 261007](https://github.com/photoprism/photoprism/releases/tag/261007-65faaae5d).

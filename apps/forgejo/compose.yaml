@@ -2,7 +2,7 @@ name: forgejo
 
 services:
   forgejo:
-    image: codeberg.org/forgejo/forgejo:16.0.3-rootless
+    image: codeberg.org/forgejo/forgejo:16.0.5-rootless
     user: "1000:1000"
     restart: unless-stopped
     depends_on:

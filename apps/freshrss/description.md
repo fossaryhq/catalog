@@ -3,7 +3,7 @@ trusted group. It groups sources, filters and labels articles, supports search,
 OPML, and WebSub, while its Google Reader and Fever APIs work with third-party
 Android, iOS, and desktop clients.
 
-This recipe runs pinned FreshRSS 1.29.1 with PostgreSQL 18. Initialization is
+This recipe runs pinned FreshRSS 1.30.1 with PostgreSQL 18. Initialization is
 deterministic: it creates a dedicated administrator with form authentication,
 enables the API with a different password, selects the English interface and
 production environment, and refreshes feeds twice per hour. Data, extensions,
@@ -13,9 +13,9 @@ and PostgreSQL use separate persistent volumes.
 
 ### Security and recipe boundaries
 
-The full smoke test, backup and restore included, has passed on amd64 and
-arm64. On armv7 the recipe does not work at all: 32-bit PHP and this PostgreSQL
-never finish creating a user. The server fetches submitted feed URLs and can reach internal
+The full smoke test, backup and restore included, passed on amd64. ARM64 and
+ARMv7 were not tested for this version. An earlier run of FreshRSS 1.29.1 on
+armv7 failed to create a user with 32-bit PHP and PostgreSQL. The server fetches submitted feed URLs and can reach internal
 addresses, so this recipe is only for trusted users. FreshRSS 1.29.1 has no
 `INTERNAL_HOST_ALLOWLIST` option; the recipe neither invents it nor permits `*`.
 Untrusted users require a separate outbound network policy. Web binds to

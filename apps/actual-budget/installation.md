@@ -139,7 +139,7 @@ curl --fail http://127.0.0.1:5006/health
 docker compose logs --tail=200 actual
 ```
 
-Replace the exact `actualbudget/actual-server:26.9.0` tag with a reviewed
+Replace the exact `actualbudget/actual-server:26.10.0` tag with a reviewed
 version; never use `latest`, `edge`, or `nightly`. After a format migration the
 clients update their local copies on the next sync, so update the desktop apps
 in the same maintenance window.
@@ -179,4 +179,4 @@ be gone everywhere.
 Sources: [Docker installation](https://actualbudget.org/docs/install/docker),
 [server configuration](https://actualbudget.org/docs/config/),
 [backup and restore](https://actualbudget.org/docs/backup-restore/backup), and
-[release v26.9.0](https://github.com/actualbudget/actual/releases/tag/v26.9.0).
+[release v26.10.0](https://github.com/actualbudget/actual/releases/tag/v26.10.0).

@@ -5,7 +5,7 @@ deduplicated blocks rather than as a mirrored directory tree, which is what
 makes syncing large collections and resuming interrupted transfers fast. A
 library can be encrypted client-side, so the server never sees its contents.
 
-This recipe runs pinned Seafile Community Edition 13.0.25 with MariaDB 10.11 and
+This recipe runs pinned Seafile Community Edition 13.0.28 with MariaDB 10.11 and
 a Valkey cache. The server keeps its configuration, logs, and the whole object
 store in one volume; the three databases hold accounts, libraries, and metadata.
 The web port binds to localhost, the SeaDoc editor, the notification server, and

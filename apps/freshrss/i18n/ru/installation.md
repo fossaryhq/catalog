@@ -3,9 +3,9 @@
 Нужны Ubuntu 22.04+ или Debian 12+, Docker Engine и Compose v2.24+. Выделите
 минимум 1 CPU, 512 МБ RAM и 2 ГБ диска; рекомендуется 1 ГБ RAM и запас диска под
 историю статей и backup. Официальный образ заявляет amd64, arm64 и armv7, но
-этот рецепт работает только на 64 битах: на armv7 его PostgreSQL отдаёт
-целочисленные столбцы 32-битному PHP строками, и FreshRSS 1.29.1 не доводит
-создание пользователя до конца. См. «После успешного первого запуска нет ни
+эта версия проверена только на amd64. В прежнем прогоне FreshRSS 1.29.1 на
+armv7 PostgreSQL отдавал целочисленные столбцы 32-битному PHP строками, и
+создание пользователя не завершалось. ARM64 и ARMv7 на этой версии не проверялись. См. «После успешного первого запуска нет ни
 одного пользователя» в диагностике.
 
 ```bash
@@ -29,7 +29,7 @@ sed -i "s|^FRESHRSS_DB_PASSWORD=.*|FRESHRSS_DB_PASSWORD=$db_password|" .env
 unset login_password api_password db_password
 ```
 
-Секреты состоят только из букв и цифр: entrypoint 1.29.1 выполняет first-run
+Секреты состоят только из букв и цифр: entrypoint 1.30.1 выполняет first-run
 option strings через shell `eval`, поэтому пробелы и shell-метасимволы здесь
 недопустимы. Все три значения должны отличаться. Сохраните их в менеджере
 паролей: API-клиент использует не пароль web-входа, а отдельный API password.
@@ -152,7 +152,7 @@ restore на отдельном сервере. После восстановл�
 <!-- coverage:update -->
 
 Сделайте backup и прочитайте release notes. Замените точный тег
-`freshrss/freshrss:1.29.1` на проверенную версию, не используйте `latest`, затем:
+`freshrss/freshrss:1.30.1` на проверенную версию, не используйте `latest`, затем:
 
 ```bash
 docker compose pull
@@ -198,7 +198,7 @@ rm -rf ~/services/freshrss
 
 Если имена volumes изменены в `.env`, подставьте фактические значения.
 
-Источники: [Docker и first run](https://github.com/FreshRSS/FreshRSS/blob/1.29.1/Docker/README.md),
+Источники: [Docker и first run](https://github.com/FreshRSS/FreshRSS/blob/1.30.1/Docker/README.md),
 [backup и OPML](https://freshrss.github.io/FreshRSS/en/admins/05_Backup.html),
 [access control и SSRF](https://freshrss.github.io/FreshRSS/en/admins/09_AccessControl.html),
 [server CSP](https://freshrss.github.io/FreshRSS/en/admins/10_ServerConfig.html) и

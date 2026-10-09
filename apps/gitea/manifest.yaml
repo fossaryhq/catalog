@@ -5,9 +5,7 @@ slug: gitea
 name: Gitea
 tagline: A lightweight Git service for repositories, issues, and collaboration
 summary: >-
-  Gitea hosts Git repositories, pull requests, issues, wikis, and package
-  registries on your own server. This recipe uses the official image and
-  PostgreSQL, disables open registration, and binds web and SSH to localhost.
+  Gitea hosts Git repositories, pull requests, issues, wikis, and package registries on your own server. This recipe uses the official image and PostgreSQL, disables open registration, and binds web and SSH to localhost.
 
 status: active
 editorial_status: experimental
@@ -87,24 +85,32 @@ operations:
 
 recipe:
   id: gitea-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: 1.27.3
+  application_version: 28.1.0
   images:
     - name: docker.gitea.com/gitea
       tag_source: pinned
     - name: postgres
       tag_source: pinned
-  tested_at: "2026-09-20"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
     arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: 28.1.0
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: false
     - tested_at: "2026-09-20"
       application_version: 1.27.3
       recipe_version: 1
@@ -123,7 +129,7 @@ recipe:
       restore_tested: false
   license: MIT
   smoke_test_limitations:
-    - The full smoke test passed on amd64 in the latest run; arm64 passed the same recipe version on 2026-09-03 and has not been re-tested since.
+    - The application smoke test passed on amd64 on 2026-10-09. arm64 were not tested in this run.
     - Backup and restore have not passed a practical restore test.
 
 security:
@@ -152,14 +158,14 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-08T11:25:09.908Z"
-    latest_version: "28.1.0"
+    status: current
+    checked_at: "2026-10-09T13:58:07.324Z"
+    latest_version: 28.1.0
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
+    status: no_findings
+    checked_at: "2026-10-09T17:06:13.851764847+03:00"
+    critical_count: 0
+    scanner: trivy
     ids: []
   breaking_updates:
     status: unknown
@@ -191,4 +197,4 @@ content:
       alt: Pull request in dark theme showing eight added lines of an alert rule highlighted in the diff, with the review controls above it
     - file: assets/commits.webp
       alt: Commit history of the main branch with the author, short hash, message, release tag and date of each commit
-  updated_at: "2026-09-01"
+  updated_at: "2026-10-09"

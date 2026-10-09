@@ -105,7 +105,7 @@ curl --fail http://127.0.0.1:3000/api/healthz
 <!-- coverage:update -->
 
 Создайте backup, прочитайте release notes и upgrade guide. Образ закреплён прямо
-в `compose.yaml`; замените `16.0.3-rootless` на проверенную точную версию и
+в `compose.yaml`; замените `16.0.5-rootless` на проверенную точную версию и
 выполните `docker compose pull && docker compose up -d --wait`. При переходе на
 новую major-ветку нужны ручная проверка требований и `forgejo doctor check --all`.
 

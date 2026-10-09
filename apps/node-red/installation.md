@@ -27,7 +27,7 @@ secret in a password manager. Never change `NODE_RED_CREDENTIAL_SECRET` after
 creating credentials, or existing ones will no longer decrypt.
 
 ```bash
-docker run --rm -it nodered/node-red:5.0.7-24 node-red admin hash-pw
+docker run --rm -it nodered/node-red:5.0.8-24 node-red admin hash-pw
 openssl rand -hex 32
 ```
 

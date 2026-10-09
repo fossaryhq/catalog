@@ -109,7 +109,7 @@ test it on a separate server first.
 <!-- coverage:update -->
 
 Back up first and read the release notes and upgrade guide. The image is pinned
-in `compose.yaml`: replace `1.27.3` with a reviewed exact version, update the
+in `compose.yaml`: replace `28.1.0` with a reviewed exact version, update the
 exact PostgreSQL tag if needed, then run
 `docker compose pull && docker compose up -d --wait`. Do not switch between
 rootful and rootless images because their data layouts are incompatible.

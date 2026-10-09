@@ -5,11 +5,7 @@ slug: pi-hole
 name: Pi-hole
 tagline: Network-wide ad blocking with a self-hosted DNS server
 summary: >-
-  Pi-hole filters DNS requests for every device on a home network, including
-  TVs and phones that cannot use a browser extension. Its web dashboard shows
-  query statistics, client activity, and allow and deny lists. This recipe runs
-  the official container with persistent SQLite data, a local control panel,
-  and DNS bound to localhost until you choose a trusted LAN or VPN address.
+  Pi-hole filters DNS requests for every device on a home network, including TVs and phones that cannot use a browser extension. Its web dashboard shows query statistics, client activity, and allow and deny lists. This recipe runs the official container with persistent SQLite data, a local control panel, and DNS bound to localhost until you choose a trusted LAN or VPN address.
 
 status: active
 editorial_status: experimental
@@ -42,9 +38,7 @@ license:
   kind: open_source
   restrictions: []
   notes: >-
-    Pi-hole Core, FTL, and the web interface use EUPL-1.2. The container also
-    bundles third-party components under their own licences. The recipe itself
-    is MIT-licensed.
+    Pi-hole Core, FTL, and the web interface use EUPL-1.2. The container also bundles third-party components under their own licences. The recipe itself is MIT-licensed.
 
 localization:
   ui_languages:
@@ -105,15 +99,24 @@ recipe:
   images:
     - name: pihole/pihole
       tag_source: env
-  tested_at: "2026-10-03"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
     arm64: not_tested
     armv7: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: 2026.09.0
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-10-03"
-      application_version: "2026.09.0"
+      application_version: 2026.09.0
       recipe_version: 1
       tested_architectures:
         amd64: passed
@@ -123,7 +126,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - Full DNS, web API, backup, and restore smoke passed on amd64; ARM64 and ARMv7 are untested.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 and armv7 were not tested in this run.
     - DHCP, NTP, and external DNS-over-HTTPS are not enabled by this recipe and were not tested.
 
 security:
@@ -157,10 +160,10 @@ update_tracking:
     checked_at: "2026-10-03T09:49:09Z"
     latest_version: "2026.09.0"
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
+    status: no_findings
+    checked_at: "2026-10-09T13:58:51Z"
+    critical_count: 0
+    scanner: trivy
     ids: []
   breaking_updates:
     status: unknown
@@ -170,7 +173,7 @@ update_tracking:
     checked_at: null
   outdated_images:
     status: current
-    checked_at: "2026-10-03T09:49:09Z"
+    checked_at: "2026-10-09T13:58:51Z"
     images: []
 
 update_policy:

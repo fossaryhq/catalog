@@ -8,9 +8,11 @@ cache_volume="${JELLYFIN_CACHE_VOLUME:-${project}-cache}"
 response="$(mktemp)"
 backup_dir="$(mktemp -d)"
 media_location="$(mktemp -d)"
+expected_version="${JELLYFIN_VERSION:-$(sed -n 's/^JELLYFIN_VERSION=//p' "$app_dir/.env.example")}"
 
 mkdir -p "$media_location/Movies"
 
+export JELLYFIN_VERSION="$expected_version"
 export JELLYFIN_PORT=0
 export JELLYFIN_PUBLISHED_URL=http://127.0.0.1:8096
 export JELLYFIN_MEDIA_LOCATION="$media_location"
@@ -70,7 +72,19 @@ grep --fixed-strings --quiet "Healthy" "$response"
 curl --fail --silent --show-error --location \
   --connect-timeout 3 --max-time 30 \
   --output "$response" "http://${published}/System/Info/Public"
-grep --fixed-strings --quiet '"Version":"10.11.11"' "$response"
+python3 - "$response" "$expected_version" <<'PY_VERSION'
+import json, sys
+info = json.load(open(sys.argv[1]))
+actual = info.get("version", info.get("Version"))
+def version_parts(value):
+    parts = [int(part) for part in value.lstrip("v").split(".")]
+    while len(parts) > 1 and parts[-1] == 0:
+        parts.pop()
+    return parts
+assert isinstance(actual, str), "the server did not report its version"
+assert version_parts(actual) == version_parts(sys.argv[2]), (actual, sys.argv[2])
+print(f"Jellyfin {actual}")
+PY_VERSION
 
 # The media library is mounted read-only.
 if docker exec "$container_id" sh -c 'touch /media/fossary-write-check' 2>/dev/null; then

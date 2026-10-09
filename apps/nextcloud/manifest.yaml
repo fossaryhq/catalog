@@ -5,10 +5,7 @@ slug: nextcloud
 name: Nextcloud
 tagline: Your own cloud with files, calendar, and collaboration
 summary: >-
-  Nextcloud is cloud storage on your own server: files sync with a computer and
-  a phone, folders open to colleagues by link or by name, and a calendar,
-  contacts, and notes sit on top. The recipe brings up the server, PostgreSQL,
-  Valkey, and a separate container for background jobs.
+  Nextcloud is cloud storage on your own server: files sync with a computer and a phone, folders open to colleagues by link or by name, and a calendar, contacts, and notes sit on top. The recipe brings up the server, PostgreSQL, Valkey, and a separate container for background jobs.
 
 status: active
 editorial_status: recommended
@@ -42,9 +39,7 @@ license:
   kind: open_source
   restrictions: []
   notes: >-
-    The server and the clients are free software and need no subscription.
-    Nextcloud GmbH sells a separate enterprise subscription with support and a few
-    closed add-ons; it does not affect what this recipe provides.
+    The server and the clients are free software and need no subscription. Nextcloud GmbH sells a separate enterprise subscription with support and a few closed add-ons; it does not affect what this recipe provides.
 
 localization:
   ui_languages:
@@ -97,13 +92,13 @@ operations:
 
 recipe:
   id: nextcloud-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: v35.0.0
+  application_version: v35.0.1
   images:
     - name: nextcloud
       tag_source: env
@@ -111,13 +106,22 @@ recipe:
       tag_source: pinned
     - name: valkey/valkey
       tag_source: pinned
-  tested_at: "2026-09-21"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
     arm64: not_tested
     armv7: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: v35.0.1
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-21"
       application_version: v35.0.0
       recipe_version: 1
@@ -147,7 +151,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - Full smoke, backup, and restore passed on amd64; ARM64 and ARMv7 remain untested.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 and armv7 were not tested in this run.
     - The smoke test starts the stack, checks the background job mode and Redis locking, and restores the database from a dump, but it does not verify desktop or mobile client sync.
 
 security:
@@ -177,15 +181,19 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-02T14:53:26.885Z"
-    latest_version: "v35.0.1"
+    status: current
+    checked_at: "2026-10-09T13:58:07.444Z"
+    latest_version: v35.0.1
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
-    ids: []
+    status: findings
+    checked_at: "2026-10-09T17:07:34.940431313+03:00"
+    critical_count: 4
+    scanner: trivy
+    ids:
+      - CVE-2026-42216
+      - CVE-2026-42217
+      - CVE-2026-43185
+      - CVE-2026-6653
   breaking_updates:
     status: unknown
     checked_at: null
@@ -193,8 +201,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-09T13:58:51Z"
     images: []
 update_policy:
   # PostgreSQL and Valkey are pinned independently of the Nextcloud version, so
@@ -219,4 +227,4 @@ content:
       alt: Account management with the user list, groups, and administrator rights
     - file: assets/admin.webp
       alt: Security and setup checks with warnings about HTTPS and headers in dark theme
-  updated_at: "2026-08-31"
+  updated_at: "2026-10-09"

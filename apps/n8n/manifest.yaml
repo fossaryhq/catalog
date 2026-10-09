@@ -5,11 +5,7 @@ slug: n8n
 name: n8n
 tagline: A workflow automation and integration builder on your own server
 summary: >-
-  n8n connects services to each other without programming: a workflow is built
-  from nodes on a canvas, runs on a schedule, a webhook, or an event, and can
-  branch, retry steps, and handle errors. Over five hundred ready-made
-  integrations, a node for custom JavaScript and Python, and LLM support. Your
-  data and credentials stay on your own server.
+  n8n connects services to each other without programming: a workflow is built from nodes on a canvas, runs on a schedule, a webhook, or an event, and can branch, retry steps, and handle errors. Over five hundred ready-made integrations, a node for custom JavaScript and Python, and LLM support. Your data and credentials stay on your own server.
 
 status: active
 editorial_status: experimental
@@ -44,11 +40,7 @@ license:
     - You may not remove or alter the licence notices, the attribution, or the n8n trademarks.
     - Files with .ee. in the name and .ee directories fall outside the Sustainable Use License and need a commercial n8n Enterprise licence.
   notes: >-
-    n8n ships under the Sustainable Use License 1.0 — fair-code, not an
-    OSI-approved open source licence. Personal and internal company use, including
-    commercial use, is free of charge; the limitations concern reselling n8n as a
-    service. Some enterprise features are covered by a separate licence and are
-    not available in this recipe.
+    n8n ships under the Sustainable Use License 1.0 — fair-code, not an OSI-approved open source licence. Personal and internal company use, including commercial use, is free of charge; the limitations concern reselling n8n as a service. Some enterprise features are covered by a separate licence and are not available in this recipe.
 
 localization:
   ui_languages:
@@ -98,24 +90,32 @@ operations:
 
 recipe:
   id: n8n-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: 2.36.9
+  application_version: 2.42.6
   images:
     - name: n8nio/n8n
       tag_source: env
     - name: postgres
       tag_source: pinned
-  tested_at: "2026-09-11"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
     arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: 2.42.6
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-11"
       application_version: 2.36.9
       recipe_version: 1
@@ -126,7 +126,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - Full smoke, backup, and restore passed on amd64; ARM64 remains untested.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 were not tested in this run.
     - The external sandboxed task runner and the Redis-backed queue are not part of the recipe and were not tested.
 
 security:
@@ -161,14 +161,21 @@ upstream:
 update_tracking:
   releases:
     status: current
-    checked_at: "2026-08-31T23:16:08Z"
-    latest_version: 2.36.9
+    checked_at: "2026-10-09T13:58:07.403Z"
+    latest_version: 2.42.6
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
-    ids: []
+    status: findings
+    checked_at: "2026-10-09T13:58:51Z"
+    critical_count: 13
+    scanner: trivy
+    ids:
+      - CVE-2026-102422
+      - CVE-2026-102828
+      - CVE-2026-102829
+      - CVE-2026-106445
+      - CVE-2026-106446
+      - CVE-2026-60002
+      - CVE-2026-90711
   breaking_updates:
     status: unknown
     checked_at: null
@@ -176,8 +183,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: current
-    checked_at: "2026-08-31T23:16:08Z"
+    status: unknown
+    checked_at: null
     images: []
 
 update_policy:
@@ -202,4 +209,4 @@ content:
       alt: List of stored credentials for external services in dark theme
     - file: assets/node-editor.webp
       alt: Code node panel with the transformation script and a preview of input and output data in light theme
-  updated_at: "2026-08-31"
+  updated_at: "2026-10-09"

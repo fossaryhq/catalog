@@ -5,10 +5,7 @@ slug: vaultwarden
 name: Vaultwarden
 tagline: A lightweight Bitwarden-compatible password manager server
 summary: >-
-  Vaultwarden stores passwords, secure notes, attachments, and shared
-  collections on your own server and works with official Bitwarden clients. A
-  single container and a local Docker volume with SQLite are enough for a small
-  deployment.
+  Vaultwarden stores passwords, secure notes, attachments, and shared collections on your own server and works with official Bitwarden clients. A single container and a local Docker volume with SQLite are enough for a small deployment.
 
 status: active
 editorial_status: recommended
@@ -39,8 +36,7 @@ license:
   kind: open_source
   restrictions: []
   notes: >-
-    Vaultwarden is not associated with Bitwarden, Inc.; compatibility issues
-    should be reported to Vaultwarden rather than official Bitwarden support.
+    Vaultwarden is not associated with Bitwarden, Inc.; compatibility issues should be reported to Vaultwarden rather than official Bitwarden support.
 
 localization:
   ui_languages:
@@ -91,23 +87,32 @@ operations:
 
 recipe:
   id: vaultwarden-compose
-  version: 2
+  version: 3
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: 1.37.2
+  application_version: 1.37.4
   images:
     - name: vaultwarden/server
       tag_source: env
-  tested_at: "2026-09-10"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
     arm64: not_tested
     armv7: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: 1.37.4
+      recipe_version: 3
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-10"
       application_version: 1.37.2
       recipe_version: 2
@@ -128,7 +133,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - Full smoke and restore passed on amd64; ARM64 and ARMv7 are untested.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 and armv7 were not tested in this run.
 
 security:
   public_exposure: supported
@@ -156,15 +161,17 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-06T11:19:32.215Z"
-    latest_version: "1.37.4"
+    status: current
+    checked_at: "2026-10-09T13:58:07.573Z"
+    latest_version: 1.37.4
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
-    ids: []
+    status: findings
+    checked_at: "2026-10-09T13:58:51Z"
+    critical_count: 4
+    scanner: trivy
+    ids:
+      - CVE-2026-44172
+      - CVE-2026-49261
   breaking_updates:
     status: unknown
     checked_at: null
@@ -172,8 +179,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-09T13:58:51Z"
     images: []
 update_policy:
   images:
@@ -196,4 +203,4 @@ content:
       alt: Two-step login settings with an authenticator app, passkey, and Duo
     - file: assets/admin-diagnostics.webp
       alt: Admin panel with versions, database, and instance check results
-  updated_at: "2026-09-10"
+  updated_at: "2026-10-09"

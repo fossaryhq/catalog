@@ -136,7 +136,7 @@ test; test it on a separate server first.
 <!-- coverage:update -->
 
 Create a backup, read release notes, and replace the exact
-`ghcr.io/linkwarden/linkwarden:v2.16.2` tag with a reviewed version. Never use
+`ghcr.io/linkwarden/linkwarden:v2.16.3` tag with a reviewed version. Never use
 `latest`, and do not update PostgreSQL or Meilisearch at the same time:
 
 ```bash
@@ -177,5 +177,5 @@ Substitute actual names when volume variables differ.
 Sources: [self-hosting setup](https://docs.linkwarden.app/self-hosting/setup),
 [environment variables](https://docs.linkwarden.app/self-hosting/environment-variables),
 [user-content domain](https://docs.linkwarden.app/self-hosting/user-content-domain),
-[release v2.16.2](https://github.com/linkwarden/linkwarden/releases/tag/v2.16.2), and
+[release v2.16.3](https://github.com/linkwarden/linkwarden/releases/tag/v2.16.3), and
 [PostgreSQL upgrades](https://www.postgresql.org/docs/16/upgrading.html).

@@ -2,7 +2,7 @@ name: syncthing
 
 services:
   syncthing:
-    image: syncthing/syncthing:${SYNCTHING_VERSION:-2.1.3}
+    image: syncthing/syncthing:${SYNCTHING_VERSION:-2.1.6}
     restart: unless-stopped
     hostname: ${SYNCTHING_DEVICE_NAME:-fossary}
     ports:

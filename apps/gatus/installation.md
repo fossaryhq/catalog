@@ -178,7 +178,7 @@ docker volume rm gatus-data
 rm -rf ~/services/gatus
 ```
 
-Sources: [official Docker usage](https://github.com/TwiN/gatus/blob/v5.36.0/README.md#docker),
-[configuration reference](https://github.com/TwiN/gatus/blob/v5.36.0/README.md#configuration),
-[storage](https://github.com/TwiN/gatus/blob/v5.36.0/README.md#storage), and
-[security](https://github.com/TwiN/gatus/blob/v5.36.0/README.md#security).
+Sources: [official Docker usage](https://github.com/TwiN/gatus/blob/v5.37.0/README.md#docker),
+[configuration reference](https://github.com/TwiN/gatus/blob/v5.37.0/README.md#configuration),
+[storage](https://github.com/TwiN/gatus/blob/v5.37.0/README.md#storage), and
+[security](https://github.com/TwiN/gatus/blob/v5.37.0/README.md#security).

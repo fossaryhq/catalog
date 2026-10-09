@@ -5,10 +5,7 @@ slug: gatus
 name: Gatus
 tagline: Configuration-driven uptime checks and status dashboard
 summary: >-
-  Gatus runs HTTP, TCP, DNS, ICMP, and certificate checks from a YAML
-  configuration, evaluates explicit conditions, and displays their history on a
-  status dashboard. This recipe keeps results in SQLite, protects the dashboard
-  with Basic Auth, and needs one small container.
+  Gatus runs HTTP, TCP, DNS, ICMP, and certificate checks from a YAML configuration, evaluates explicit conditions, and displays their history on a status dashboard. This recipe keeps results in SQLite, protects the dashboard with Basic Auth, and needs one small container.
 
 status: active
 editorial_status: experimental
@@ -88,23 +85,32 @@ operations:
 
 recipe:
   id: gatus-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: v5.36.0
+  application_version: v5.37.0
   images:
     - name: twinproduction/gatus
       tag_source: env
-  tested_at: "2026-09-22"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
     arm64: not_tested
     armv7: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: v5.37.0
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-22"
       application_version: v5.36.0
       recipe_version: 1
@@ -116,7 +122,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - Full smoke and restore passed on amd64; ARM64 and ARMv7 are untested.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 and armv7 were not tested in this run.
 
 security:
   public_exposure: supported
@@ -144,14 +150,14 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-02T14:32:44.459Z"
-    latest_version: "v5.37.0"
+    status: current
+    checked_at: "2026-10-09T13:58:07.306Z"
+    latest_version: v5.37.0
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
+    status: no_findings
+    checked_at: "2026-10-09T13:58:51Z"
+    critical_count: 0
+    scanner: trivy
     ids: []
   breaking_updates:
     status: unknown
@@ -160,8 +166,8 @@ update_tracking:
     status: unknown
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-09T13:58:51Z"
     images: []
 update_policy:
   images:
@@ -182,4 +188,4 @@ content:
       alt: Endpoint detail view with successful conditions and a response-time history chart
     - file: assets/announcements.webp
       alt: Gatus status dashboard showing an operational announcement above monitored services
-  updated_at: "2026-09-22"
+  updated_at: "2026-10-09"

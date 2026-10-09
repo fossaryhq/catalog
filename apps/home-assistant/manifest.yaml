@@ -5,10 +5,7 @@ slug: home-assistant
 name: Home Assistant
 tagline: A smart home hub that runs without vendor clouds
 summary: >-
-  Home Assistant brings lights, sensors, air conditioners, TVs, and vacuums from
-  different vendors into one interface and runs automations on your own server
-  instead of someone else's cloud. More than two thousand integrations, a
-  dashboard with state history, an automation editor, and Android and iOS apps.
+  Home Assistant brings lights, sensors, air conditioners, TVs, and vacuums from different vendors into one interface and runs automations on your own server instead of someone else's cloud. More than two thousand integrations, a dashboard with state history, an automation editor, and Android and iOS apps.
 
 status: active
 editorial_status: experimental
@@ -42,9 +39,7 @@ license:
   kind: open_source
   restrictions: []
   notes: >-
-    The application itself is free and needs no subscription. The paid Nabu Casa
-    Home Assistant Cloud plan is only for remote access without your own domain
-    and for cloud voice assistants; this recipe does not use it.
+    The application itself is free and needs no subscription. The paid Nabu Casa Home Assistant Cloud plan is only for remote access without your own domain and for cloud voice assistants; this recipe does not use it.
 
 localization:
   ui_languages:
@@ -94,22 +89,30 @@ operations:
 
 recipe:
   id: home-assistant-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: 2026.8.3
+  application_version: 2026.10.0
   images:
     - name: homeassistant/home-assistant
       tag_source: env
-  tested_at: "2026-09-11"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
     arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: 2026.10.0
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-11"
       application_version: 2026.8.3
       recipe_version: 1
@@ -128,7 +131,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - Full smoke, backup, and restore passed on amd64; ARM64 remains untested.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 were not tested in this run.
     - The recipe runs on an isolated Compose network, so device discovery over mDNS, SSDP, and DHCP was not tested and does not work without host networking.
     - Bluetooth and USB Zigbee or Z-Wave adapters are not wired into the recipe and were not tested.
     - The Container install has no Supervisor, so add-ons and in-panel updates were not tested and are unavailable.
@@ -161,15 +164,18 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-08T11:25:09.908Z"
-    latest_version: "2026.10.0"
+    status: current
+    checked_at: "2026-10-09T13:58:07.338Z"
+    latest_version: 2026.10.0
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
-    ids: []
+    status: findings
+    checked_at: "2026-10-09T13:58:51Z"
+    critical_count: 6
+    scanner: trivy
+    ids:
+      - CVE-2025-68121
+      - CVE-2026-60002
+      - CVE-2026-85394
   breaking_updates:
     status: unknown
     checked_at: null
@@ -177,8 +183,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-09T13:58:51Z"
     images: []
 update_policy:
   images:
@@ -199,4 +205,4 @@ content:
       alt: State history with temperature charts for two rooms and outdoors plus living room humidity in light theme
     - file: assets/areas.webp
       alt: List of rooms in the home with the number of entities assigned to each in dark theme
-  updated_at: "2026-08-31"
+  updated_at: "2026-10-09"

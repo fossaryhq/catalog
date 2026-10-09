@@ -192,7 +192,7 @@ section of your release notes, then:
 
 ```bash
 ./backup.sh
-sed -i 's/^HOMEASSISTANT_VERSION=.*/HOMEASSISTANT_VERSION=2026.9.0/' .env
+sed -i 's/^HOMEASSISTANT_VERSION=.*/HOMEASSISTANT_VERSION=2026.10.0/' .env
 docker compose pull
 docker compose up -d
 docker compose ps

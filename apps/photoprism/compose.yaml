@@ -2,7 +2,7 @@ name: photoprism
 
 services:
   photoprism:
-    image: photoprism/photoprism:${PHOTOPRISM_VERSION:-260728}
+    image: photoprism/photoprism:${PHOTOPRISM_VERSION:-261007}
     restart: unless-stopped
     stop_grace_period: 30s
     depends_on:

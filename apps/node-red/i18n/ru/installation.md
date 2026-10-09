@@ -27,7 +27,7 @@ chmod 600 .env
 старые значения перестанут расшифровываться.
 
 ```bash
-docker run --rm -it nodered/node-red:5.0.7-24 node-red admin hash-pw
+docker run --rm -it nodered/node-red:5.0.8-24 node-red admin hash-pw
 openssl rand -hex 32
 ```
 

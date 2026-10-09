@@ -5,10 +5,7 @@ slug: linkwarden
 name: Linkwarden
 tagline: Bookmarks and web archives on your own server
 summary: >-
-  Linkwarden saves, organizes, and searches bookmarks, preserves local copies of
-  pages, and shares collections. This recipe includes PostgreSQL 16, Meilisearch
-  1.13.3, a separate origin for preserved HTML, and a web port safely bound to
-  localhost.
+  Linkwarden saves, organizes, and searches bookmarks, preserves local copies of pages, and shares collections. This recipe includes PostgreSQL 16, Meilisearch 1.13.3, a separate origin for preserved HTML, and a web port safely bound to localhost.
 
 status: active
 editorial_status: experimental
@@ -91,13 +88,13 @@ operations:
 
 recipe:
   id: linkwarden-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: v2.16.2
+  application_version: v2.16.3
   images:
     - name: ghcr.io/linkwarden/linkwarden
       tag_source: pinned
@@ -105,12 +102,20 @@ recipe:
       tag_source: pinned
     - name: getmeili/meilisearch
       tag_source: pinned
-  tested_at: "2026-09-20"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
     arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: v2.16.3
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: false
     - tested_at: "2026-09-20"
       application_version: v2.16.2
       recipe_version: 1
@@ -129,7 +134,7 @@ recipe:
       restore_tested: false
   license: MIT
   smoke_test_limitations:
-    - The full HTTP smoke test passed on amd64; arm64 remains untested because the WSL/QEMU host could not run it reliably.
+    - The application smoke test passed on amd64 on 2026-10-09. arm64 were not tested in this run.
     - Backup, restore, PostgreSQL migrations, and Meilisearch index restoration have not passed practical testing.
 
 security:
@@ -160,15 +165,30 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-02T14:53:26.885Z"
-    latest_version: "v2.16.3"
+    status: current
+    checked_at: "2026-10-09T13:58:07.386Z"
+    latest_version: v2.16.3
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
-    ids: []
+    status: findings
+    checked_at: "2026-10-09T13:58:51Z"
+    critical_count: 18
+    scanner: trivy
+    ids:
+      - CVE-2023-45853
+      - CVE-2025-68121
+      - CVE-2025-7458
+      - CVE-2026-102422
+      - CVE-2026-106445
+      - CVE-2026-106446
+      - CVE-2026-13221
+      - CVE-2026-25896
+      - CVE-2026-42496
+      - CVE-2026-58016
+      - CVE-2026-59873
+      - CVE-2026-6653
+      - CVE-2026-73420
+      - CVE-2026-75604
+      - CVE-2026-8376
   breaking_updates:
     status: unknown
     checked_at: null
@@ -202,4 +222,4 @@ content:
       alt: A bookmark's own page in dark theme with its tag, the reader's note, and the four preserved formats — webpage, screenshot, PDF and readable copy
     - file: assets/settings.webp
       alt: Account settings with the display name, username and interface language, and the import, export and account deletion controls
-  updated_at: "2026-09-01"
+  updated_at: "2026-10-09"

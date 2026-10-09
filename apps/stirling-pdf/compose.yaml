@@ -2,7 +2,7 @@ name: stirling-pdf
 
 services:
   stirling-pdf:
-    image: stirlingtools/stirling-pdf:2.14.3
+    image: stirlingtools/stirling-pdf:3.1.0
     restart: unless-stopped
     ports:
       - "127.0.0.1:${STIRLING_PDF_PORT:-8080}:8080"

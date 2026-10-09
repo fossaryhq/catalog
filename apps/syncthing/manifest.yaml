@@ -5,10 +5,7 @@ slug: syncthing
 name: Syncthing
 tagline: File synchronisation between devices, directly and without a cloud
 summary: >-
-  Syncthing keeps chosen folders identical on several devices and transfers
-  files directly between them over an encrypted channel. There is no server in
-  the middle: every node holds a copy, and the server in this recipe acts as the
-  always-available participant in the exchange.
+  Syncthing keeps chosen folders identical on several devices and transfers files directly between them over an encrypted channel. There is no server in the middle: every node holds a copy, and the server in this recipe acts as the always-available participant in the exchange.
 
 status: active
 editorial_status: recommended
@@ -41,9 +38,7 @@ license:
   kind: open_source
   restrictions: []
   notes: >-
-    The official Android app was archived in December 2024; on Android and iOS
-    Syncthing runs through community-maintained apps. The server, the web
-    interface, and the desktop builds are developed by the project itself.
+    The official Android app was archived in December 2024; on Android and iOS Syncthing runs through community-maintained apps. The server, the web interface, and the desktop builds are developed by the project itself.
 
 localization:
   ui_languages:
@@ -94,23 +89,32 @@ operations:
 
 recipe:
   id: syncthing-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: v2.1.3
+  application_version: v2.1.6
   images:
     - name: syncthing/syncthing
       tag_source: env
-  tested_at: "2026-09-11"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
     arm64: not_tested
     armv7: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: v2.1.6
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-11"
       application_version: v2.1.3
       recipe_version: 1
@@ -131,7 +135,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - Full smoke, backup, and restore passed on amd64; ARM64 and ARMv7 remain untested.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 and armv7 were not tested in this run.
     - The smoke test starts a single node and checks the API, the data directory permissions, and that the device key survives a restore, but it does not exchange files between two nodes.
 
 security:
@@ -161,14 +165,14 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-06T11:19:32.215Z"
-    latest_version: "v2.1.6"
+    status: current
+    checked_at: "2026-10-09T13:58:07.535Z"
+    latest_version: v2.1.6
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
+    status: no_findings
+    checked_at: "2026-10-09T13:58:51Z"
+    critical_count: 0
+    scanner: trivy
     ids: []
   breaking_updates:
     status: unknown
@@ -177,8 +181,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-09T13:58:51Z"
     images: []
 update_policy:
   images:
@@ -201,4 +205,4 @@ content:
       alt: Web interface settings with the user and password fields, the HTTPS switch, and the theme selector
     - file: assets/folder-edit.webp
       alt: Folder edit dialog with the sharing, versioning, and ignore pattern tabs
-  updated_at: "2026-08-31"
+  updated_at: "2026-10-09"

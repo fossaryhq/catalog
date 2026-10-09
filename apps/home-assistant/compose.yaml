@@ -2,7 +2,7 @@ name: home-assistant
 
 services:
   home-assistant:
-    image: homeassistant/home-assistant:${HOMEASSISTANT_VERSION:-2026.8.3}
+    image: homeassistant/home-assistant:${HOMEASSISTANT_VERSION:-2026.10.0}
     restart: unless-stopped
     ports:
       # The panel is published on localhost only; anything external goes through

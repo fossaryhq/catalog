@@ -1,10 +1,10 @@
 ### No user exists after a successful first start
 
-On 32-bit hardware — armv7 — the logs end the first run with
+In an earlier FreshRSS 1.29.1 check on 32-bit hardware — armv7 — the logs ended the first run with
 `❌ FreshRSS error during the creation of a user!` after a
 `FreshRSS_Category::_error(): Argument #1 ($value) must be of type int|bool,
 string given` TypeError. PostgreSQL hands its integer columns to 32-bit PHP as
-strings and FreshRSS 1.29.1 rejects them, so the administrator is never created.
+strings and FreshRSS 1.29.1 rejected them, so the administrator is never created.
 The container still passes its healthcheck and `/i/` still answers, which is why
 only `cli/list-users.php` shows the problem:
 
@@ -47,7 +47,7 @@ WebSockets.
 
 ### Feeds on internal addresses are reachable
 
-This is FreshRSS 1.29.1 behavior, not a recipe error. Do not add a wildcard
+This is FreshRSS 1.30.1 behavior, not a recipe error. Do not add a wildcard
 internal-host allowlist: this version has no such supported variable, and
 allowing every address would create a false sense of protection. For untrusted users, block
 container egress to loopback, RFC1918, link-local, and cloud metadata addresses

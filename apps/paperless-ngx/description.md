@@ -4,7 +4,7 @@ extracts metadata, and automatically suggests tags, document types, and
 correspondents. It suits personal, family, and small workplace archives and can
 replace cloud document storage and manual folder searches.
 
-This recipe runs the pinned Paperless-ngx 3.1.2 image with PostgreSQL 18 and
+This recipe runs the pinned Paperless-ngx 3.3.0 image with PostgreSQL 18 and
 Valkey 9. English OCR is enabled by default, and one variable adds more
 languages. Application data, originals and derived files, import/export, the
 database, and broker state use separate Docker volumes. Tika and Gotenberg are omitted, so this recipe does not

@@ -5,11 +5,7 @@ slug: seafile
 name: Seafile
 tagline: Library-based file sync and sharing with fast desktop clients
 summary: >-
-  Seafile syncs files as deduplicated blocks rather than as a mirrored
-  directory, which is what makes large collections and interrupted transfers
-  fast. Each library syncs separately to desktop, mobile, and the browser, can
-  be shared by link or account, and can be encrypted client-side so the server
-  never sees its contents.
+  Seafile syncs files as deduplicated blocks rather than as a mirrored directory, which is what makes large collections and interrupted transfers fast. Each library syncs separately to desktop, mobile, and the browser, can be shared by link or account, and can be encrypted client-side so the server never sees its contents.
 
 status: active
 editorial_status: experimental
@@ -44,11 +40,7 @@ license:
   kind: open_source
   restrictions: []
   notes: >-
-    The Community Edition is split: the server core is AGPLv3 with an OpenSSL
-    linking exception, and Seahub, the web frontend, is Apache-2.0. The
-    Professional Edition adds SAML, advanced administration, and online office
-    integration under a paid licence and is free for up to three users; this
-    recipe deploys the Community Edition only.
+    The Community Edition is split: the server core is AGPLv3 with an OpenSSL linking exception, and Seahub, the web frontend, is Apache-2.0. The Professional Edition adds SAML, advanced administration, and online office integration under a paid licence and is free for up to three users; this recipe deploys the Community Edition only.
 
 localization:
   ui_languages:
@@ -99,13 +91,13 @@ operations:
 
 recipe:
   id: seafile-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: 13.0.25
+  application_version: 13.0.28
   images:
     - name: seafileltd/seafile-mc
       tag_source: pinned
@@ -113,11 +105,18 @@ recipe:
       tag_source: pinned
     - name: valkey/valkey
       tag_source: pinned
-  tested_at: "2026-09-20"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: 13.0.28
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-20"
       application_version: 13.0.25
       recipe_version: 1
@@ -141,7 +140,7 @@ recipe:
       restore_tested: false
   license: MIT
   smoke_test_limitations:
-    - The full application smoke test passed on amd64; the published image has no stable ARM build to test.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09.
     - A practical backup and restore test passed on amd64.
     - Desktop and mobile synchronisation, client-side encrypted libraries, sharing links, and OAuth sign-in are not exercised by the smoke test.
 
@@ -177,14 +176,20 @@ update_tracking:
   # hand instead of from a release feed.
   releases:
     status: current
-    checked_at: "2026-09-02T20:10:00Z"
-    latest_version: 13.0.25
+    checked_at: "2026-10-09T13:58:07.506Z"
+    latest_version: 13.0.28
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
-    ids: []
+    status: findings
+    checked_at: "2026-10-09T13:58:51Z"
+    critical_count: 7
+    scanner: trivy
+    ids:
+      - CVE-2026-102268
+      - CVE-2026-53398
+      - CVE-2026-63940
+      - CVE-2026-64535
+      - CVE-2026-64564
+      - CVE-2026-74394
   breaking_updates:
     status: unknown
     checked_at: null
@@ -219,4 +224,4 @@ content:
       alt: One photograph open in the built-in viewer, with the zoom, download, sharing and comment controls above it
     - file: assets/admin.webp
       alt: System administration showing the edition and version, the number of libraries and files, storage used, devices and accounts
-  updated_at: "2026-09-02"
+  updated_at: "2026-10-09"

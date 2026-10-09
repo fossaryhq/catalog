@@ -5,11 +5,7 @@ slug: actual-budget
 name: Actual Budget
 tagline: Envelope budgeting that syncs between your own devices
 summary: >-
-  Actual Budget assigns every rouble or dollar to a category for the month
-  ahead, imports transactions from files or bank integrations, and keeps a full
-  local copy of the budget in each browser and desktop client. The server in
-  this recipe is the sync endpoint that merges those copies and stores the file
-  in SQLite.
+  Actual Budget assigns every rouble or dollar to a category for the month ahead, imports transactions from files or bank integrations, and keeps a full local copy of the budget in each browser and desktop client. The server in this recipe is the sync endpoint that merges those copies and stores the file in SQLite.
 
 status: active
 editorial_status: experimental
@@ -90,22 +86,30 @@ operations:
 
 recipe:
   id: actual-budget-compose
-  version: 2
+  version: 3
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: 26.9.0
+  application_version: 26.10.0
   images:
     - name: actualbudget/actual-server
       tag_source: pinned
-  tested_at: "2026-09-11"
+  tested_at: "2026-10-09"
   tested_architectures:
     amd64: passed
-    arm64: passed
+    arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: 26.10.0
+      recipe_version: 3
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-11"
       application_version: 26.9.0
       recipe_version: 2
@@ -132,7 +136,7 @@ recipe:
       restore_tested: false
   license: MIT
   smoke_test_limitations:
-    - The full application smoke test, including the backup and restore round trip, passed on amd64 and on arm64 under emulation.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 were not tested in this run.
     - "The restore is checked against a volume that was actually removed: the server password and the budget files come back and the password logs in again."
     - Budget synchronisation between clients, end-to-end encryption, and bank integrations are not exercised by the smoke test.
 
@@ -163,15 +167,20 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-06T11:19:32.215Z"
-    latest_version: "26.10.0"
+    status: current
+    checked_at: "2026-10-09T13:58:07.217Z"
+    latest_version: 26.10.0
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
-    ids: []
+    status: findings
+    checked_at: "2026-10-09T13:58:51Z"
+    critical_count: 5
+    scanner: trivy
+    ids:
+      - CVE-2023-45853
+      - CVE-2026-13221
+      - CVE-2026-42496
+      - CVE-2026-8376
+      - CVE-2026-90711
   breaking_updates:
     status: unknown
     checked_at: null
@@ -179,8 +188,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-09T13:58:51Z"
     images: []
 update_policy:
   images:
@@ -203,4 +212,4 @@ content:
       alt: The cash flow report for the month with income and expense bars over the running balance in dark theme
     - file: assets/settings.webp
       alt: Settings with the client and server versions, themes, number and date formats, and the interface language
-  updated_at: "2026-09-11"
+  updated_at: "2026-10-09"

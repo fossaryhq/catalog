@@ -2,7 +2,7 @@ name: jellyfin
 
 services:
   jellyfin:
-    image: jellyfin/jellyfin:${JELLYFIN_VERSION:-10.11.11}
+    image: jellyfin/jellyfin:${JELLYFIN_VERSION:-12.2}
     restart: unless-stopped
     ports:
       - "127.0.0.1:${JELLYFIN_PORT:-8096}:8096"

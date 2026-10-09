@@ -145,7 +145,7 @@ and test restores.
 
 Import irreversibly replaces all six volumes. It is supported only into a
 completely empty installation of the **same Paperless-ngx version**, with the
-same path settings. Verify tag `3.1.2`, free space, and the active `.env`, then:
+same path settings. Verify tag `3.3.0`, free space, and the active `.env`, then:
 
 ```bash
 ./restore.sh ./backups/paperless-ngx-YYYYMMDDTHHMMSSZ.tar
@@ -173,7 +173,7 @@ container proves the service started, not that the archive came back.
 <!-- coverage:update -->
 
 Wait for tasks, back up, and read the release notes and migration instructions.
-Replace only the exact `paperlessngx/paperless-ngx:3.1.2` tag with a reviewed
+Replace only the exact `paperlessngx/paperless-ngx:3.3.0` tag with a reviewed
 version; never use `latest`. Then run:
 
 ```bash
@@ -220,7 +220,7 @@ rm -rf ~/services/paperless-ngx
 
 Substitute the actual names when volume variables differ in `.env`.
 
-Sources: [configuration](https://github.com/paperless-ngx/paperless-ngx/blob/v3.1.2/docs/configuration.md),
-[backup, exporter/importer, and update](https://github.com/paperless-ngx/paperless-ngx/blob/v3.1.2/docs/administration.md),
-[release 3.1.2](https://github.com/paperless-ngx/paperless-ngx/releases/tag/v3.1.2), and
+Sources: [configuration](https://github.com/paperless-ngx/paperless-ngx/blob/v3.3.0/docs/configuration.md),
+[backup, exporter/importer, and update](https://github.com/paperless-ngx/paperless-ngx/blob/v3.3.0/docs/administration.md),
+[release 3.3.0](https://github.com/paperless-ngx/paperless-ngx/releases/tag/v3.3.0), and
 [PostgreSQL major upgrades](https://www.postgresql.org/docs/18/upgrading.html).

@@ -5,10 +5,7 @@ slug: immich
 name: Immich
 tagline: Self-hosted photo library with mobile sync and semantic search
 summary: >-
-  Immich keeps your photos and videos on your own server, uploads them
-  automatically from your phone, and shows a familiar timeline with albums, a
-  map, and content-based search. This recipe brings up the server, machine
-  learning, PostgreSQL with vector search, and Valkey from one Compose file.
+  Immich keeps your photos and videos on your own server, uploads them automatically from your phone, and shows a familiar timeline with albums, a map, and content-based search. This recipe brings up the server, machine learning, PostgreSQL with vector search, and Valkey from one Compose file.
 
 status: active
 editorial_status: recommended
@@ -41,9 +38,7 @@ license:
   kind: open_source
   restrictions: []
   notes: >-
-    Immich is distributed under AGPL-3.0 and is fully functional without payment.
-    The paid Immich license is voluntary support for the project and does not
-    unlock additional features.
+    Immich is distributed under AGPL-3.0 and is fully functional without payment. The paid Immich license is voluntary support for the project and does not unlock additional features.
 
 localization:
   ui_languages:
@@ -95,13 +90,13 @@ operations:
 
 recipe:
   id: immich-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: v3.2.2
+  application_version: v3.3.1
   images:
     - name: ghcr.io/immich-app/immich-server
       tag_source: env
@@ -111,7 +106,7 @@ recipe:
       tag_source: pinned
     - name: ghcr.io/immich-app/postgres
       tag_source: pinned
-  tested_at: "2026-09-21"
+  tested_at: "2026-10-09"
   # Immich ships breaking changes regularly (see description.md), so a check here
   # lives 30 days instead of the standard 90.
   recheck_interval_days: 30
@@ -120,6 +115,14 @@ recipe:
     arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-09"
+      application_version: v3.3.1
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-09-21"
       application_version: v3.2.2
       recipe_version: 1
@@ -146,7 +149,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - Full smoke, backup, and restore passed on amd64; ARM64 remains untested.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 were not tested in this run.
     - The smoke test starts the stack and checks the API, but it does not upload media or verify face recognition and smart search.
 
 security:
@@ -176,15 +179,26 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-08T11:25:09.908Z"
-    latest_version: "v3.3.0"
+    status: current
+    checked_at: "2026-10-09T13:58:07.354Z"
+    latest_version: v3.3.1
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
-    ids: []
+    status: findings
+    checked_at: "2026-10-09T13:58:51Z"
+    critical_count: 11
+    scanner: trivy
+    ids:
+      - CVE-2026-106445
+      - CVE-2026-106446
+      - CVE-2026-13221
+      - CVE-2026-42216
+      - CVE-2026-42217
+      - CVE-2026-42496
+      - CVE-2026-59873
+      - CVE-2026-63374
+      - CVE-2026-6653
+      - CVE-2026-8376
+      - CVE-2026-90711
   breaking_updates:
     status: unknown
     checked_at: null
@@ -223,4 +237,4 @@ content:
       alt: Asset viewer with a side panel showing date, file size, and the album it appears in
     - file: assets/admin-settings.webp
       alt: Machine learning settings in the admin panel with smart search, duplicate detection, facial recognition, and OCR sections
-  updated_at: "2026-08-30"
+  updated_at: "2026-10-09"

@@ -159,7 +159,7 @@ docker compose logs --tail=200 seafile
 A major upgrade is not: Seafile runs versioned upgrade scripts and expects you
 to move one major version at a time, from the latest minor of the current
 series. Do not jump from 12.x to 14.x, and never change MariaDB in the same
-step. Replace the exact `seafileltd/seafile-mc:13.0.25` tag with a reviewed
+step. Replace the exact `seafileltd/seafile-mc:13.0.28` tag with a reviewed
 version, never a `-latest` or `-testing` tag.
 
 ### Rollback
