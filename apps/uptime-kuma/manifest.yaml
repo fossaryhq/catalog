@@ -149,115 +149,15 @@ upstream:
 
 update_tracking:
   releases:
-    status: current
-    checked_at: "2026-10-09T13:58:07.557Z"
-    latest_version: 2.5.5
+    status: update_available
+    checked_at: "2026-10-10T10:39:18.867Z"
+    latest_version: "2.5.6"
   critical_vulnerabilities:
-    status: findings
-    checked_at: "2026-10-09T13:58:51Z"
-    critical_count: 202
-    scanner: trivy
-    ids:
-      - CVE-2023-45853
-      - CVE-2024-24790
-      - CVE-2025-68121
-      - CVE-2025-7458
-      - CVE-2026-102267
-      - CVE-2026-106195
-      - CVE-2026-106237
-      - CVE-2026-10931
-      - CVE-2026-10966
-      - CVE-2026-10971
-      - CVE-2026-10972
-      - CVE-2026-10974
-      - CVE-2026-10990
-      - CVE-2026-11002
-      - CVE-2026-11029
-      - CVE-2026-11113
-      - CVE-2026-11120
-      - CVE-2026-13032
-      - CVE-2026-13033
-      - CVE-2026-13038
-      - CVE-2026-13221
-      - CVE-2026-13775
-      - CVE-2026-13776
-      - CVE-2026-13780
-      - CVE-2026-13781
-      - CVE-2026-13782
-      - CVE-2026-13785
-      - CVE-2026-14101
-      - CVE-2026-14104
-      - CVE-2026-14106
-      - CVE-2026-14109
-      - CVE-2026-14120
-      - CVE-2026-15764
-      - CVE-2026-15765
-      - CVE-2026-17651
-      - CVE-2026-17652
-      - CVE-2026-17653
-      - CVE-2026-17654
-      - CVE-2026-17655
-      - CVE-2026-17656
-      - CVE-2026-19157
-      - CVE-2026-33186
-      - CVE-2026-33845
-      - CVE-2026-40393
-      - CVE-2026-40468
-      - CVE-2026-40469
-      - CVE-2026-41242
-      - CVE-2026-42010
-      - CVE-2026-42496
-      - CVE-2026-44172
-      - CVE-2026-49261
-      - CVE-2026-58016
-      - CVE-2026-59873
-      - CVE-2026-6653
-      - CVE-2026-78904
-      - CVE-2026-78905
-      - CVE-2026-78978
-      - CVE-2026-78989
-      - CVE-2026-79019
-      - CVE-2026-79043
-      - CVE-2026-79127
-      - CVE-2026-79130
-      - CVE-2026-79131
-      - CVE-2026-79138
-      - CVE-2026-79142
-      - CVE-2026-79149
-      - CVE-2026-79188
-      - CVE-2026-79189
-      - CVE-2026-79230
-      - CVE-2026-79269
-      - CVE-2026-79275
-      - CVE-2026-79282
-      - CVE-2026-8376
-      - CVE-2026-87500
-      - CVE-2026-87512
-      - CVE-2026-87534
-      - CVE-2026-87544
-      - CVE-2026-87621
-      - CVE-2026-87654
-      - CVE-2026-90711
-      - CVE-2026-9698
-      - CVE-2026-9872
-      - CVE-2026-9873
-      - CVE-2026-9874
-      - CVE-2026-9875
-      - CVE-2026-9876
-      - CVE-2026-9878
-      - CVE-2026-9879
-      - CVE-2026-9880
-      - CVE-2026-9881
-      - CVE-2026-9883
-      - CVE-2026-9884
-      - CVE-2026-9885
-      - CVE-2026-9886
-      - CVE-2026-9888
-      - CVE-2026-9889
-      - CVE-2026-9890
-      - CVE-2026-9891
-      - CVE-2026-9892
-      - CVE-2026-9893
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
   breaking_updates:
     status: unknown
     checked_at: null
@@ -265,8 +165,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: current
-    checked_at: "2026-10-09T13:58:51Z"
+    status: unknown
+    checked_at: null
     images: []
 update_policy:
   images:
