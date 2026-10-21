@@ -1,0 +1,14 @@
+http:
+  routers:
+    mealie:
+      rule: Host(`recipes.example.com`)
+      entryPoints:
+        - websecure
+      service: mealie
+      tls:
+        certResolver: letsencrypt
+  services:
+    mealie:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:9925

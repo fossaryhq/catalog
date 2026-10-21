@@ -1,0 +1,28 @@
+name: mealie
+
+services:
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie:${MEALIE_VERSION:-v3.29.0}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${MEALIE_PORT:-9925}:9000"
+    environment:
+      ALLOW_SIGNUP: "false"
+      BASE_URL: ${MEALIE_BASE_URL:-http://localhost:9925}
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      DEFAULT_LOCALE: ${MEALIE_DEFAULT_LOCALE:-en}
+      TZ: ${TZ:-Etc/UTC}
+      DB_ENGINE: sqlite
+    volumes:
+      - mealie-data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:9000/api/app/about', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+volumes:
+  mealie-data:
+    name: ${MEALIE_DATA_VOLUME:-mealie-data}

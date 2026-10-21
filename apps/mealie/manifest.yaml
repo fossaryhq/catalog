@@ -1,0 +1,187 @@
+schema_version: 6
+publication_status: draft
+
+slug: mealie
+name: Mealie
+tagline: Recipes, meal planning, and shopping lists for your household
+summary: >-
+  Mealie keeps recipes, meal plans, and shopping lists in one self-hosted
+  kitchen organizer. Save a recipe from a website or add it yourself, organize
+  meals into cookbooks, and plan the week together with your household. This
+  recipe uses SQLite and one persistent volume for the database and uploads.
+
+status: active
+editorial_status: experimental
+
+links:
+  website: https://mealie.io/
+  source: https://github.com/mealie-recipes/mealie
+  documentation: https://docs.mealie.io/
+  issues: https://github.com/mealie-recipes/mealie/issues
+
+classification:
+  categories:
+    - Food and cooking
+  tags:
+    - recipes
+    - meal-planning
+    - shopping-list
+    - cooking
+    - household
+  implementation_languages:
+    - Python
+    - TypeScript
+  alternatives_to:
+    - Paprika Recipe Manager
+    - Recipe Keeper
+    - AnyList
+
+license:
+  spdx: AGPL-3.0
+  kind: open_source
+  restrictions: []
+  notes: null
+
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+    - ru
+
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: false
+
+auth:
+  oidc: native
+  saml: none
+  two_factor: none
+  proxy_header: true
+
+requirements:
+  architectures:
+    - amd64
+    - arm64
+  min_cpu_cores: 1
+  min_ram_mb: 512
+  recommended_ram_mb: 1024
+  min_disk_gb: 5
+  gpu:
+    required: false
+    supported: false
+  database: sqlite
+  dependencies: []
+
+operations:
+  install_difficulty: 2
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: partial
+  maintenance_difficulty: 2
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: in_place
+
+recipe:
+  id: mealie-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: v3.29.0
+  images:
+    - name: ghcr.io/mealie-recipes/mealie
+      tag_source: env
+  tested_at: "2026-10-21"
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-10-21"
+      application_version: v3.29.0
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+    - Full health, login, API, backup, and restore checks ran on amd64; arm64 was not tested.
+    - The smoke test verifies persistence and login after restore but does not import a recipe, send email, test OIDC, or exercise external URL imports.
+
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - The documented initial account password is public; replace it over loopback before making the service reachable to other users.
+    - Recipe URL imports make outbound requests from the server; allow access only to trusted users and isolate the container from sensitive internal services where practical.
+    - Recipes, household data, uploaded images, and the SQLite database share one volume; protect the volume and off-server backups.
+    - Mealie defaults HOST_IP to *, trusting forwarded headers from every connecting source; restrict it to the reverse proxy address or network and prevent direct untrusted access when forwarding headers are used.
+  assessment:
+    status: warnings
+    assessed_at: "2026-10-21"
+
+upstream:
+  release_source: github
+  repository: mealie-recipes/mealie
+  last_release_at: "2026-10-17"
+  last_checked_at: "2026-10-21T21:44:51Z"
+  stars: 13647
+  stars_checked_at: "2026-10-21T21:44:51Z"
+  releases_last_year: 39
+  releases_checked_at: "2026-10-21T21:44:51Z"
+
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-10-21T21:44:51Z"
+    latest_version: v3.29.0
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+
+update_policy:
+  images:
+    - image: ghcr.io/mealie-recipes/mealie
+      provider: ghcr
+      repository: mealie-recipes/mealie
+  compose: null
+
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+    - file: assets/recipes.webp
+      alt: Mealie recipe collection with dishes, preparation times, and meal categories
+    - file: assets/recipe.webp
+      alt: Mealie recipe page with ingredients, cooking directions, and preparation time
+    - file: assets/shopping-list.webp
+      alt: Mealie household shopping list grouped by ingredient
+  updated_at: "2026-10-21"
