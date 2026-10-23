@@ -1,0 +1,32 @@
+name: memos
+services:
+  memos:
+    image: neosmemo/memos:${MEMOS_VERSION:-0.31.0}
+    restart: unless-stopped
+    environment:
+      MEMOS_DRIVER: sqlite
+      MEMOS_DATA: /var/opt/memos
+      MEMOS_PORT: "5230"
+      MEMOS_INSTANCE_URL: ${MEMOS_URL:-http://localhost:5230}
+      MEMOS_TRUSTED_PROXIES: ${MEMOS_TRUSTED_PROXIES:-none}
+      TZ: ${TZ:-Etc/UTC}
+    ports:
+      - "127.0.0.1:${MEMOS_PORT:-5230}:5230"
+    volumes:
+      - memos-data:/var/opt/memos
+      - ./config:/etc/secrets:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5230/healthz | grep -q 'Service ready.'"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+volumes:
+  memos-data:
+    name: ${MEMOS_DATA_VOLUME:-memos-data}

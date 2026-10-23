@@ -1,0 +1,14 @@
+http:
+  routers:
+    memos:
+      rule: Host(`notes.example.com`)
+      entryPoints:
+        - websecure
+      service: memos
+      tls:
+        certResolver: letsencrypt
+  services:
+    memos:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:5230
