@@ -1,0 +1,196 @@
+schema_version: 6
+publication_status: draft
+slug: open-webui
+name: Open WebUI
+tagline: A private chat interface for models on your server
+summary: Open WebUI brings conversations, files, and knowledge collections to a browser interface
+  for local language models. This CPU recipe connects the official app to an internal Ollama
+  server, creates an administrator from private environment settings, and disables public
+  signup and external OpenAI-compatible providers.
+status: active
+editorial_status: experimental
+links:
+  website: https://openwebui.com/
+  source: https://github.com/open-webui/open-webui
+  documentation: https://docs.openwebui.com/
+  issues: https://github.com/open-webui/open-webui/issues
+classification:
+  categories:
+  - AI assistants
+  tags:
+  - ai
+  - chat
+  - local-llm
+  - ollama
+  implementation_languages:
+  - Python
+  - JavaScript
+  - TypeScript
+  alternatives_to:
+  - ChatGPT
+  - Claude
+license:
+  spdx: LicenseRef-Open-WebUI
+  kind: source_available
+  restrictions:
+  - Redistributions must retain copyright notices, license conditions, and the disclaimer.
+  - Open WebUI branding may not be altered, removed, obscured, or replaced above 50 end users
+    in a rolling 30-day period without prior written permission or an applicable enterprise
+    license; the standard recipe preserves it.
+  - The copyright holder and contributor names may not endorse derived products without prior
+    written permission.
+  notes: 'The Open WebUI License adds branding conditions to BSD-style terms and is recorded
+    as source available. It does not cap ordinary use at 50 users: the threshold concerns
+    branding changes. Ollama is MIT licensed; model weights have their own licenses. The small
+    Qwen3 0.6B example is Apache-2.0 licensed and is downloaded separately.'
+localization:
+  ui_languages:
+  - en
+  - ru
+  docs_languages:
+  - en
+  - ru
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: false
+auth:
+  oidc: native
+  saml: none
+  two_factor: native
+  proxy_header: true
+requirements:
+  architectures:
+  - amd64
+  - arm64
+  min_cpu_cores: 2
+  min_ram_mb: 4096
+  recommended_ram_mb: 8192
+  min_disk_gb: 10
+  gpu:
+    required: false
+    supported: false
+  database: sqlite
+  dependencies:
+  - Ollama
+operations:
+  install_difficulty: 3
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: unsupported
+  maintenance_difficulty: 3
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: in_place
+recipe:
+  id: open-webui-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: '>=2.24.0'
+  application_version: v0.12.3
+  images:
+  - name: ghcr.io/open-webui/open-webui
+    tag_source: env
+  - name: ollama/ollama
+    tag_source: env
+  - name: alpine
+    tag_source: pinned
+  tested_at: '2026-10-23'
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  check_history:
+  - tested_at: '2026-10-23'
+    application_version: v0.12.3
+    recipe_version: 1
+    tested_architectures:
+      amd64: passed
+      arm64: not_tested
+    smoke_test: full
+    restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+  - The amd64 smoke checks CPU inference with Qwen3 0.6B, administrator login, blocked signup,
+    private chats/files, exact file bytes, model digest, and recovery after removing both
+    volumes; arm64 was not tested.
+  - GPU acceleration, large models, model-answer quality, voice, web search, plugins, external
+    providers, OIDC/MFA, and reverse-proxy integration were not exercised.
+  - The smoke uploads a file without embedding/retrieval processing; it does not establish
+    RAG accuracy. Model weights require a separate network download and a separate license
+    review.
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+  - Conversations, uploads, model data, and settings can contain private information. Protect
+    both volumes, the original service secret, and encrypted off-server backups.
+  - Administrator Functions and Tools can run code on the server. Grant administrator access
+    only to trusted people; this recipe supplies no Docker socket, cloud provider keys, or
+    host data mounts.
+  - Keep signup disabled and Ollama private. The initial administrator password is stored
+    in .env; changing bootstrap environment values does not rotate an existing account password.
+  - Language-model output can be wrong or contain unsafe instructions. Review answers before
+    acting; model licenses and resource needs are separate from the web interface.
+  - Settings saved in the UI can override initial environment defaults. Recheck provider access,
+    registration, and sharing permissions after changes or recovery.
+  assessment:
+    status: warnings
+    assessed_at: '2026-10-23'
+upstream:
+  release_source: github
+  repository: open-webui/open-webui
+  last_release_at: '2026-10-16'
+  last_checked_at: '2026-10-23T23:03:30Z'
+  stars: 156582
+  stars_checked_at: '2026-10-23T23:03:30Z'
+  releases_last_year: 44
+  releases_checked_at: '2026-10-23T23:03:30Z'
+update_tracking:
+  releases:
+    status: current
+    checked_at: '2026-10-23T23:03:30Z'
+    latest_version: v0.12.3
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+update_policy:
+  images:
+  - image: ghcr.io/open-webui/open-webui
+    provider: ghcr
+    repository: open-webui/open-webui
+  compose: null
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+  - file: assets/chat.webp
+    alt: Open WebUI conversation with a response generated by the local Qwen3 model
+  - file: assets/knowledge.webp
+    alt: Open WebUI knowledge collection with household reference documents in dark mode
+  - file: assets/users.webp
+    alt: Open WebUI administrator user list with fictional household accounts
+  updated_at: '2026-10-23'

@@ -1,0 +1,90 @@
+name: open-webui
+services:
+  permissions:
+    image: alpine:3.22
+    user: "0:0"
+    command: ["chown", "-R", "1000:1000", "/webui", "/ollama"]
+    volumes:
+      - webui-data:/webui
+      - ollama-data:/ollama
+    restart: "no"
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:${OPEN_WEBUI_VERSION:-v0.12.3}
+    user: "1000:1000"
+    restart: unless-stopped
+    environment:
+      WEBUI_URL: ${OPEN_WEBUI_URL:-http://localhost:3080}
+      WEBUI_SECRET_KEY: ${OPEN_WEBUI_SECRET:?Set a unique OPEN_WEBUI_SECRET}
+      WEBUI_ADMIN_EMAIL: ${OPEN_WEBUI_ADMIN_EMAIL:?Set OPEN_WEBUI_ADMIN_EMAIL}
+      WEBUI_ADMIN_PASSWORD: ${OPEN_WEBUI_ADMIN_PASSWORD:?Set a unique initial administrator password}
+      WEBUI_ADMIN_NAME: Admin
+      WEBUI_AUTH: "true"
+      ENABLE_SIGNUP: "false"
+      ENABLE_OPENAI_API: "false"
+      ENABLE_OLLAMA_API: "true"
+      OLLAMA_BASE_URL: http://ollama:11434
+      OFFLINE_MODE: "true"
+      FORWARDED_ALLOW_IPS: ${OPEN_WEBUI_TRUSTED_PROXIES:-127.0.0.1}
+      STATIC_DIR: /app/backend/data/static
+      CORS_ALLOW_ORIGIN: ${OPEN_WEBUI_URL:-http://localhost:3080}
+      HOME: /app/backend/data
+      TZ: ${TZ:-Etc/UTC}
+    ports:
+      - "127.0.0.1:${OPEN_WEBUI_PORT:-3080}:8080"
+    volumes:
+      - webui-data:/app/backend/data
+    depends_on:
+      permissions:
+        condition: service_completed_successfully
+      ollama:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import json,urllib.request; assert json.load(urllib.request.urlopen('http://127.0.0.1:8080/health/db',timeout=5))['status'] is True"]
+      interval: 20s
+      timeout: 10s
+      retries: 15
+      start_period: 90s
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=256m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 60s
+
+  ollama:
+    image: ollama/ollama:${OLLAMA_VERSION:-0.40.10}
+    user: "1000:1000"
+    restart: unless-stopped
+    environment:
+      HOME: /home/ollama
+      OLLAMA_HOST: 0.0.0.0:11434
+      OLLAMA_MODELS: /home/ollama/.ollama/models
+      OLLAMA_NO_CLOUD: "true"
+    volumes:
+      - ollama-data:/home/ollama/.ollama
+    depends_on:
+      permissions:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 15s
+      timeout: 10s
+      retries: 15
+      start_period: 30s
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=256m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 60s
+
+volumes:
+  webui-data:
+    name: ${OPEN_WEBUI_DATA_VOLUME:-open-webui-data}
+  ollama-data:
+    name: ${OLLAMA_DATA_VOLUME:-open-webui-models}
