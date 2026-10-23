@@ -1,0 +1,53 @@
+name: bookstack
+
+services:
+  bookstack:
+    image: lscr.io/linuxserver/bookstack:version-${BOOKSTACK_VERSION:-v26.09.2}
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-Etc/UTC}
+      APP_URL: ${BOOKSTACK_APP_URL:-http://localhost:6875}
+      APP_KEY: ${BOOKSTACK_APP_KEY:?Set BOOKSTACK_APP_KEY to a unique base64 key}
+      DB_HOST: database
+      DB_PORT: "3306"
+      DB_USERNAME: bookstack
+      DB_PASSWORD: ${BOOKSTACK_DB_PASSWORD:?Set a unique BOOKSTACK_DB_PASSWORD}
+      DB_DATABASE: bookstack
+    ports:
+      - "127.0.0.1:${BOOKSTACK_PORT:-6875}:80"
+    volumes:
+      - bookstack-config:/config
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "--max-time", "5", "http://127.0.0.1/status"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+  database:
+    image: mariadb:11.4.13
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${BOOKSTACK_DB_ROOT_PASSWORD:?Set a unique BOOKSTACK_DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: bookstack
+      MARIADB_USER: bookstack
+      MARIADB_PASSWORD: ${BOOKSTACK_DB_PASSWORD:?Set a unique BOOKSTACK_DB_PASSWORD}
+    volumes:
+      - bookstack-database:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  bookstack-config:
+    name: ${BOOKSTACK_CONFIG_VOLUME:-bookstack-config}
+  bookstack-database:
+    name: ${BOOKSTACK_DB_VOLUME:-bookstack-database}
