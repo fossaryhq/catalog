@@ -1,0 +1,175 @@
+schema_version: 6
+publication_status: draft
+slug: memos
+name: Memos
+tagline: Private Markdown notes with tags and attachments
+summary: Memos keeps short Markdown notes, checklists, tags, and attachments on your own server.
+  Capture household references, reading notes, and daily ideas in a searchable timeline. This
+  recipe uses the official image, SQLite, local files, private instance access, and disabled
+  public registration.
+status: active
+editorial_status: experimental
+links:
+  website: https://usememos.com/
+  source: https://github.com/usememos/memos
+  documentation: https://usememos.com/docs
+  issues: https://github.com/usememos/memos/issues
+classification:
+  categories:
+  - Knowledge management
+  tags:
+  - notes
+  - markdown
+  - knowledge
+  - personal
+  implementation_languages:
+  - Go
+  - TypeScript
+  alternatives_to:
+  - Google Keep
+license:
+  spdx: MIT
+  kind: open_source
+  restrictions: []
+  notes: The application and this recipe are MIT licensed. Browser access is included; third-party
+    clients are not bundled or verified.
+localization:
+  ui_languages:
+  - en
+  - ru
+  docs_languages:
+  - en
+  - ru
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: false
+auth:
+  oidc: native
+  saml: none
+  two_factor: none
+  proxy_header: false
+requirements:
+  architectures:
+  - amd64
+  - arm64
+  min_cpu_cores: 1
+  min_ram_mb: 256
+  recommended_ram_mb: 512
+  min_disk_gb: 1
+  gpu:
+    required: false
+    supported: false
+  database: sqlite
+  dependencies: []
+operations:
+  install_difficulty: 2
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: unsupported
+  maintenance_difficulty: 2
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: in_place
+recipe:
+  id: memos-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: '>=2.24.0'
+  application_version: 0.31.0
+  images:
+  - name: neosmemo/memos
+    tag_source: env
+  - name: alpine
+    tag_source: pinned
+  tested_at: '2026-10-23'
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  check_history:
+  - tested_at: '2026-10-23'
+    application_version: 0.31.0
+    recipe_version: 1
+    tested_architectures:
+      amd64: passed
+      arm64: not_tested
+    smoke_test: full
+    restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+  - Full health, first-admin setup, closed registration, private-note/file access, note creation,
+    attachment upload, and recovery after volume removal ran on amd64; arm64 was not tested.
+  - OAuth2/OIDC, external reverse proxies, webhooks, remote storage, imports, and third-party
+    clients were not exercised.
+  recheck_interval_days: 30
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+  - The first visitor can create the administrator account. Finish setup through loopback
+    or an SSH tunnel before exposing the reverse proxy.
+  - Instance administrators can read and manage private notes. Private visibility is access
+    control, not end-to-end encryption; share tokens can grant additional access.
+  - The data volume and backups include accounts, notes, attachments, and session secrets.
+    Encrypt off-server backups and protect the active configuration.
+  assessment:
+    status: warnings
+    assessed_at: '2026-10-23'
+upstream:
+  release_source: github
+  repository: usememos/memos
+  last_release_at: '2026-09-19'
+  last_checked_at: '2026-10-23T22:18:03Z'
+  stars: 64027
+  stars_checked_at: '2026-10-23T22:18:03Z'
+  releases_last_year: 12
+  releases_checked_at: '2026-10-23T22:18:03Z'
+update_tracking:
+  releases:
+    status: current
+    checked_at: '2026-10-23T22:18:03Z'
+    latest_version: 0.31.0
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+update_policy:
+  images:
+  - image: neosmemo/memos
+    provider: docker_hub
+    repository: neosmemo/memos
+  compose: null
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+  - file: assets/timeline.webp
+    alt: Memos timeline with household notes, Markdown checklists, and nested tags
+  - file: assets/note.webp
+    alt: Memos recovery checklist with a linked attachment and comment in dark mode
+  - file: assets/attachments.webp
+    alt: Memos attachment library with household reference files
+  updated_at: '2026-10-23'
