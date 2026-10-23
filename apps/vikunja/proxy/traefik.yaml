@@ -1,0 +1,14 @@
+http:
+  routers:
+    vikunja:
+      rule: Host(`tasks.example.com`)
+      entryPoints:
+        - websecure
+      service: vikunja
+      tls:
+        certResolver: letsencrypt
+  services:
+    vikunja:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:3456
