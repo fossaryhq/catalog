@@ -1,0 +1,14 @@
+http:
+  routers:
+    open-webui:
+      rule: Host(`chat.example.com`)
+      entryPoints:
+        - websecure
+      service: open-webui
+      tls:
+        certResolver: letsencrypt
+  services:
+    open-webui:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:3080
