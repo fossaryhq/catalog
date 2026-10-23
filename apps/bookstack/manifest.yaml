@@ -1,0 +1,163 @@
+schema_version: 6
+publication_status: draft
+slug: bookstack
+name: BookStack
+tagline: A wiki with books, chapters, and pages
+summary: >-
+  BookStack organizes shared knowledge into books, chapters, and pages. Write
+  household guides, team handbooks, and maintenance runbooks in a visual or
+  Markdown editor, with search, revisions, and permissions. This recipe runs
+  the community LinuxServer image with a separate MariaDB database.
+status: active
+editorial_status: experimental
+links:
+  website: https://www.bookstackapp.com/
+  source: https://github.com/BookStackApp/BookStack
+  documentation: https://www.bookstackapp.com/docs/
+  issues: https://github.com/BookStackApp/BookStack/issues
+classification:
+  categories:
+    - Knowledge management
+  tags:
+    - wiki
+    - documentation
+    - knowledge-base
+    - markdown
+  implementation_languages:
+    - PHP
+    - TypeScript
+  alternatives_to:
+    - Notion
+    - Confluence
+license:
+  spdx: MIT
+  kind: open_source
+  restrictions: []
+  notes: null
+localization:
+  ui_languages: [en, ru]
+  docs_languages: [en, ru]
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: false
+auth:
+  oidc: native
+  saml: native
+  two_factor: native
+  proxy_header: false
+requirements:
+  architectures: [amd64, arm64]
+  min_cpu_cores: 1
+  min_ram_mb: 1024
+  recommended_ram_mb: 2048
+  min_disk_gb: 5
+  gpu:
+    required: false
+    supported: false
+  database: mariadb
+  dependencies: [MariaDB]
+operations:
+  install_difficulty: 2
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: partial
+  maintenance_difficulty: 2
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: in_place
+recipe:
+  id: bookstack-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: v26.09.2
+  images:
+    - name: lscr.io/linuxserver/bookstack
+      tag_source: env
+    - name: mariadb
+      tag_source: pinned
+  tested_at: "2026-10-23"
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-10-23"
+      application_version: v26.09.2
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+    - Full health, login, database/files backup, and restore checks ran on amd64; arm64 was not tested.
+    - Email, OIDC, SAML, MFA, and reverse proxy integration are not exercised by the smoke test.
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - The initial admin@admin.com / password credentials are public; replace this account over loopback before exposing the service.
+    - Preserve APP_KEY with the database and uploads; losing or changing it can invalidate encrypted application data, including MFA secrets.
+    - Documents, attachments, accounts, and credentials are private data; encrypt backups and keep a copy off-server.
+    - The recipe uses a third-party LinuxServer image; BookStack does not publish this container image itself.
+  assessment:
+    status: warnings
+    assessed_at: "2026-10-23"
+upstream:
+  release_source: github
+  repository: BookStackApp/BookStack
+  last_release_at: "2026-10-20"
+  last_checked_at: "2026-10-23T15:03:41Z"
+  stars: 19095
+  stars_checked_at: "2026-10-23T15:03:41Z"
+  releases_last_year: 32
+  releases_checked_at: "2026-10-23T15:03:41Z"
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-10-23T15:03:41Z"
+    latest_version: v26.09.2
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+update_policy:
+  # lscr.io and its version-v tag prefix are unsupported by the image checker.
+  images: []
+  compose: null
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+    - file: assets/library.webp
+      alt: BookStack library with home operations, household, and project handbooks
+    - file: assets/book.webp
+      alt: BookStack operations handbook organized into chapters and pages
+    - file: assets/page.webp
+      alt: BookStack backup runbook with a checklist and recovery procedure in dark mode
+  updated_at: "2026-10-23"

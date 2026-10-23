@@ -1,0 +1,14 @@
+http:
+  routers:
+    bookstack:
+      rule: Host(`docs.example.com`)
+      entryPoints:
+        - websecure
+      service: bookstack
+      tls:
+        certResolver: letsencrypt
+  services:
+    bookstack:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:6875
