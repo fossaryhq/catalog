@@ -1,0 +1,71 @@
+name: vikunja
+
+services:
+  permissions:
+    image: alpine:3.22
+    user: "0:0"
+    command: ["chown", "1000:1000", "/data"]
+    volumes:
+      - vikunja-data:/data
+    restart: "no"
+
+  vikunja:
+    image: vikunja/vikunja:${VIKUNJA_VERSION:-2.7.1}
+    restart: unless-stopped
+    user: "1000:1000"
+    environment:
+      VIKUNJA_SERVICE_PUBLICURL: ${VIKUNJA_PUBLIC_URL:-http://localhost:3456/}
+      VIKUNJA_SERVICE_SECRET: ${VIKUNJA_SECRET:?Set VIKUNJA_SECRET to a unique random secret}
+      VIKUNJA_SERVICE_ENABLEREGISTRATION: "false"
+      VIKUNJA_DATABASE_TYPE: postgres
+      VIKUNJA_DATABASE_HOST: database
+      VIKUNJA_DATABASE_DATABASE: vikunja
+      VIKUNJA_DATABASE_USER: vikunja
+      VIKUNJA_DATABASE_PASSWORD: ${VIKUNJA_DB_PASSWORD:?Set a unique VIKUNJA_DB_PASSWORD}
+      VIKUNJA_DATABASE_SSLMODE: disable
+      VIKUNJA_FILES_BASEPATH: /data/files
+      TZ: ${TZ:-Etc/UTC}
+    ports:
+      - "127.0.0.1:${VIKUNJA_PORT:-3456}:3456"
+    volumes:
+      - vikunja-data:/data
+    depends_on:
+      permissions:
+        condition: service_completed_successfully
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/app/vikunja/vikunja", "healthcheck"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+  database:
+    image: postgres:18.4-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: vikunja
+      POSTGRES_USER: vikunja
+      POSTGRES_PASSWORD: ${VIKUNJA_DB_PASSWORD:?Set a unique VIKUNJA_DB_PASSWORD}
+    volumes:
+      - vikunja-database:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready --username=vikunja --dbname=vikunja"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  vikunja-database:
+    name: ${VIKUNJA_DB_VOLUME:-vikunja-database}
+  vikunja-data:
+    name: ${VIKUNJA_DATA_VOLUME:-vikunja-data}

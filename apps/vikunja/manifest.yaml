@@ -1,0 +1,182 @@
+schema_version: 6
+publication_status: draft
+slug: vikunja
+name: Vikunja
+tagline: Tasks, projects, and kanban on your own server
+summary: Vikunja keeps tasks, project boards, deadlines, and attachments on your
+  own server. Use lists or kanban to plan household work and small team
+  projects, with recurring tasks and built-in two-factor authentication. This
+  recipe uses the official image and a separate PostgreSQL database.
+status: active
+editorial_status: experimental
+links:
+  website: https://vikunja.io/
+  source: https://github.com/go-vikunja/vikunja
+  documentation: https://vikunja.io/docs/
+  issues: https://github.com/go-vikunja/vikunja/issues
+classification:
+  categories:
+    - Task management
+  tags:
+    - tasks
+    - kanban
+    - projects
+    - collaboration
+  implementation_languages:
+    - Go
+    - TypeScript
+  alternatives_to:
+    - Todoist
+    - Trello
+license:
+  spdx: AGPL-3.0-or-later
+  kind: open_source
+  restrictions: []
+  notes: The server uses AGPL-3.0-or-later. Optional Pro features require a
+    separate license; this recipe uses the free core. The desktop wrapper is
+    separately GPL-3.0-or-later licensed.
+localization:
+  ui_languages:
+    - en
+    - ru
+  docs_languages:
+    - en
+    - ru
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: true
+auth:
+  oidc: native
+  saml: none
+  two_factor: native
+  proxy_header: false
+requirements:
+  architectures:
+    - amd64
+    - arm64
+  min_cpu_cores: 1
+  min_ram_mb: 1024
+  recommended_ram_mb: 2048
+  min_disk_gb: 5
+  gpu:
+    required: false
+    supported: false
+  database: postgresql
+  dependencies:
+    - PostgreSQL
+operations:
+  install_difficulty: 2
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: partial
+  maintenance_difficulty: 2
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: in_place
+recipe:
+  id: vikunja-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: ">=2.24.0"
+  application_version: 2.7.1
+  images:
+    - name: vikunja/vikunja
+      tag_source: env
+    - name: postgres
+      tag_source: pinned
+    - name: alpine
+      tag_source: pinned
+  tested_at: "2026-10-23"
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  check_history:
+    - tested_at: "2026-10-23"
+      application_version: 2.7.1
+      recipe_version: 1
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+    - Full health, login, task/kanban, attachment, backup, and restore checks
+      ran on amd64; arm64 was not tested.
+    - SMTP, OIDC, MFA enrollment, desktop clients, and reverse proxy integration
+      are not exercised by the smoke test.
+    - Recurring-task schedules and email reminders were not exercised.
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+    - Tasks, comments, accounts, and attachments are private data; protect both
+      data volumes and encrypt off-server backups.
+    - Preserve the service secret and database credentials with the backup; keep
+      .env private and do not rotate initialized database credentials by editing
+      .env alone.
+    - Project share links can grant access beyond registered accounts; review
+      their permissions and distribute them only to intended readers.
+  assessment:
+    status: warnings
+    assessed_at: "2026-10-23"
+upstream:
+  release_source: github
+  repository: go-vikunja/vikunja
+  last_release_at: "2026-10-20"
+  last_checked_at: "2026-10-23T21:32:29Z"
+  stars: 5832
+  stars_checked_at: "2026-10-23T21:32:29Z"
+  releases_last_year: 12
+  releases_checked_at: "2026-10-23T21:32:29Z"
+update_tracking:
+  releases:
+    status: current
+    checked_at: "2026-10-23T21:32:29Z"
+    latest_version: 2.7.1
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+update_policy:
+  images:
+    - image: vikunja/vikunja
+      provider: docker_hub
+      repository: vikunja/vikunja
+  compose: null
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+    - file: assets/board.webp
+      alt: Vikunja kanban board with household project tasks grouped by progress
+    - file: assets/list.webp
+      alt: Vikunja task list with due dates, priorities, and labels in dark mode
+    - file: assets/task.webp
+      alt: Vikunja task details with recovery steps, assignee, labels, and an
+        attachment
+  updated_at: "2026-10-23"
