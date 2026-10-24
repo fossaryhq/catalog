@@ -70,13 +70,13 @@ else:
 assert json.load(client.open(base+'/api/auth/session'))['user']['name']=='Homepage'
 print('Login, blocked anonymous APIs/Host and dashboard content verified:',sys.argv[1])
 PYCODE
-cat >> "$tmp/config/services.yaml" <<'YAML'
+"${compose[@]}" exec -T homepage sh -c 'cat >> /app/config/services.yaml' <<'YAML'
 - Recovery:
     - Recovery sentinel:
         href: https://example.com/recovered
         description: Dashboard entry preserved by backup
 YAML
-cat >> "$tmp/config/bookmarks.yaml" <<'YAML'
+"${compose[@]}" exec -T homepage sh -c 'cat >> /app/config/bookmarks.yaml' <<'YAML'
 - Recovery:
     - Recovery bookmark:
         - abbr: RB
