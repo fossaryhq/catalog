@@ -154,14 +154,14 @@ upstream:
 
 update_tracking:
   releases:
-    status: current
-    checked_at: "2026-10-09T13:58:07.455Z"
-    latest_version: 5.0.8
+    status: update_available
+    checked_at: "2026-10-24T08:55:05.550Z"
+    latest_version: "5.0.9"
   critical_vulnerabilities:
-    status: no_findings
-    checked_at: "2026-10-09T17:07:32.133213011+03:00"
-    critical_count: 0
-    scanner: trivy
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
     ids: []
   breaking_updates:
     status: unknown
@@ -170,8 +170,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: current
-    checked_at: "2026-10-09T13:58:51Z"
+    status: unknown
+    checked_at: null
     images: []
 update_policy:
   images:
