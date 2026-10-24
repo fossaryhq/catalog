@@ -1,0 +1,14 @@
+http:
+  routers:
+    beszel:
+      rule: Host(`metrics.example.com`)
+      entryPoints: [websecure]
+      service: beszel
+      tls:
+        certResolver: letsencrypt
+  services:
+    beszel:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8090
+# Host-based Traefik file provider; containerized Traefik needs suitable networking.
