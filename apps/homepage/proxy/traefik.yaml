@@ -1,0 +1,15 @@
+http:
+  routers:
+    homepage:
+      rule: Host(`home.example.com`)
+      entryPoints: [websecure]
+      service: homepage
+      tls:
+        certResolver: letsencrypt
+  services:
+    homepage:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:3000
+# This file-provider sample assumes Traefik runs on the host.
+# Use a VPN/IP allowlist or an edge login-attempt limit for public access.

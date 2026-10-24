@@ -1,0 +1,12 @@
+title: Home services
+language: en
+color: slate
+headerStyle: clean
+hideVersion: false
+layout:
+  Services:
+    style: row
+    columns: 3
+  Documentation:
+    style: row
+    columns: 3

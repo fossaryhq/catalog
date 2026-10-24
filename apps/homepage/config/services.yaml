@@ -1,0 +1,10 @@
+- Services:
+    - Homepage:
+        href: /
+        description: Your local service dashboard
+    - Fossary:
+        href: https://fossary.com/
+        description: Self-hosted application recipes
+    - Home Assistant:
+        href: https://www.home-assistant.io/
+        description: Official home automation documentation
