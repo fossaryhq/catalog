@@ -1,0 +1,10 @@
+- Documentation:
+    - Homepage guide:
+        - abbr: HP
+          href: https://gethomepage.dev/
+    - Docker guide:
+        - abbr: DC
+          href: https://docs.docker.com/
+    - Debian handbook:
+        - abbr: DB
+          href: https://www.debian.org/doc/

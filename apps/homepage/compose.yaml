@@ -1,0 +1,40 @@
+services:
+  permissions:
+    image: alpine:3.22
+    user: "0:0"
+    command: ["sh", "-c", "chown -R 1000:1000 /config"]
+    volumes:
+      - ${HOMEPAGE_CONFIG_DIR:-./config}:/config
+    restart: "no"
+
+  homepage:
+    image: ghcr.io/gethomepage/homepage:${HOMEPAGE_VERSION:-v2.7.0}
+    user: "1000:1000"
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${HOMEPAGE_PORT:-3000}:3000"
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      HOMEPAGE_ALLOWED_HOSTS: ${HOMEPAGE_ALLOWED_HOSTS:-localhost:3000,127.0.0.1:3000}
+      HOMEPAGE_AUTH_ENABLED: "true"
+      HOMEPAGE_AUTH_PASSWORD: ${HOMEPAGE_AUTH_PASSWORD:?Set a unique password in .env}
+      HOMEPAGE_AUTH_SECRET: ${HOMEPAGE_AUTH_SECRET:?Set a random session secret in .env}
+      HOMEPAGE_EXTERNAL_URL: ${HOMEPAGE_EXTERNAL_URL:-http://localhost:3000}
+      TZ: ${TZ:-Etc/UTC}
+    volumes:
+      - ${HOMEPAGE_CONFIG_DIR:-./config}:/app/config
+    depends_on:
+      permissions:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/healthcheck | grep -qx up"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s

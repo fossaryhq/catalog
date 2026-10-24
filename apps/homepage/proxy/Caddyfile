@@ -1,0 +1,4 @@
+home.example.com {
+  reverse_proxy 127.0.0.1:3000
+}
+# Restrict access to a trusted network/VPN or configure an edge login-attempt limit.
