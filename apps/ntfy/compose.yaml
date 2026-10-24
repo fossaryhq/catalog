@@ -1,0 +1,57 @@
+name: ntfy
+services:
+  permissions:
+    image: alpine:3.22
+    user: "0:0"
+    command: ["sh", "-c", "mkdir -p /data/attachments && chown -R 1000:1000 /data"]
+    volumes:
+      - ntfy-data:/data
+    restart: "no"
+
+  ntfy:
+    image: binwiederhier/ntfy:${NTFY_VERSION:-v2.33.1}
+    command: ["serve"]
+    user: "1000:1000"
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${NTFY_PORT:-8083}:8080"
+    environment:
+      NTFY_LISTEN_HTTP: ":8080"
+      NTFY_BASE_URL: ${NTFY_URL:-http://localhost:8083}
+      NTFY_CACHE_FILE: /var/cache/ntfy/cache.db
+      NTFY_CACHE_DURATION: 168h
+      NTFY_AUTH_FILE: /var/cache/ntfy/user.db
+      NTFY_AUTH_DEFAULT_ACCESS: deny-all
+      NTFY_AUTH_USERS: ${NTFY_AUTH_USERS:?Set a private bcrypt administrator entry}
+      NTFY_ENABLE_LOGIN: "true"
+      NTFY_REQUIRE_LOGIN: "true"
+      NTFY_ENABLE_SIGNUP: "false"
+      NTFY_ATTACHMENT_CACHE_DIR: /var/cache/ntfy/attachments
+      NTFY_ATTACHMENT_TOTAL_SIZE_LIMIT: 1G
+      NTFY_ATTACHMENT_FILE_SIZE_LIMIT: 15M
+      NTFY_ATTACHMENT_EXPIRY_DURATION: 168h
+      NTFY_BEHIND_PROXY: "false"
+      TZ: ${TZ:-Etc/UTC}
+    volumes:
+      - ntfy-data:/var/cache/ntfy
+    depends_on:
+      permissions:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/v1/health | grep -q 'healthy.*true'"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+volumes:
+  ntfy-data:
+    name: ${NTFY_DATA_VOLUME:-ntfy-data}
