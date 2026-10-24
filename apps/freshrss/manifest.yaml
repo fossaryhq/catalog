@@ -169,16 +169,15 @@ upstream:
 
 update_tracking:
   releases:
-    status: current
-    checked_at: "2026-10-09T13:58:07.285Z"
-    latest_version: 1.30.1
+    status: update_available
+    checked_at: "2026-10-24T08:55:05.550Z"
+    latest_version: "1.30.4"
   critical_vulnerabilities:
-    status: findings
-    checked_at: "2026-10-09T13:58:51Z"
-    critical_count: 1
-    scanner: trivy
-    ids:
-      - CVE-2026-6653
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
   breaking_updates:
     status: unknown
     checked_at: null
@@ -186,8 +185,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: current
-    checked_at: "2026-10-09T13:58:51Z"
+    status: unknown
+    checked_at: null
     images: []
 update_policy:
   images:
