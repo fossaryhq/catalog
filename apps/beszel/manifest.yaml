@@ -1,0 +1,188 @@
+schema_version: 6
+publication_status: draft
+slug: beszel
+name: Beszel
+tagline: Lightweight server metrics and history
+summary: Beszel collects server CPU, memory, storage and network metrics through lightweight agents and
+  keeps their history in a local dashboard. This hub recipe creates a private administrator on first start,
+  closes self-registration, and preserves accounts, monitoring history and SSH identity in one backed-up
+  volume.
+status: active
+editorial_status: experimental
+links:
+  website: https://beszel.dev/
+  source: https://github.com/henrygd/beszel
+  documentation: https://beszel.dev/guide/getting-started
+  issues: https://github.com/henrygd/beszel/issues
+classification:
+  categories:
+  - Monitoring
+  tags:
+  - monitoring
+  - metrics
+  - servers
+  - homelab
+  implementation_languages:
+  - Go
+  alternatives_to:
+  - Netdata Cloud
+license:
+  spdx: MIT
+  kind: open_source
+  restrictions: []
+  notes: Upstream Beszel and this recipe use the MIT license. Preserve applicable copyright and permission
+    notices when distributing code or the upstream mark.
+localization:
+  ui_languages:
+  - en
+  - ru
+  docs_languages:
+  - en
+  - ru
+clients:
+  web: true
+  android: true
+  ios: true
+  desktop: true
+auth:
+  oidc: native
+  saml: none
+  two_factor: native
+  proxy_header: true
+requirements:
+  architectures:
+  - amd64
+  - arm64
+  min_cpu_cores: 1
+  min_ram_mb: 128
+  recommended_ram_mb: 256
+  min_disk_gb: 2
+  gpu:
+    required: false
+    supported: false
+  database: sqlite
+  dependencies:
+  - A Beszel agent on each monitored system; agents are deployed separately from this hub recipe.
+operations:
+  install_difficulty: 2
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: unsupported
+  maintenance_difficulty: 2
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: in_place
+recipe:
+  id: beszel-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: '>=2.24.0'
+  application_version: 0.21.1
+  images:
+  - name: henrygd/beszel
+    tag_source: env
+  - name: alpine
+    tag_source: pinned
+  tested_at: '2026-10-24'
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  check_history:
+  - tested_at: '2026-10-24'
+    application_version: 0.21.1
+    recipe_version: 1
+    tested_architectures:
+      amd64: passed
+      arm64: not_tested
+    smoke_test: full
+    restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+  - On amd64, the smoke verifies bootstrap login, closed first-user/public registration, anonymous data
+    isolation, real metrics from a separate pinned sandbox agent, recovery after deleting the hub volume,
+    restored historical measurements/settings/SSH key, rejected incomplete backups, and stopped-state
+    backup. ARM64 was not tested.
+  - The test agent runs in an isolated Docker network without host networking, host mounts or Docker socket.
+    Its readings describe that sandbox/kernel environment; the test does not establish complete physical-host,
+    container, GPU, SMART, ZFS or systemd monitoring.
+  - OIDC, email-OTP MFA, trusted-header login, email/push delivery, external network checks, native third-party
+    clients, TLS proxies and long-term retention were not exercised. Agents on your real systems require
+    separate onboarding.
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+  - The hub stores sensitive infrastructure inventory, metrics, SSH private identity and integration tokens.
+    Protect the data volume and encrypt off-server backups. A restored hub key restores trust with existing
+    agents.
+  - BESZEL_ADMIN_EMAIL and BESZEL_ADMIN_PASSWORD bootstrap both the application administrator and PocketBase
+    superuser on a new database only. They do not rotate credentials in an existing or restored database.
+    Restrict access to the /_/ administration interface.
+  - Only systems assigned to a user are shared by default; administrator/superuser access is powerful.
+    Grant accounts the minimum role and do not enable SHARE_ALL_SYSTEMS casually.
+  - Trusted-header login, AUTO_LOGIN, OIDC, email-OTP MFA and new OAuth user creation are not enabled
+    by this recipe. If enabling forwarded login later, restrict trusted proxy IPs and prevent direct access
+    to the hub.
+  - This recipe installs the hub only. Agents can expose host inventory and gain additional privileges
+    through host networking, device mounts or Docker socket access; review and restrict each agent deployment
+    separately. The test agent has none of those integrations.
+  assessment:
+    status: warnings
+    assessed_at: '2026-10-24'
+upstream:
+  release_source: github
+  repository: henrygd/beszel
+  last_release_at: '2026-10-22'
+  last_checked_at: '2026-10-24T09:32:11Z'
+  stars: 26494
+  stars_checked_at: '2026-10-24T09:32:11Z'
+  releases_last_year: 21
+  releases_checked_at: '2026-10-24T09:32:11Z'
+update_tracking:
+  releases:
+    status: current
+    checked_at: '2026-10-24T09:32:11Z'
+    latest_version: 0.21.1
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+update_policy:
+  images:
+  - image: henrygd/beszel
+    provider: docker_hub
+    repository: henrygd/beszel
+  compose: null
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+  - file: assets/overview.webp
+    alt: Beszel overview with real metrics from a localized recipe sandbox
+  - file: assets/system.webp
+    alt: Beszel system detail showing native resource history charts in dark mode
+  - file: assets/alerts.webp
+    alt: Beszel native alert configuration for the monitored sandbox in light mode
+  updated_at: '2026-10-24'
