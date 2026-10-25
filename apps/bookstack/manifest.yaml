@@ -1,5 +1,5 @@
 schema_version: 6
-publication_status: draft
+publication_status: published
 slug: bookstack
 name: BookStack
 tagline: A wiki with books, chapters, and pages
@@ -160,4 +160,4 @@ content:
       alt: BookStack operations handbook organized into chapters and pages
     - file: assets/page.webp
       alt: BookStack backup runbook with a checklist and recovery procedure in dark mode
-  updated_at: "2026-10-23"
+  updated_at: '2026-10-25'

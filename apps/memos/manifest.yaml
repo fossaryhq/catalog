@@ -1,5 +1,5 @@
 schema_version: 6
-publication_status: draft
+publication_status: published
 slug: memos
 name: Memos
 tagline: Private Markdown notes with tags and attachments
@@ -172,4 +172,4 @@ content:
     alt: Memos recovery checklist with a linked attachment and comment in dark mode
   - file: assets/attachments.webp
     alt: Memos attachment library with household reference files
-  updated_at: '2026-10-23'
+  updated_at: '2026-10-25'

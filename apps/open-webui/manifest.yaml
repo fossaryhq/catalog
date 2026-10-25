@@ -1,5 +1,5 @@
 schema_version: 6
-publication_status: draft
+publication_status: published
 slug: open-webui
 name: Open WebUI
 tagline: A private chat interface for models on your server
@@ -193,4 +193,4 @@ content:
     alt: Open WebUI knowledge collection with household reference documents in dark mode
   - file: assets/users.webp
     alt: Open WebUI administrator user list with fictional household accounts
-  updated_at: '2026-10-23'
+  updated_at: '2026-10-25'

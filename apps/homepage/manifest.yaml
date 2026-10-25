@@ -1,5 +1,5 @@
 schema_version: 6
-publication_status: draft
+publication_status: published
 slug: homepage
 name: Homepage
 tagline: A dashboard for your self-hosted services
@@ -178,4 +178,4 @@ content:
     alt: Homepage infrastructure tab with administration links and documentation in light mode
   - file: assets/quicklaunch.webp
     alt: Homepage native quick launch searching configured services in dark mode
-  updated_at: '2026-10-24'
+  updated_at: '2026-10-25'
