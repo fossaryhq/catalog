@@ -22,6 +22,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Test release tracking
+        run: node --test scripts/*.test.mjs
+
       - name: Validate manifests
         run: |
           pipx run check-jsonschema==0.33.3 \

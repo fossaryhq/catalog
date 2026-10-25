@@ -154,9 +154,9 @@ upstream:
 
 update_tracking:
   releases:
-    status: current
-    checked_at: "2026-10-09T13:58:07.455Z"
-    latest_version: 5.0.8
+    status: update_available
+    checked_at: "2026-10-25T13:46:15.786Z"
+    latest_version: "5.0.9"
   critical_vulnerabilities:
     status: no_findings
     checked_at: "2026-10-09T17:07:32.133213011+03:00"
