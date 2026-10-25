@@ -1,0 +1,14 @@
+http:
+  routers:
+    audiobookshelf:
+      rule: Host(`books.example.com`)
+      entryPoints: [websecure]
+      service: audiobookshelf
+      tls:
+        certResolver: letsencrypt
+  services:
+    audiobookshelf:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:13378
+# Host-based Traefik file provider; containerized Traefik needs suitable networking.

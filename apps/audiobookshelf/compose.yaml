@@ -1,0 +1,75 @@
+services:
+  permissions:
+    image: alpine:3.22
+    user: "0:0"
+    command: ["sh", "-c", "mkdir -p /data/config /data/metadata /data/audiobooks /data/podcasts && chown -R 1000:1000 /data"]
+    volumes:
+      - audiobookshelf-data:/data
+    restart: "no"
+
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:${AUDIOBOOKSHELF_VERSION:-2.37.2}
+    user: "1000:1000"
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${AUDIOBOOKSHELF_PORT:-13378}:80"
+    environment:
+      CONFIG_PATH: /data/config
+      METADATA_PATH: /data/metadata
+      TZ: ${TZ:-Etc/UTC}
+    volumes:
+      - audiobookshelf-data:/data
+    depends_on:
+      permissions:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:80/ping | grep -q 'success.*true'"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+  bootstrap:
+    image: ghcr.io/advplyr/audiobookshelf:${AUDIOBOOKSHELF_VERSION:-2.37.2}
+    profiles: [tools]
+    user: "1000:1000"
+    entrypoint: ["node", "--input-type=module", "-e"]
+    command:
+      - |
+        const base = "http://audiobookshelf:80";
+        const response = await fetch(base + "/status");
+        if (!response.ok) throw new Error("Cannot inspect initialization state");
+        const state = await response.json();
+        if (state.app !== "audiobookshelf" || typeof state.isInit !== "boolean") throw new Error("Unexpected server status");
+        if (!state.isInit) {
+          const password = process.env.ROOT_PASSWORD;
+          if (!password || password.length < 16 || password.startsWith("CHANGE_ME")) throw new Error("Set a unique administrator password of at least 16 characters");
+          const created = await fetch(base + "/init", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({newRoot: {username: "admin", password}})});
+          if (!created.ok) throw new Error("Administrator initialization failed: " + created.status);
+          console.log("Administrator initialized through the native API");
+        } else {
+          console.log("Existing administrator retained; environment does not rotate its password");
+        }
+    environment:
+      ROOT_PASSWORD: ${AUDIOBOOKSHELF_ADMIN_PASSWORD:?Set a unique administrator password}
+    depends_on:
+      audiobookshelf:
+        condition: service_healthy
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: "no"
+
+volumes:
+  audiobookshelf-data:
+    name: ${AUDIOBOOKSHELF_DATA_VOLUME:-audiobookshelf-data}
