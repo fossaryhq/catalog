@@ -73,7 +73,7 @@ operations:
     reliable: unsupported
   maintenance_difficulty: 3
   backup_supported: true
-  restore_tested: false
+  restore_tested: true
   healthcheck: true
   reverse_proxy_required: false
   update_complexity: in_place
@@ -93,13 +93,21 @@ recipe:
     tag_source: env
   - name: alpine
     tag_source: pinned
-  tested_at: '2026-10-23'
+  tested_at: '2026-10-25'
   tested_architectures:
-    amd64: not_tested
+    amd64: passed
     arm64: not_tested
-  smoke_test: not_tested
+  smoke_test: full
   check_history:
-  - tested_at: '2026-10-23'
+  - tested_at: "2026-10-25"
+    application_version: v0.12.4
+    recipe_version: 2
+    tested_architectures:
+      amd64: passed
+      arm64: not_tested
+    smoke_test: full
+    restore_tested: true
+  - tested_at: "2026-10-23"
     application_version: v0.12.3
     recipe_version: 1
     tested_architectures:
@@ -130,23 +138,32 @@ security:
 upstream:
   release_source: github
   repository: open-webui/open-webui
-  last_release_at: '2026-10-16'
-  last_checked_at: '2026-10-23T23:03:30Z'
+  last_release_at: '2026-10-25'
+  last_checked_at: '2026-10-25T15:20:10.682Z'
   stars: 156582
   stars_checked_at: '2026-10-23T23:03:30Z'
-  releases_last_year: 44
-  releases_checked_at: '2026-10-23T23:03:30Z'
+  releases_last_year: 45
+  releases_checked_at: '2026-10-25T15:20:10.682Z'
 update_tracking:
   releases:
-    status: unknown
-    checked_at: null
-    latest_version: null
+    status: current
+    checked_at: "2026-10-25T15:20:10.682Z"
+    latest_version: v0.12.4
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
-    ids: []
+    status: findings
+    checked_at: "2026-10-25T15:21:03.910Z"
+    critical_count: 13
+    scanner: trivy
+    ids:
+    - CVE-2026-102268
+    - CVE-2026-44172
+    - CVE-2026-45829
+    - CVE-2026-45833
+    - CVE-2026-49261
+    - CVE-2026-6653
+    - CVE-2026-68770
+    - CVE-2026-71428
+    - CVE-2026-93221
   breaking_updates:
     status: unknown
     checked_at: null
@@ -154,8 +171,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-25T15:20:10.682Z"
     images: []
 update_policy:
   images:

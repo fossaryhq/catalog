@@ -81,7 +81,7 @@ operations:
     reliable: partial
   maintenance_difficulty: 2
   backup_supported: true
-  restore_tested: false
+  restore_tested: true
   healthcheck: true
   reverse_proxy_required: false
   update_complexity: in_place
@@ -98,13 +98,22 @@ recipe:
   images:
     - name: nodered/node-red
       tag_source: env
-  tested_at: "2026-10-09"
+  tested_at: "2026-10-25"
   tested_architectures:
-    amd64: not_tested
+    amd64: passed
     arm64: not_tested
     armv7: not_tested
-  smoke_test: not_tested
+  smoke_test: full
   check_history:
+    - tested_at: "2026-10-25"
+      application_version: 5.0.9
+      recipe_version: 3
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-10-09"
       application_version: 5.0.8
       recipe_version: 2
@@ -125,7 +134,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 and armv7 were not tested in this run.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-25. arm64 and armv7 were not tested in this run.
     - The smoke flow verifies the editor API and runtime; third-party palette nodes and external integrations are not tested.
 
 security:
@@ -145,33 +154,33 @@ security:
 upstream:
   release_source: github
   repository: node-red/node-red
-  last_release_at: "2026-09-08"
-  last_checked_at: "2026-10-03T00:00:00Z"
+  last_release_at: "2026-10-21"
+  last_checked_at: "2026-10-25T15:20:06.724Z"
   stars: 23701
   stars_checked_at: "2026-10-03T00:00:00Z"
-  releases_last_year: 30
-  releases_checked_at: "2026-10-03T00:00:00Z"
+  releases_last_year: 26
+  releases_checked_at: "2026-10-25T15:20:06.724Z"
 
 update_tracking:
   releases:
-    status: unknown
-    checked_at: null
-    latest_version: null
+    status: current
+    checked_at: "2026-10-25T15:20:06.724Z"
+    latest_version: 5.0.9
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
+    status: no_findings
+    checked_at: "2026-10-25T15:21:03.910Z"
+    critical_count: 0
+    scanner: trivy
     ids: []
   breaking_updates:
-    status: unknown
-    checked_at: null
+    status: review_required
+    checked_at: "2026-10-25T15:21:03.910Z"
   compose_changes:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-25T15:20:06.724Z"
     images: []
 update_policy:
   images:
@@ -190,4 +199,4 @@ content:
       alt: Node-RED workflow editor with the Morning briefing flow selected
     - file: assets/palette.webp
       alt: Node-RED editor showing the built-in palette beside a workflow canvas
-  updated_at: "2026-10-09"
+  updated_at: "2026-10-25"

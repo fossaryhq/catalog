@@ -79,7 +79,7 @@ operations:
     reliable: unsupported
   maintenance_difficulty: 2
   backup_supported: true
-  restore_tested: false
+  restore_tested: true
   healthcheck: true
   reverse_proxy_required: true
   update_complexity: staged_migration
@@ -96,12 +96,20 @@ recipe:
   images:
     - name: jellyfin/jellyfin
       tag_source: env
-  tested_at: "2026-10-09"
+  tested_at: "2026-10-25"
   tested_architectures:
-    amd64: not_tested
+    amd64: passed
     arm64: not_tested
-  smoke_test: not_tested
+  smoke_test: full
   check_history:
+    - tested_at: "2026-10-25"
+      application_version: v12.3
+      recipe_version: 3
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-10-09"
       application_version: v12.2
       recipe_version: 2
@@ -128,7 +136,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 were not tested in this run.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-25. arm64 were not tested in this run.
     - The smoke test starts the server and checks the API, but it does not play media or verify transcoding.
 
 security:
@@ -149,24 +157,25 @@ security:
 upstream:
   release_source: github
   repository: jellyfin/jellyfin
-  last_release_at: "2026-06-06"
-  last_checked_at: "2026-08-30T22:46:56Z"
+  last_release_at: "2026-10-23"
+  last_checked_at: "2026-10-25T15:20:03.513Z"
   stars: 56375
   stars_checked_at: "2026-08-30T22:46:56Z"
-  releases_last_year: 12
-  releases_checked_at: "2026-09-02T17:47:54Z"
+  releases_last_year: 15
+  releases_checked_at: "2026-10-25T15:20:03.513Z"
 
 update_tracking:
   releases:
-    status: unknown
-    checked_at: null
-    latest_version: null
+    status: current
+    checked_at: "2026-10-25T15:20:03.513Z"
+    latest_version: v12.3
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
-    ids: []
+    status: findings
+    checked_at: "2026-10-25T15:21:03.910Z"
+    critical_count: 1
+    scanner: trivy
+    ids:
+      - CVE-2026-6653
   breaking_updates:
     status: unknown
     checked_at: null
@@ -174,8 +183,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-25T15:20:03.513Z"
     images: []
 update_policy:
   images:
@@ -198,4 +207,4 @@ content:
       alt: Built-in web player with the control bar, playback progress, and remaining time
     - file: assets/dashboard.webp
       alt: Admin dashboard with the server version, libraries, connected devices, and the activity log
-  updated_at: "2026-10-09"
+  updated_at: "2026-10-25"

@@ -80,7 +80,7 @@ operations:
     reliable: partial
   maintenance_difficulty: 2
   backup_supported: true
-  restore_tested: false
+  restore_tested: true
   healthcheck: true
   reverse_proxy_required: true
   update_complexity: in_place
@@ -99,12 +99,20 @@ recipe:
       tag_source: pinned
     - name: postgres
       tag_source: pinned
-  tested_at: "2026-10-09"
+  tested_at: "2026-10-25"
   tested_architectures:
-    amd64: not_tested
+    amd64: passed
     arm64: not_tested
-  smoke_test: not_tested
+  smoke_test: full
   check_history:
+    - tested_at: "2026-10-25"
+      application_version: 2.3.4
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-10-09"
       application_version: 2.3.3
       recipe_version: 1
@@ -139,8 +147,8 @@ recipe:
       restore_tested: false
   license: MIT
   smoke_test_limitations:
-    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 were not tested in this run.
-    - arm64 passed the same recipe version on 2026-09-03 and has not been re-tested since.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-25. arm64 were not tested in this run.
+    - arm64 passed an earlier recipe version on 2026-09-03 and has not been re-tested since.
     - Feed polling, the Google Reader and Fever APIs, OAuth2 sign-in, and passkeys are not exercised by the smoke test.
 
 security:
@@ -161,33 +169,34 @@ security:
 upstream:
   release_source: github
   repository: miniflux/v2
-  last_release_at: "2026-07-24"
-  last_checked_at: "2026-09-02T19:40:00Z"
+  last_release_at: "2026-10-20"
+  last_checked_at: "2026-10-25T15:20:05.069Z"
   stars: 9646
   stars_checked_at: "2026-09-02T19:40:00Z"
-  releases_last_year: 11
-  releases_checked_at: "2026-09-02T19:40:00Z"
+  releases_last_year: 10
+  releases_checked_at: "2026-10-25T15:20:05.069Z"
 
 update_tracking:
   releases:
-    status: unknown
-    checked_at: null
-    latest_version: null
+    status: current
+    checked_at: "2026-10-25T15:20:05.069Z"
+    latest_version: 2.3.4
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
-    ids: []
+    status: findings
+    checked_at: "2026-10-25T15:21:03.910Z"
+    critical_count: 1
+    scanner: trivy
+    ids:
+      - CVE-2025-68121
   breaking_updates:
-    status: unknown
-    checked_at: null
+    status: review_required
+    checked_at: "2026-10-25T15:21:03.910Z"
   compose_changes:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-25T15:20:05.069Z"
     images: []
 
 update_policy:
@@ -213,4 +222,4 @@ content:
       alt: Categories screen with three categories, their unread counts, and how many feeds each holds in dark theme
     - file: assets/settings.webp
       alt: Settings page with the account credentials, reading speed, the rule for marking entries read, and the interface language
-  updated_at: "2026-09-02"
+  updated_at: "2026-10-25"

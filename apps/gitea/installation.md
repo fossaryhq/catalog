@@ -101,8 +101,9 @@ curl --fail http://127.0.0.1:3000/api/healthz
 
 The script finishes with `gitea admin regenerate hooks`: hook scripts embed
 absolute paths and the binary version, so they must be rewritten after the data
-directory is replaced. The procedure has not passed a practical restore test;
-test it on a separate server first.
+directory is replaced. The amd64 smoke restores a private test repository,
+including PostgreSQL data and Git files. Rehearse your own production backup
+on a separate server before relying on it.
 
 ### Update
 

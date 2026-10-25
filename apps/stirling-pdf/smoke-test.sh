@@ -25,6 +25,7 @@ cleanup() {
   "${compose[@]}" ps --all
   "${compose[@]}" logs --no-color --timestamps --tail=300
   "${compose[@]}" down --volumes --remove-orphans --timeout 60
+  docker run --rm -v "${data_path}:/data" alpine:3.22 sh -c 'find /data -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +'
   rm -rf "$response" "$data_path" "$work_dir" "$backup_dir"
   exit "$status"
 }

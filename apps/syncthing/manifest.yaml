@@ -82,7 +82,7 @@ operations:
     reliable: unsupported
   maintenance_difficulty: 2
   backup_supported: true
-  restore_tested: false
+  restore_tested: true
   healthcheck: true
   reverse_proxy_required: true
   update_complexity: in_place
@@ -99,13 +99,22 @@ recipe:
   images:
     - name: syncthing/syncthing
       tag_source: env
-  tested_at: "2026-10-09"
+  tested_at: "2026-10-25"
   tested_architectures:
-    amd64: not_tested
+    amd64: passed
     arm64: not_tested
     armv7: not_tested
-  smoke_test: not_tested
+  smoke_test: full
   check_history:
+    - tested_at: "2026-10-25"
+      application_version: v2.1.7
+      recipe_version: 3
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-10-09"
       application_version: v2.1.6
       recipe_version: 2
@@ -135,7 +144,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 and armv7 were not tested in this run.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-25. arm64 and armv7 were not tested in this run.
     - The smoke test starts a single node and checks the API, the data directory permissions, and that the device key survives a restore, but it does not exchange files between two nodes.
 
 security:
@@ -156,23 +165,23 @@ security:
 upstream:
   release_source: github
   repository: syncthing/syncthing
-  last_release_at: "2026-08-05"
-  last_checked_at: "2026-08-31T08:59:25Z"
+  last_release_at: "2026-10-21"
+  last_checked_at: "2026-10-25T15:20:25.885Z"
   stars: 88148
   stars_checked_at: "2026-08-31T08:59:25Z"
-  releases_last_year: 16
-  releases_checked_at: "2026-09-02T17:47:54Z"
+  releases_last_year: 13
+  releases_checked_at: "2026-10-25T15:20:25.885Z"
 
 update_tracking:
   releases:
-    status: unknown
-    checked_at: null
-    latest_version: null
+    status: current
+    checked_at: "2026-10-25T15:20:25.885Z"
+    latest_version: v2.1.7
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
+    status: no_findings
+    checked_at: "2026-10-25T15:21:03.910Z"
+    critical_count: 0
+    scanner: trivy
     ids: []
   breaking_updates:
     status: unknown
@@ -181,8 +190,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-25T15:20:25.885Z"
     images: []
 update_policy:
   images:
@@ -205,4 +214,4 @@ content:
       alt: Web interface settings with the user and password fields, the HTTPS switch, and the theme selector
     - file: assets/folder-edit.webp
       alt: Folder edit dialog with the sharing, versioning, and ignore pattern tabs
-  updated_at: "2026-10-09"
+  updated_at: "2026-10-25"

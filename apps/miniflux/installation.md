@@ -129,8 +129,9 @@ curl --fail http://127.0.0.1:8080/healthcheck
 
 The script first backs up the state being replaced, recreates the volume,
 restores the dump, and starts the stack. The archived `configuration.env` is
-kept for comparison only and is never activated. This procedure has not passed a
-practical restore test; rehearse it on a separate server before you rely on it.
+kept for comparison only and is never activated. The amd64 smoke verifies a
+PostgreSQL backup/restore round trip. Rehearse your own backup on a separate
+server; a PostgreSQL major upgrade is a separate procedure.
 
 ### Update Miniflux
 

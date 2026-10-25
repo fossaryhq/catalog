@@ -81,7 +81,7 @@ operations:
     reliable: partial
   maintenance_difficulty: 3
   backup_supported: true
-  restore_tested: false
+  restore_tested: true
   healthcheck: true
   reverse_proxy_required: true
   update_complexity: manual_steps
@@ -102,12 +102,20 @@ recipe:
       tag_source: pinned
     - name: valkey/valkey
       tag_source: pinned
-  tested_at: "2026-10-09"
+  tested_at: "2026-10-25"
   tested_architectures:
-    amd64: not_tested
+    amd64: passed
     arm64: not_tested
-  smoke_test: not_tested
+  smoke_test: full
   check_history:
+    - tested_at: "2026-10-25"
+      application_version: 3.3.4
+      recipe_version: 4
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-10-09"
       application_version: 3.3.0
       recipe_version: 3
@@ -134,7 +142,7 @@ recipe:
       restore_tested: false
   license: MIT
   smoke_test_limitations:
-    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 were not tested in this run.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-25. arm64 were not tested in this run.
     - The restore was checked against the same Paperless-ngx version and the same PostgreSQL major; an import into another version and a PostgreSQL major upgrade are not covered.
     - The export omits API tokens, so every token has to be issued again after an import; the round trip confirms it.
 
@@ -156,24 +164,29 @@ security:
 upstream:
   release_source: github
   repository: paperless-ngx/paperless-ngx
-  last_release_at: "2026-09-01"
-  last_checked_at: "2026-09-02T09:26:18Z"
+  last_release_at: "2026-10-22"
+  last_checked_at: "2026-10-25T15:20:12.642Z"
   stars: 44757
   stars_checked_at: "2026-09-01T00:21:29Z"
-  releases_last_year: 33
-  releases_checked_at: "2026-09-02T17:47:54Z"
+  releases_last_year: 37
+  releases_checked_at: "2026-10-25T15:20:12.642Z"
 
 update_tracking:
   releases:
-    status: unknown
-    checked_at: null
-    latest_version: null
+    status: current
+    checked_at: "2026-10-25T15:20:12.642Z"
+    latest_version: 3.3.4
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
-    ids: []
+    status: findings
+    checked_at: "2026-10-25T15:21:03.910Z"
+    critical_count: 11
+    scanner: trivy
+    ids:
+      - CVE-2025-68121
+      - CVE-2026-44172
+      - CVE-2026-49261
+      - CVE-2026-6653
+      - GHSA-9v8h-qqgm-4m35
   breaking_updates:
     status: unknown
     checked_at: null
@@ -181,8 +194,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-25T15:20:12.642Z"
     images: []
 update_policy:
   images:
@@ -205,4 +218,4 @@ content:
       alt: The recognized text of a scanned notice beside the image of the page it was read from
     - file: assets/tags.webp
       alt: Tag management with matching mode, document counts, and colours in dark theme
-  updated_at: "2026-10-09"
+  updated_at: "2026-10-25"

@@ -79,7 +79,7 @@ operations:
     reliable: unsupported
   maintenance_difficulty: 2
   backup_supported: true
-  restore_tested: false
+  restore_tested: true
   healthcheck: true
   reverse_proxy_required: false
   update_complexity: in_place
@@ -96,13 +96,22 @@ recipe:
   images:
     - name: louislam/uptime-kuma
       tag_source: env
-  tested_at: "2026-10-09"
+  tested_at: "2026-10-25"
   tested_architectures:
-    amd64: not_tested
+    amd64: passed
     arm64: not_tested
     armv7: not_tested
-  smoke_test: not_tested
+  smoke_test: full
   check_history:
+    - tested_at: "2026-10-25"
+      application_version: 2.5.7
+      recipe_version: 3
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-10-09"
       application_version: 2.5.5
       recipe_version: 2
@@ -123,7 +132,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 and armv7 were not tested in this run.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-25. arm64 and armv7 were not tested in this run.
 
 security:
   public_exposure: supported
@@ -140,24 +149,36 @@ security:
 upstream:
   release_source: github
   repository: louislam/uptime-kuma
-  last_release_at: "2026-08-22"
-  last_checked_at: "2026-08-30T13:17:43Z"
+  last_release_at: "2026-10-23"
+  last_checked_at: "2026-10-25T15:20:27.352Z"
   stars: 90771
   stars_checked_at: "2026-08-30T13:17:43Z"
   releases_last_year: 18
-  releases_checked_at: "2026-09-02T17:47:54Z"
+  releases_checked_at: "2026-10-25T15:20:27.352Z"
 
 update_tracking:
   releases:
-    status: unknown
-    checked_at: null
-    latest_version: null
+    status: current
+    checked_at: "2026-10-25T15:20:27.352Z"
+    latest_version: 2.5.7
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
-    ids: []
+    status: findings
+    checked_at: "2026-10-25T15:21:03.910Z"
+    critical_count: 13
+    scanner: trivy
+    ids:
+      - CVE-2023-45853
+      - CVE-2024-24790
+      - CVE-2025-68121
+      - CVE-2025-7458
+      - CVE-2026-102267
+      - CVE-2026-102268
+      - CVE-2026-40468
+      - CVE-2026-40469
+      - CVE-2026-41242
+      - CVE-2026-58016
+      - CVE-2026-59873
+      - CVE-2026-6653
   breaking_updates:
     status: unknown
     checked_at: null
@@ -165,8 +186,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-25T15:20:27.352Z"
     images: []
 update_policy:
   images:
@@ -187,4 +208,4 @@ content:
       alt: The add-monitor form with check type, interval, and HTTP options
     - file: assets/status-page.webp
       alt: A public status page listing services and their current availability
-  updated_at: "2026-10-09"
+  updated_at: "2026-10-25"

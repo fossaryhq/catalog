@@ -83,7 +83,7 @@ operations:
     reliable: partial
   maintenance_difficulty: 3
   backup_supported: true
-  restore_tested: false
+  restore_tested: true
   healthcheck: true
   reverse_proxy_required: true
   update_complexity: staged_migration
@@ -106,15 +106,23 @@ recipe:
       tag_source: pinned
     - name: ghcr.io/immich-app/postgres
       tag_source: pinned
-  tested_at: "2026-10-09"
+  tested_at: "2026-10-25"
   # Immich ships breaking changes regularly (see description.md), so a check here
   # lives 30 days instead of the standard 90.
   recheck_interval_days: 30
   tested_architectures:
-    amd64: not_tested
+    amd64: passed
     arm64: not_tested
-  smoke_test: not_tested
+  smoke_test: full
   check_history:
+    - tested_at: "2026-10-25"
+      application_version: v3.3.5
+      recipe_version: 3
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-10-09"
       application_version: v3.3.1
       recipe_version: 2
@@ -149,7 +157,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 were not tested in this run.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-25. arm64 were not tested in this run.
     - The smoke test starts the stack and checks the API, but it does not upload media or verify face recognition and smart search.
 
 security:
@@ -170,24 +178,50 @@ security:
 upstream:
   release_source: github
   repository: immich-app/immich
-  last_release_at: "2026-09-15"
-  last_checked_at: "2026-09-21T07:21:38Z"
+  last_release_at: "2026-10-21"
+  last_checked_at: "2026-10-25T15:20:01.442Z"
   stars: 114700
   stars_checked_at: "2026-09-21T07:21:38Z"
   releases_last_year: 36
-  releases_checked_at: "2026-09-21T07:21:38Z"
+  releases_checked_at: "2026-10-25T15:20:01.442Z"
 
 update_tracking:
   releases:
-    status: unknown
-    checked_at: null
-    latest_version: null
+    status: current
+    checked_at: "2026-10-25T15:20:01.442Z"
+    latest_version: v3.3.5
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
-    ids: []
+    status: findings
+    checked_at: "2026-10-25T15:21:03.910Z"
+    critical_count: 40
+    scanner: trivy
+    ids:
+      - CVE-2023-24538
+      - CVE-2023-24540
+      - CVE-2023-45853
+      - CVE-2024-24790
+      - CVE-2025-68121
+      - CVE-2025-7458
+      - CVE-2026-106445
+      - CVE-2026-106446
+      - CVE-2026-112393
+      - CVE-2026-112398
+      - CVE-2026-112403
+      - CVE-2026-112900
+      - CVE-2026-13221
+      - CVE-2026-31789
+      - CVE-2026-33845
+      - CVE-2026-42010
+      - CVE-2026-42216
+      - CVE-2026-42217
+      - CVE-2026-42496
+      - CVE-2026-59873
+      - CVE-2026-63374
+      - CVE-2026-6653
+      - CVE-2026-8376
+      - CVE-2026-90711
+      - CVE-2026-96639
+      - GHSA-6q48-6c7w-9gw2
   breaking_updates:
     status: unknown
     checked_at: null
@@ -195,8 +229,8 @@ update_tracking:
     status: unknown
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-25T15:20:01.442Z"
     images: []
 update_policy:
   # Valkey and PostgreSQL are pinned by digest and their tags do not track the
@@ -226,4 +260,4 @@ content:
       alt: Asset viewer with a side panel showing date, file size, and the album it appears in
     - file: assets/admin-settings.webp
       alt: Machine learning settings in the admin panel with smart search, duplicate detection, facial recognition, and OCR sections
-  updated_at: "2026-10-09"
+  updated_at: "2026-10-25"
