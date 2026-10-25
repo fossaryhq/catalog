@@ -1,0 +1,185 @@
+schema_version: 6
+publication_status: published
+slug: audiobookshelf
+name: Audiobookshelf
+tagline: Your audiobooks, podcasts and listening progress
+summary: Audiobookshelf streams your own audiobook and podcast files, tracks listening progress, bookmarks
+  and collections, and gives each account access to selected libraries. This recipe initializes a private
+  administrator through the native API and backs up the database together with the actual media.
+status: active
+editorial_status: experimental
+links:
+  website: https://www.audiobookshelf.org/
+  source: https://github.com/advplyr/audiobookshelf
+  documentation: https://www.audiobookshelf.org/docs
+  issues: https://github.com/advplyr/audiobookshelf/issues
+classification:
+  categories:
+  - Media servers
+  tags:
+  - audiobooks
+  - podcasts
+  - books
+  - media
+  implementation_languages:
+  - JavaScript
+  alternatives_to:
+  - Plex
+license:
+  spdx: GPL-3.0-only
+  kind: open_source
+  restrictions: []
+  notes: Audiobookshelf is GPLv3; preserve its license and source obligations when redistributing modified
+    binaries. This deployment recipe is MIT. Own or obtain permission for the media you host; the server
+    does not supply an audiobook catalog.
+localization:
+  ui_languages:
+  - en
+  - ru
+  docs_languages:
+  - en
+  - ru
+clients:
+  web: true
+  android: true
+  ios: true
+  desktop: false
+auth:
+  oidc: native
+  saml: none
+  two_factor: none
+  proxy_header: false
+requirements:
+  architectures:
+  - amd64
+  - arm64
+  min_cpu_cores: 1
+  min_ram_mb: 512
+  recommended_ram_mb: 1024
+  min_disk_gb: 5
+  gpu:
+    required: false
+    supported: false
+  database: sqlite
+  dependencies:
+  - Your own DRM-free audiobooks and podcast files; disk requirements grow with the media library.
+operations:
+  install_difficulty: 2
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: unsupported
+  maintenance_difficulty: 2
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: in_place
+recipe:
+  id: audiobookshelf-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: '>=2.24.0'
+  application_version: 2.37.2
+  images:
+  - name: ghcr.io/advplyr/audiobookshelf
+    tag_source: env
+  - name: alpine
+    tag_source: pinned
+  tested_at: '2026-10-25'
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  check_history:
+  - tested_at: '2026-10-25'
+    application_version: 2.37.2
+    recipe_version: 1
+    tested_architectures:
+      amd64: passed
+      arm64: not_tested
+    smoke_test: full
+    restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+  - On amd64, verifies native initialization and password validation/idempotence, login, anonymous denial,
+    a restricted regular account, scanned original audio, authenticated HTTP range playback, progress,
+    bookmark and collection. Deletes the volume and restores real audio bytes, accounts, signing identity
+    and listening state; rejects database-only archives and preserves stopped-state backup. ARM64 was
+    not tested.
+  - The media fixture is a short original generated sample. Large libraries, transcoding under load, external
+    podcast downloads, metadata providers, e-books, RSS sharing, OIDC, mobile clients and TLS proxies
+    were not exercised.
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+  - Before enabling any public proxy, run the bootstrap tools service from loopback. The native first-user
+    setup is unauthenticated until initialization. AUDIOBOOKSHELF_ADMIN_PASSWORD initializes admin only
+    on a new database and never rotates existing or restored passwords.
+  - The data volume contains private media, account credentials, JWT signing material, progress, bookmarks
+    and podcast/integration details. Encrypt backups and retain the entire volume, not only the SQLite
+    database. RSS sharing feeds and download links can grant access to their holders; sharing is not enabled
+    by this recipe.
+  - Grant normal users only the required libraries and permissions; root accounts can administer all content.
+    Local login has no native two-factor authentication. OIDC exists upstream but is not configured or
+    tested here.
+  - All books and podcast downloads must stay under /data/audiobooks and /data/podcasts to be covered
+    by this backup. External mounts are not included. Host only material you are allowed to store and
+    share. This recipe provides no hosted catalog or DRM removal.
+  assessment:
+    status: warnings
+    assessed_at: '2026-10-25'
+upstream:
+  release_source: github
+  repository: advplyr/audiobookshelf
+  last_release_at: '2026-10-23'
+  last_checked_at: '2026-10-25T08:07:57Z'
+  stars: 14777
+  stars_checked_at: '2026-10-25T08:07:57Z'
+  releases_last_year: 14
+  releases_checked_at: '2026-10-24T10:00:00Z'
+update_tracking:
+  releases:
+    status: current
+    checked_at: '2026-10-25T08:07:57Z'
+    latest_version: 2.37.2
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+update_policy:
+  images:
+  - image: ghcr.io/advplyr/audiobookshelf
+    provider: ghcr
+    repository: advplyr/audiobookshelf
+  compose: null
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+  - file: assets/library.webp
+    alt: Audiobookshelf native library with original narrated samples and locally drawn covers
+  - file: assets/book.webp
+    alt: Audiobookshelf native audiobook details with listening progress and audio player
+  - file: assets/collection.webp
+    alt: Audiobookshelf native collection of original narrated samples
+  updated_at: '2026-10-25'

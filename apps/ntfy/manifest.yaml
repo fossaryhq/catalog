@@ -1,5 +1,5 @@
 schema_version: 6
-publication_status: draft
+publication_status: published
 slug: ntfy
 name: ntfy
 tagline: Private topic-based notifications for scripts and devices
@@ -181,4 +181,4 @@ content:
     alt: ntfy backup topic with recovery messages and a sample attachment in dark mode
   - file: assets/account.webp
     alt: ntfy regular account with separately named automation access tokens
-  updated_at: '2026-10-24'
+  updated_at: '2026-10-25'

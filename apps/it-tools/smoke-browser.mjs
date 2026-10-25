@@ -1,0 +1,33 @@
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { pathToFileURL } from "node:url";
+const { chromium } = await import(pathToFileURL(process.argv[3]).href);
+const base = process.argv[2];
+const browser = await chromium.launch();
+try {
+  const page = await browser.newPage();
+  const errors = [];
+  const external = [];
+  page.on("pageerror", error => errors.push(error.message));
+  page.on("request", request => { if (new URL(request.url()).origin !== new URL(base).origin) external.push(request.url()); });
+  await page.goto(`${base}/base64-string-converter`);
+  const text = "Fossary — проверка локальных инструментов";
+  const encoded = Buffer.from(text).toString("base64");
+  await page.getByPlaceholder("Put your string here...").fill(text);
+  await page.waitForFunction(value => [...document.querySelectorAll("textarea")].some(element => element.value === value), encoded);
+  await page.getByPlaceholder("Your base64 string...").fill(encoded);
+  await page.waitForFunction(value => [...document.querySelectorAll("textarea")].filter(element => element.value === value).length >= 2, text);
+  await page.goto(`${base}/hash-text`);
+  await page.getByPlaceholder("Your string to hash...").fill(text);
+  const digest = createHash("sha256").update(text).digest("hex");
+  await page.waitForFunction(value => [...document.querySelectorAll("input")].some(element => element.value === value), digest);
+  await page.goto(`${base}/json-to-yaml-converter`);
+  const input = page.getByPlaceholder("Paste your JSON here...");
+  await input.fill('{"service":"Fossary","enabled":true,"ports":[8084,443]}');
+  await page.waitForFunction(() => document.body.innerText.includes("service: Fossary") && document.body.innerText.includes("enabled: true"));
+  await input.fill("{invalid");
+  await page.getByText("Provided JSON is not valid.", { exact: true }).waitFor();
+  assert.deepEqual(errors, []);
+  assert.deepEqual(external, [], "The exercised tools must not send input or telemetry off-origin");
+  console.log("Native browser Base64 Unicode roundtrip, SHA-256, JSON/YAML and invalid input passed without off-origin requests");
+} finally { await browser.close(); }

@@ -1,0 +1,46 @@
+services:
+  permissions:
+    image: alpine:3.22
+    user: "0:0"
+    command: ["sh", "-c", "chown -R 1000:1000 /data"]
+    volumes:
+      - beszel-data:/data
+    restart: "no"
+
+  beszel:
+    image: henrygd/beszel:${BESZEL_VERSION:-0.21.1}
+    user: "1000:1000"
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${BESZEL_PORT:-8090}:8090"
+    environment:
+      BESZEL_HUB_USER_EMAIL: ${BESZEL_ADMIN_EMAIL:-admin@example.com}
+      BESZEL_HUB_USER_PASSWORD: ${BESZEL_ADMIN_PASSWORD:?Set a unique administrator password}
+      BESZEL_HUB_USER_CREATION: "false"
+      BESZEL_HUB_SHARE_ALL_SYSTEMS: "false"
+      BESZEL_HUB_CHECK_UPDATES: "false"
+      APP_URL: ${BESZEL_URL:-http://localhost:8090}
+      TZ: ${TZ:-Etc/UTC}
+    volumes:
+      - beszel-data:/beszel_data
+    depends_on:
+      permissions:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "/beszel", "health", "--url", "http://127.0.0.1:8090"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+volumes:
+  beszel-data:
+    name: ${BESZEL_DATA_VOLUME:-beszel-data}

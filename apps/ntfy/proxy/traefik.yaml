@@ -1,14 +1,14 @@
 http:
   routers:
-    open-webui:
+    ntfy:
       rule: Host(`notify.example.com`)
       entryPoints:
         - websecure
-      service: open-webui
+      service: ntfy
       tls:
         certResolver: letsencrypt
   services:
-    open-webui:
+    ntfy:
       loadBalancer:
         servers:
           - url: http://127.0.0.1:8083

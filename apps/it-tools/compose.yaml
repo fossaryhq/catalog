@@ -1,0 +1,25 @@
+services:
+  it-tools:
+    image: ghcr.io/corentinth/it-tools:${IT_TOOLS_VERSION:-2024.10.22-7ca5933}
+    user: "101:101"
+    entrypoint: ["nginx"]
+    command: ["-c", "/etc/fossary/nginx.conf", "-g", "daemon off;"]
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${IT_TOOLS_PORT:-8084}:8080"
+    volumes:
+      - ./config/nginx.conf:/etc/fossary/nginx.conf:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/ | grep -q '<title>IT Tools'"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=32m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 15s

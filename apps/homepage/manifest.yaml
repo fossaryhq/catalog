@@ -1,0 +1,181 @@
+schema_version: 6
+publication_status: published
+slug: homepage
+name: Homepage
+tagline: A dashboard for your self-hosted services
+summary: Homepage brings service links, bookmarks, and optional integration widgets into a configurable
+  home dashboard. This recipe enables password login, restricts accepted hosts, runs as an unprivileged
+  user, and keeps configuration on your server.
+status: active
+editorial_status: experimental
+links:
+  website: https://gethomepage.dev/
+  source: https://github.com/gethomepage/homepage
+  documentation: https://gethomepage.dev/
+  issues: https://github.com/gethomepage/homepage/issues
+classification:
+  categories:
+  - Dashboards
+  tags:
+  - dashboard
+  - homelab
+  - bookmarks
+  - widgets
+  implementation_languages:
+  - JavaScript
+  alternatives_to:
+  - start.me
+license:
+  spdx: GPL-3.0-only
+  kind: open_source
+  restrictions: []
+  notes: The upstream repository includes the GNU GPL version 3 license. Distributed modifications must
+    meet its source and license requirements. The recipe is MIT; upstream interface and mark assets keep
+    their own terms.
+localization:
+  ui_languages:
+  - en
+  - ru
+  docs_languages:
+  - en
+  - ru
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: false
+auth:
+  oidc: native
+  saml: none
+  two_factor: none
+  proxy_header: false
+requirements:
+  architectures:
+  - amd64
+  - arm64
+  min_cpu_cores: 1
+  min_ram_mb: 256
+  recommended_ram_mb: 512
+  min_disk_gb: 2
+  gpu:
+    required: false
+    supported: false
+  database: none
+  dependencies: []
+operations:
+  install_difficulty: 2
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: unsupported
+  maintenance_difficulty: 2
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: in_place
+recipe:
+  id: homepage-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: '>=2.24.0'
+  application_version: v2.7.0
+  images:
+  - name: ghcr.io/gethomepage/homepage
+    tag_source: env
+  - name: alpine
+    tag_source: pinned
+  tested_at: '2026-10-24'
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  check_history:
+  - tested_at: '2026-10-24'
+    application_version: v2.7.0
+    recipe_version: 1
+    tested_architectures:
+      amd64: passed
+      arm64: not_tested
+    smoke_test: full
+    restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+  - On amd64, the smoke checks native health, rejected anonymous API access and unexpected Host headers,
+    failed and successful password login, service/bookmark content, recovery after removing configuration,
+    rejection of an incomplete backup, and stopped-state backup. ARM64 was not exercised.
+  - OIDC, external service integrations and credentials, Docker/Kubernetes discovery, reverse-proxy TLS,
+    edge login rate limits, and long-term operation were not tested. Resource widgets describe the container,
+    not the complete host.
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+  - The configured password grants access to the shared dashboard; Homepage has no per-user authorization
+    in this recipe. OIDC exists upstream but is not configured or tested.
+  - Homepage has no built-in password-attempt rate limit. Use a VPN/IP allowlist or an edge limit before
+    exposing the login publicly; the Nginx sample includes a limit for credential callbacks.
+  - The allowed-host list is not authentication or a firewall. Keep exact host:port entries and the external
+    URL consistent; do not use a wildcard. Use HTTPS outside a trusted LAN.
+  - Configuration, environment and backups can contain widget API keys, the login password and session
+    secret. Protect them and encrypt off-server backups. Static assets and custom CSS remain public; never
+    put secrets in them.
+  - Widget URLs can make server-side requests to reachable systems. Only trusted operators should edit
+    configuration; use least-privilege integration tokens. Docker socket and Kubernetes discovery are
+    not connected by this recipe.
+  assessment:
+    status: warnings
+    assessed_at: '2026-10-24'
+upstream:
+  release_source: github
+  repository: gethomepage/homepage
+  last_release_at: '2026-10-23'
+  last_checked_at: '2026-10-24T09:00:10Z'
+  stars: 33326
+  stars_checked_at: '2026-10-24T09:00:10Z'
+  releases_last_year: 24
+  releases_checked_at: '2026-10-24T09:00:10Z'
+update_tracking:
+  releases:
+    status: current
+    checked_at: '2026-10-24T09:00:10Z'
+    latest_version: v2.7.0
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+update_policy:
+  images:
+  - image: ghcr.io/gethomepage/homepage
+    provider: ghcr
+    repository: gethomepage/homepage
+  compose: null
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+  - file: assets/dashboard.webp
+    alt: Homepage household dashboard with service groups and bookmarks in dark mode
+  - file: assets/infrastructure.webp
+    alt: Homepage infrastructure tab with administration links and documentation in light mode
+  - file: assets/quicklaunch.webp
+    alt: Homepage native quick launch searching configured services in dark mode
+  updated_at: '2026-10-25'
