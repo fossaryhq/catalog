@@ -1,5 +1,5 @@
 schema_version: 6
-publication_status: draft
+publication_status: published
 slug: vikunja
 name: Vikunja
 tagline: Tasks, projects, and kanban on your own server
@@ -179,4 +179,4 @@ content:
     - file: assets/task.webp
       alt: Vikunja task details with recovery steps, assignee, labels, and an
         attachment
-  updated_at: "2026-10-23"
+  updated_at: '2026-10-25'

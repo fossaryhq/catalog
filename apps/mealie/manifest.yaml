@@ -1,5 +1,5 @@
 schema_version: 6
-publication_status: draft
+publication_status: published
 
 slug: mealie
 name: Mealie
@@ -184,4 +184,4 @@ content:
       alt: Mealie recipe page with ingredients, cooking directions, and preparation time
     - file: assets/shopping-list.webp
       alt: Mealie household shopping list grouped by ingredient
-  updated_at: "2026-10-21"
+  updated_at: '2026-10-25'

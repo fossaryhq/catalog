@@ -1,5 +1,5 @@
 schema_version: 6
-publication_status: draft
+publication_status: published
 slug: beszel
 name: Beszel
 tagline: Lightweight server metrics and history
@@ -185,4 +185,4 @@ content:
     alt: Beszel system detail showing native resource history charts in dark mode
   - file: assets/alerts.webp
     alt: Beszel native alert configuration for the monitored sandbox in light mode
-  updated_at: '2026-10-24'
+  updated_at: '2026-10-25'
