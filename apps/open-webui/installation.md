@@ -17,7 +17,7 @@ Replace the two placeholders before starting. Every `.env.example` parameter:
 
 | Parameter | Meaning |
 | --- | --- |
-| `OPEN_WEBUI_VERSION` | Exact app tag, initially `v0.12.3`, including `v`. |
+| `OPEN_WEBUI_VERSION` | Exact app tag, initially `v0.12.4`, including `v`. |
 | `OLLAMA_VERSION` | Independent exact inference-server tag, initially `0.40.10`. |
 | `OPEN_WEBUI_PORT` | Loopback host port, default `3080`. |
 | `OPEN_WEBUI_URL` | Exact browser origin, initially `http://localhost:3080`; use the external HTTPS origin behind a proxy. Also used for the CORS allowlist. |
@@ -135,4 +135,4 @@ The safety backup reads stopped volumes without launching the old app against ne
 
 `docker compose down` keeps both volumes. After verifying an off-server backup, `docker compose down --volumes` permanently deletes accounts, chats, files, model weights, and Ollama state. Removing the recipe directory also removes local backups and `.env`.
 
-Sources: [documentation](https://docs.openwebui.com/), [environment configuration](https://docs.openwebui.com/getting-started/env-configuration/), [v0.12.3](https://github.com/open-webui/open-webui/releases/tag/v0.12.3), [Ollama](https://github.com/ollama/ollama), [Qwen model](https://ollama.com/library/qwen3:0.6b), [license](https://docs.openwebui.com/license/).
+Sources: [documentation](https://docs.openwebui.com/), [environment configuration](https://docs.openwebui.com/getting-started/env-configuration/), [v0.12.4](https://github.com/open-webui/open-webui/releases/tag/v0.12.4), [Ollama](https://github.com/ollama/ollama), [Qwen model](https://ollama.com/library/qwen3:0.6b), [license](https://docs.openwebui.com/license/).

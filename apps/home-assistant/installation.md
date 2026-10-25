@@ -173,7 +173,7 @@ server. The script and the built-in backups complement each other.
 Restoring completely replaces the volume content with the chosen archive:
 
 ```bash
-./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose ps
 ```
 
@@ -185,6 +185,10 @@ version is not obliged to understand `.storage` files upgraded by a newer one.
 
 <!-- coverage:update -->
 
+The 2026.10.1 release removed the configurable polling interval from the
+`omnilogic` integration. Review that integration if you use it; the recipe's
+core automation test does not exercise real devices.
+
 Releases ship monthly and regularly contain breaking integration changes. Always
 read the
 [Backward-incompatible changes](https://www.home-assistant.io/blog/categories/release-notes/)
@@ -192,7 +196,7 @@ section of your release notes, then:
 
 ```bash
 ./backup.sh
-sed -i 's/^HOMEASSISTANT_VERSION=.*/HOMEASSISTANT_VERSION=2026.10.0/' .env
+sed -i 's/^HOMEASSISTANT_VERSION=.*/HOMEASSISTANT_VERSION=2026.10.4/' .env
 docker compose pull
 docker compose up -d
 docker compose ps
@@ -214,7 +218,7 @@ schema to the new format, and there is no reverse migration. If the older versio
 refuses to start, restore the archive created before the update:
 
 ```bash
-./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose up -d
 ```
 

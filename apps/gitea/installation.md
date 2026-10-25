@@ -94,22 +94,23 @@ emergency copy of the current state before replacing it. Use the same Gitea
 version, check `.env`, then:
 
 ```bash
-./restore.sh ./backups/gitea-YYYYMMDDTHHMMSSZ.tar
+./restore.sh ./backups/gitea-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar
 docker compose ps
 curl --fail http://127.0.0.1:3000/api/healthz
 ```
 
 The script finishes with `gitea admin regenerate hooks`: hook scripts embed
 absolute paths and the binary version, so they must be rewritten after the data
-directory is replaced. The procedure has not passed a practical restore test;
-test it on a separate server first.
+directory is replaced. The amd64 smoke restores a private test repository,
+including PostgreSQL data and Git files. Rehearse your own production backup
+on a separate server before relying on it.
 
 ### Update
 
 <!-- coverage:update -->
 
 Back up first and read the release notes and upgrade guide. The image is pinned
-in `compose.yaml`: replace `28.1.0` with a reviewed exact version, update the
+in `compose.yaml`: replace `28.2.0` with a reviewed exact version, update the
 exact PostgreSQL tag if needed, then run
 `docker compose pull && docker compose up -d --wait`. Do not switch between
 rootful and rootless images because their data layouts are incompatible.

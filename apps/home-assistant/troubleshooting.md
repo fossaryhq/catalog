@@ -106,7 +106,7 @@ refuses to start because the `.storage` migration already happened, restore the
 archive created before the update:
 
 ```bash
-./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 ```
 
 ### Automations fire at the wrong time

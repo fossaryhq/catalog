@@ -16,7 +16,11 @@ test("an older maintenance release preserves the last known recipe release check
 });
 
 test("a new upstream release preserves checks of the unchanged recipe", async () => {
-  const source = await readFile(new URL("../apps/uptime-kuma/manifest.yaml", import.meta.url), "utf8");
+  const manifest = await readFile(new URL("../apps/uptime-kuma/manifest.yaml", import.meta.url), "utf8");
+  const source = manifest.replace(
+    /^  critical_vulnerabilities:\n[\s\S]*?(?=^  breaking_updates:)/m,
+    '  critical_vulnerabilities:\n    status: findings\n    checked_at: "2026-10-09T13:58:51Z"\n    critical_count: 1\n    scanner: trivy\n    ids:\n      - CVE-2026-6653\n',
+  );
   assert.match(source, /critical_vulnerabilities:\n    status: findings/);
   const result = updateManifest(source, "v99.0.0", "2026-10-25T14:00:00Z");
   assert.equal(result.changed, true);

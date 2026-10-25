@@ -29,7 +29,7 @@ sed -i "s|^FRESHRSS_DB_PASSWORD=.*|FRESHRSS_DB_PASSWORD=$db_password|" .env
 unset login_password api_password db_password
 ```
 
-These secrets contain letters and digits only. The 1.30.1 entrypoint evaluates
+These secrets contain letters and digits only. The 1.30.4 entrypoint evaluates
 first-run option strings through shell `eval`, so spaces and shell metacharacters
 are unsafe here. All three values must differ. Store them in a password manager:
 API clients use the API password, not the web login password.
@@ -131,7 +131,7 @@ Restore irreversibly replaces data, extensions, and PostgreSQL. Use the same
 FreshRSS version and the active `.env`, then run:
 
 ```bash
-./restore.sh ./backups/freshrss-YYYYMMDDTHHMMSSZ.tar
+./restore.sh ./backups/freshrss-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar
 docker compose exec freshrss cli/health.php
 ```
 
@@ -152,7 +152,7 @@ expected articles came back.
 <!-- coverage:update -->
 
 Create a backup and read release notes. Replace the exact
-`freshrss/freshrss:1.30.1` tag with a reviewed version, never `latest`, then run:
+`freshrss/freshrss:1.30.4` tag with a reviewed version, never `latest`, then run:
 
 ```bash
 docker compose pull
@@ -198,7 +198,7 @@ rm -rf ~/services/freshrss
 
 Substitute actual names when volume variables differ.
 
-Sources: [Docker and first run](https://github.com/FreshRSS/FreshRSS/blob/1.30.1/Docker/README.md),
+Sources: [Docker and first run](https://github.com/FreshRSS/FreshRSS/blob/1.30.4/Docker/README.md),
 [backup and OPML](https://freshrss.github.io/FreshRSS/en/admins/05_Backup.html),
 [access control and SSRF](https://freshrss.github.io/FreshRSS/en/admins/09_AccessControl.html),
 [server CSP](https://freshrss.github.io/FreshRSS/en/admins/10_ServerConfig.html), and

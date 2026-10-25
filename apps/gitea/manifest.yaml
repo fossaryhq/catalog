@@ -78,31 +78,39 @@ operations:
     reliable: partial
   maintenance_difficulty: 3
   backup_supported: true
-  restore_tested: false
+  restore_tested: true
   healthcheck: true
   reverse_proxy_required: true
   update_complexity: manual_steps
 
 recipe:
   id: gitea-compose
-  version: 2
+  version: 3
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: 28.1.0
+  application_version: 28.2.0
   images:
     - name: docker.gitea.com/gitea
       tag_source: pinned
     - name: postgres
       tag_source: pinned
-  tested_at: "2026-10-09"
+  tested_at: "2026-10-25"
   tested_architectures:
     amd64: passed
     arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-25"
+      application_version: 28.2.0
+      recipe_version: 3
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-10-09"
       application_version: 28.1.0
       recipe_version: 2
@@ -129,8 +137,8 @@ recipe:
       restore_tested: false
   license: MIT
   smoke_test_limitations:
-    - The application smoke test passed on amd64 on 2026-10-09. arm64 were not tested in this run.
-    - Backup and restore have not passed a practical restore test.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-25. arm64 were not tested in this run.
+    - The amd64 smoke creates a private repository, removes it, and restores both its PostgreSQL rows and Git files; SSH pushes, OIDC, Actions runners, and external integrations are not exercised.
 
 security:
   public_exposure: supported
@@ -149,24 +157,25 @@ security:
 upstream:
   release_source: github
   repository: go-gitea/gitea
-  last_release_at: "2026-08-29"
-  last_checked_at: "2026-09-01T16:15:41Z"
+  last_release_at: "2026-10-18"
+  last_checked_at: "2026-10-25T15:19:46.635Z"
   stars: 57748
   stars_checked_at: "2026-09-01T16:15:41Z"
-  releases_last_year: 17
-  releases_checked_at: "2026-09-02T17:47:54Z"
+  releases_last_year: 18
+  releases_checked_at: "2026-10-25T15:19:46.635Z"
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-25T13:46:15.786Z"
-    latest_version: "28.2.0"
+    status: current
+    checked_at: "2026-10-25T15:19:46.635Z"
+    latest_version: 28.2.0
   critical_vulnerabilities:
-    status: no_findings
-    checked_at: "2026-10-09T17:06:13.851764847+03:00"
-    critical_count: 0
+    status: findings
+    checked_at: "2026-10-25T15:21:03.910Z"
+    critical_count: 1
     scanner: trivy
-    ids: []
+    ids:
+      - CVE-2025-68121
   breaking_updates:
     status: unknown
     checked_at: null
@@ -174,8 +183,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-25T15:19:46.635Z"
     images: []
 update_policy:
   # The recipe uses Gitea's current official docker.gitea.com registry, which
@@ -197,4 +206,4 @@ content:
       alt: Pull request in dark theme showing eight added lines of an alert rule highlighted in the diff, with the review controls above it
     - file: assets/commits.webp
       alt: Commit history of the main branch with the author, short hash, message, release tag and date of each commit
-  updated_at: "2026-10-09"
+  updated_at: "2026-10-25"

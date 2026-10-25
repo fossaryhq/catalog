@@ -84,29 +84,37 @@ operations:
     reliable: partial
   maintenance_difficulty: 3
   backup_supported: true
-  restore_tested: false
+  restore_tested: true
   healthcheck: true
   reverse_proxy_required: true
   update_complexity: manual_steps
 
 recipe:
   id: stirling-pdf-compose
-  version: 2
+  version: 3
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: 3.1.0
+  application_version: 3.2.2
   images:
     - name: stirlingtools/stirling-pdf
       tag_source: pinned
-  tested_at: "2026-10-09"
+  tested_at: "2026-10-25"
   tested_architectures:
     amd64: passed
     arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-25"
+      application_version: 3.2.2
+      recipe_version: 3
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-10-09"
       application_version: 3.1.0
       recipe_version: 2
@@ -133,8 +141,8 @@ recipe:
       restore_tested: false
   license: MIT
   smoke_test_limitations:
-    - The application smoke test passed on amd64 on 2026-10-09. arm64 were not tested in this run.
-    - Backup and restoration of H2 together with configuration, custom files, pipelines, and tessdata have not passed a practical restore test.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-25. arm64 were not tested in this run.
+    - The amd64 smoke verifies administrator login before and after H2/configuration restore, and markers in configs, customFiles, pipeline, and tessdata. OCR, PDF conversions, and a production H2 migration are not exercised.
 
 security:
   public_exposure: supported
@@ -155,24 +163,30 @@ security:
 upstream:
   release_source: github
   repository: Stirling-Tools/Stirling-PDF
-  last_release_at: "2026-08-06"
-  last_checked_at: "2026-09-01T00:21:59Z"
+  last_release_at: "2026-10-24"
+  last_checked_at: "2026-10-25T15:20:16.626Z"
   stars: 91063
   stars_checked_at: "2026-09-01T00:21:59Z"
-  releases_last_year: 51
-  releases_checked_at: "2026-09-02T17:47:54Z"
+  releases_last_year: 53
+  releases_checked_at: "2026-10-25T15:20:16.626Z"
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-25T13:46:15.786Z"
-    latest_version: "3.2.2"
+    status: current
+    checked_at: "2026-10-25T15:20:16.626Z"
+    latest_version: 3.2.2
   critical_vulnerabilities:
-    status: no_findings
-    checked_at: "2026-10-09T13:58:51Z"
-    critical_count: 0
+    status: findings
+    checked_at: "2026-10-25T15:21:03.910Z"
+    critical_count: 6
     scanner: trivy
-    ids: []
+    ids:
+      - CVE-2026-112393
+      - CVE-2026-112398
+      - CVE-2026-112403
+      - CVE-2026-112900
+      - CVE-2026-96639
+      - GHSA-9v8h-qqgm-4m35
   breaking_updates:
     status: unknown
     checked_at: null
@@ -181,7 +195,7 @@ update_tracking:
     checked_at: null
   outdated_images:
     status: current
-    checked_at: "2026-10-09T13:58:51Z"
+    checked_at: "2026-10-25T15:20:16.626Z"
     images: []
 update_policy:
   images:
@@ -204,4 +218,4 @@ content:
       alt: The compress tool with the quality method chosen, a quality slider and the options for greyscale, fast web viewing and line art
     - file: assets/convert.webp
       alt: The convert tool with the source and target formats to choose between, applied to the documents in the workspace
-  updated_at: "2026-10-09"
+  updated_at: "2026-10-25"

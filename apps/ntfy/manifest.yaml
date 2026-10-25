@@ -3,9 +3,7 @@ publication_status: published
 slug: ntfy
 name: ntfy
 tagline: Private topic-based notifications for scripts and devices
-summary: ntfy delivers messages from scripts, monitoring, and home automations to subscribed
-  browsers and mobile clients. This recipe requires login, denies anonymous topic access, stores
-  messages and attachments locally, and provisions an administrator from a private bcrypt entry.
+summary: ntfy delivers messages from scripts, monitoring, and home automations to subscribed browsers and mobile clients. This recipe requires login, denies anonymous topic access, stores messages and attachments locally, and provisions an administrator from a private bcrypt entry.
 status: active
 editorial_status: experimental
 links:
@@ -30,8 +28,7 @@ license:
   spdx: Apache-2.0 OR GPL-2.0-only
   kind: open_source
   restrictions: []
-  notes: Upstream is dual licensed under Apache-2.0 and GPLv2; choose the applicable option.
-    The recipe has its own MIT license. Third-party client assets retain their upstream terms.
+  notes: Upstream is dual licensed under Apache-2.0 and GPLv2; choose the applicable option. The recipe has its own MIT license. Third-party client assets retain their upstream terms.
 localization:
   ui_languages:
   - en
@@ -76,25 +73,33 @@ operations:
   update_complexity: in_place
 recipe:
   id: ntfy-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: '>=2.24.0'
-  application_version: v2.33.1
+  application_version: v2.34.0
   images:
   - name: binwiederhier/ntfy
     tag_source: env
   - name: alpine
     tag_source: pinned
-  tested_at: '2026-10-24'
+  tested_at: '2026-10-25'
   tested_architectures:
     amd64: passed
     arm64: not_tested
   smoke_test: full
   check_history:
-  - tested_at: '2026-10-24'
+  - tested_at: "2026-10-25"
+    application_version: v2.34.0
+    recipe_version: 2
+    tested_architectures:
+      amd64: passed
+      arm64: not_tested
+    smoke_test: full
+    restore_tested: true
+  - tested_at: "2026-10-24"
     application_version: v2.33.1
     recipe_version: 1
     tested_architectures:
@@ -104,14 +109,9 @@ recipe:
     restore_tested: true
   license: MIT
   smoke_test_limitations:
-  - On amd64, the smoke verifies live HTTP delivery, blocked anonymous topic reads/writes and
-    signup, exact attachment bytes, a regular account, token scope through topic ACLs, subscriptions/settings,
-    and recovery after deleting the data volume; arm64 was not tested.
-  - Attachment URLs are bearer links and intentionally remain downloadable without login when
-    the URL is known. The test verifies this behavior; it does not establish private or end-to-end
-    encrypted attachments.
-  - Browser Web Push, Android/iOS background delivery, Firebase, upstream polling, SMTP, calls,
-    external integrations, TLS proxies, and long-term retention/expiry were not exercised.
+  - On amd64, the smoke verifies live HTTP delivery, blocked anonymous topic reads/writes and signup, exact attachment bytes, a regular account, token scope through topic ACLs, subscriptions/settings, and recovery after deleting the data volume; arm64 was not tested.
+  - Attachment URLs are bearer links and intentionally remain downloadable without login when the URL is known. The test verifies this behavior; it does not establish private or end-to-end encrypted attachments.
+  - Browser Web Push, Android/iOS background delivery, Firebase, upstream polling, SMTP, calls, external integrations, TLS proxies, and long-term retention/expiry were not exercised.
 security:
   public_exposure: supported
   default_bind: localhost
@@ -119,41 +119,33 @@ security:
   host_network: false
   docker_socket: false
   known_risks:
-  - 'Attachment URLs are bearer links: anyone who knows one can download the file without logging
-    in, even if the topic denies anonymous access. Encrypt sensitive attachments before uploading
-    and protect logs containing those links.'
-  - Messages, attachments, accounts, tokens, and bcrypt bootstrap hashes remain on the server
-    without end-to-end encryption. Protect the data volume and encrypt off-server backups.
-  - The NTFY_AUTH_USERS entry is declarative and overrides stored administrator credentials
-    at startup. Keep it private and consistent during recovery; changing only a saved plaintext
-    password does not rotate this hash.
-  - Give automations regular users with explicit topic ACLs instead of administrator tokens.
-    A leaked token inherits its owner's permissions; topic names are not passwords.
-  - Cached messages and attachments expire after seven days. Backup restores original timestamps,
-    not a new retention period. Proxy requests share one rate limit while forwarded-IP trust
-    is disabled.
+  - 'Attachment URLs are bearer links: anyone who knows one can download the file without logging in, even if the topic denies anonymous access. Encrypt sensitive attachments before uploading and protect logs containing those links.'
+  - Messages, attachments, accounts, tokens, and bcrypt bootstrap hashes remain on the server without end-to-end encryption. Protect the data volume and encrypt off-server backups.
+  - The NTFY_AUTH_USERS entry is declarative and overrides stored administrator credentials at startup. Keep it private and consistent during recovery; changing only a saved plaintext password does not rotate this hash.
+  - Give automations regular users with explicit topic ACLs instead of administrator tokens. A leaked token inherits its owner's permissions; topic names are not passwords.
+  - Cached messages and attachments expire after seven days. Backup restores original timestamps, not a new retention period. Proxy requests share one rate limit while forwarded-IP trust is disabled.
   assessment:
     status: warnings
     assessed_at: '2026-10-24'
 upstream:
   release_source: github
   repository: binwiederhier/ntfy
-  last_release_at: '2026-10-23'
-  last_checked_at: '2026-10-24T08:36:41Z'
+  last_release_at: '2026-10-24'
+  last_checked_at: '2026-10-25T15:20:08.621Z'
   stars: 35024
   stars_checked_at: '2026-10-24T08:36:41Z'
-  releases_last_year: 24
-  releases_checked_at: '2026-10-24T08:36:41Z'
+  releases_last_year: 25
+  releases_checked_at: '2026-10-25T15:20:08.621Z'
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-25T13:46:15.786Z"
-    latest_version: "v2.34.0"
+    status: current
+    checked_at: "2026-10-25T15:20:08.621Z"
+    latest_version: v2.34.0
   critical_vulnerabilities:
-    status: unknown
-    checked_at: null
-    critical_count: null
-    scanner: null
+    status: no_findings
+    checked_at: "2026-10-25T15:21:03.910Z"
+    critical_count: 0
+    scanner: trivy
     ids: []
   breaking_updates:
     status: unknown
@@ -162,8 +154,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: unknown
-    checked_at: null
+    status: current
+    checked_at: "2026-10-25T15:20:08.621Z"
     images: []
 update_policy:
   images:

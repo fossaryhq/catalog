@@ -818,7 +818,7 @@
               "uniqueItems": true,
               "items": {
                 "type": "string",
-                "pattern": "^CVE-[0-9]{4}-[0-9]{4,}$"
+                "pattern": "^(CVE-[0-9]{4}-[0-9]{4,}|GHSA(-[23456789cfghjmpqrvwx]{4}){3})$"
               }
             }
           }

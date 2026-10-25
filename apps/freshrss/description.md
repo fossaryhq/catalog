@@ -3,7 +3,7 @@ trusted group. It groups sources, filters and labels articles, supports search,
 OPML, and WebSub, while its Google Reader and Fever APIs work with third-party
 Android, iOS, and desktop clients.
 
-This recipe runs pinned FreshRSS 1.30.1 with PostgreSQL 18. Initialization is
+This recipe runs pinned FreshRSS 1.30.4 with PostgreSQL 18. Initialization is
 deterministic: it creates a dedicated administrator with form authentication,
 enables the API with a different password, selects the English interface and
 production environment, and refreshes feeds twice per hour. Data, extensions,

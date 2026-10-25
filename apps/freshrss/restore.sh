@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 if [[ $# -ne 1 || ! -f "$1" ]]; then
-  echo "Usage: $0 path/to/freshrss-YYYYMMDDTHHMMSSZ.tar" >&2
+  echo "Usage: $0 path/to/freshrss-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar" >&2
   exit 2
 fi
 

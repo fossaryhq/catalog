@@ -5,7 +5,7 @@ text when a feed only ships an excerpt, keeps entries readable offline in the
 browser, and exposes the Google Reader and Fever APIs so existing mobile
 readers can sync against it.
 
-This recipe runs pinned Miniflux 2.3.3 with PostgreSQL 18. The application
+This recipe runs pinned Miniflux 2.3.4 with PostgreSQL 18. The application
 itself stores nothing on disk — feeds, entries, icons, sessions, and API keys
 all live in the database, so a single dump is the whole backup. The web port
 binds to localhost and PostgreSQL is not published at all.

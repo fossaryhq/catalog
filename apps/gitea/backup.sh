@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
+umask 077
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$script_dir"
@@ -14,7 +15,7 @@ data_volume="${GITEA_DATA_VOLUME:-gitea-data}"
 db_user="${POSTGRES_USER:-gitea}"
 db_name="${POSTGRES_DB:-gitea}"
 backup_dir="${GITEA_BACKUP_DIR:-$script_dir/backups}"
-timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
+timestamp="$(date -u +%Y%m%dT%H%M%S.%NZ)"
 staging="$(mktemp -d)"
 mkdir -p "$backup_dir"
 

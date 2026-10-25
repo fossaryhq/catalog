@@ -89,22 +89,30 @@ operations:
 
 recipe:
   id: home-assistant-compose
-  version: 2
+  version: 3
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: 2026.10.0
+  application_version: 2026.10.4
   images:
     - name: homeassistant/home-assistant
       tag_source: env
-  tested_at: "2026-10-09"
+  tested_at: "2026-10-25"
   tested_architectures:
     amd64: passed
     arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-25"
+      application_version: 2026.10.4
+      recipe_version: 3
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-10-09"
       application_version: 2026.10.0
       recipe_version: 2
@@ -131,7 +139,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 were not tested in this run.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-25. arm64 were not tested in this run.
     - The recipe runs on an isolated Compose network, so device discovery over mDNS, SSDP, and DHCP was not tested and does not work without host networking.
     - Bluetooth and USB Zigbee or Z-Wave adapters are not wired into the recipe and were not tested.
     - The Container install has no Supervisor, so add-ons and in-panel updates were not tested and are unavailable.
@@ -155,36 +163,40 @@ security:
 upstream:
   release_source: github
   repository: home-assistant/core
-  last_release_at: "2026-08-21"
-  last_checked_at: "2026-08-31T19:49:23Z"
+  last_release_at: "2026-10-24"
+  last_checked_at: "2026-10-25T15:19:57.386Z"
   stars: 90199
   stars_checked_at: "2026-08-31T19:49:23Z"
-  releases_last_year: 58
-  releases_checked_at: "2026-09-02T17:47:54Z"
+  releases_last_year: 57
+  releases_checked_at: "2026-10-25T15:19:57.386Z"
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-25T13:46:15.786Z"
-    latest_version: "2026.10.4"
+    status: current
+    checked_at: "2026-10-25T15:19:57.386Z"
+    latest_version: 2026.10.4
   critical_vulnerabilities:
     status: findings
-    checked_at: "2026-10-09T13:58:51Z"
-    critical_count: 6
+    checked_at: "2026-10-25T15:21:03.910Z"
+    critical_count: 7
     scanner: trivy
     ids:
       - CVE-2025-68121
-      - CVE-2026-60002
+      - CVE-2026-112393
+      - CVE-2026-112398
+      - CVE-2026-112403
+      - CVE-2026-112900
       - CVE-2026-85394
+      - CVE-2026-96639
   breaking_updates:
-    status: unknown
-    checked_at: null
+    status: review_required
+    checked_at: "2026-10-25T15:21:03.910Z"
   compose_changes:
     status: not_tracked
     checked_at: null
   outdated_images:
     status: current
-    checked_at: "2026-10-09T13:58:51Z"
+    checked_at: "2026-10-25T15:19:57.386Z"
     images: []
 update_policy:
   images:
@@ -205,4 +217,4 @@ content:
       alt: State history with temperature charts for two rooms and outdoors plus living room humidity in light theme
     - file: assets/areas.webp
       alt: List of rooms in the home with the number of entities assigned to each in dark theme
-  updated_at: "2026-10-09"
+  updated_at: "2026-10-25"

@@ -95,22 +95,23 @@ volume и снова запускает сервис. Остановка обя�
 проверьте `.env`, затем:
 
 ```bash
-./restore.sh ./backups/gitea-YYYYMMDDTHHMMSSZ.tar
+./restore.sh ./backups/gitea-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar
 docker compose ps
 curl --fail http://127.0.0.1:3000/api/healthz
 ```
 
 Скрипт заканчивает вызовом `gitea admin regenerate hooks`: hook-скрипты хранят
 абсолютные пути и версию бинарника, поэтому после замены data-каталога их нужно
-перезаписать. Процедура ещё не проверена практическим restore-тестом; сначала
-испытайте её на отдельном сервере.
+перезаписать. Smoke-тест на amd64 восстанавливает приватный тестовый репозиторий,
+включая данные PostgreSQL и Git-файлы. Собственную production-копию сначала
+проверьте на отдельном сервере.
 
 ### Обновление
 
 <!-- coverage:update -->
 
 Создайте backup, прочитайте release notes и руководство по обновлению. Образ
-закреплён в `compose.yaml`: замените `28.1.0` на проверенную точную версию, при
+закреплён в `compose.yaml`: замените `28.2.0` на проверенную точную версию, при
 необходимости обновите точный тег PostgreSQL и выполните
 `docker compose pull && docker compose up -d --wait`. Не переключайтесь между
 rootful и rootless образами: их структуры данных несовместимы.

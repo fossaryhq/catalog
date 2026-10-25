@@ -13,7 +13,7 @@ fi
 
 volume="${HOMEASSISTANT_CONFIG_VOLUME:-home-assistant-config}"
 backup_dir="${HOMEASSISTANT_BACKUP_DIR:-$script_dir/backups}"
-timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
+timestamp="$(date -u +%Y%m%dT%H%M%S.%NZ)"
 
 mkdir -p "$backup_dir"
 

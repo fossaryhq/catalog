@@ -142,7 +142,7 @@ handy before an update, and it ends up inside the copy that `backup.sh` makes.
 Restoring replaces the contents of `/config` with the selected archive:
 
 ```bash
-./restore.sh ./backups/jellyfin-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/jellyfin-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose ps
 curl --fail http://127.0.0.1:8096/health
 ```

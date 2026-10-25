@@ -13,7 +13,7 @@ fi
 
 volume="${SYNCTHING_CONFIG_VOLUME:-syncthing-config}"
 backup_dir="${SYNCTHING_BACKUP_DIR:-$script_dir/backups}"
-timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
+timestamp="$(date -u +%Y%m%dT%H%M%S.%NZ)"
 
 mkdir -p "$backup_dir"
 

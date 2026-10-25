@@ -141,7 +141,7 @@ upstream считает небезопасным, поэтому рецепт в
 Восстановление полностью заменяет и базу, и каталог библиотеки:
 
 ```bash
-./restore.sh ./backups/immich-YYYYMMDDTHHMMSSZ.tar
+./restore.sh ./backups/immich-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar
 docker compose ps
 curl --fail http://127.0.0.1:2283/api/server/ping
 ```

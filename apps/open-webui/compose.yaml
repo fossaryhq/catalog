@@ -10,7 +10,7 @@ services:
     restart: "no"
 
   open-webui:
-    image: ghcr.io/open-webui/open-webui:${OPEN_WEBUI_VERSION:-v0.12.3}
+    image: ghcr.io/open-webui/open-webui:${OPEN_WEBUI_VERSION:-v0.12.4}
     user: "1000:1000"
     restart: unless-stopped
     environment:

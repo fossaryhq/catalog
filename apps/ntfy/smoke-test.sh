@@ -14,7 +14,7 @@ hash="$(python3 - "$staging/admin-password" <<'HASH'
 import subprocess,sys
 from pathlib import Path
 password=Path(sys.argv[1]).read_text()
-r=subprocess.run(['docker','run','--rm','-i','binwiederhier/ntfy:v2.33.1','user','hash'],input=password+'\n'+password+'\n',text=True,capture_output=True,check=True)
+r=subprocess.run(['docker','run','--rm','-i','binwiederhier/ntfy:v2.34.0','user','hash'],input=password+'\n'+password+'\n',text=True,capture_output=True,check=True)
 h=r.stdout.strip();assert h.startswith('$2') and len(h)==60
 print(h)
 HASH

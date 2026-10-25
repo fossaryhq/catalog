@@ -27,7 +27,7 @@ chmod 600 .env
 старые значения перестанут расшифровываться.
 
 ```bash
-docker run --rm -it nodered/node-red:5.0.8-24 node-red admin hash-pw
+docker run --rm -it nodered/node-red:5.0.9-24 node-red admin hash-pw
 openssl rand -hex 32
 ```
 
@@ -100,7 +100,7 @@ chmod +x backup.sh restore.sh
 затем загружается выбранный архив:
 
 ```bash
-./restore.sh ./backups/node-red-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/node-red-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose up -d
 ```
 
@@ -111,6 +111,9 @@ docker compose up -d
 ## Обновление
 
 <!-- coverage:update -->
+
+В 5.0.9 узел Range отбрасывает нечисловые входные значения вместо их
+преобразования. Проверьте flow, которые полагались на прежнее поведение.
 
 Сначала сделайте backup, прочитайте [release notes](https://github.com/node-red/node-red/releases),
 поменяйте `NODE_RED_VERSION` в `.env` и пересоздайте сервис:

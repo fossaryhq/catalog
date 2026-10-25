@@ -173,7 +173,7 @@ chmod +x backup.sh restore.sh
 Восстановление полностью заменяет содержимое volume выбранным архивом:
 
 ```bash
-./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose ps
 ```
 
@@ -185,6 +185,10 @@ docker compose ps
 
 <!-- coverage:update -->
 
+В 2026.10.1 из интеграции `omnilogic` убран настраиваемый интервал опроса.
+Если используете её, проверьте настройки: тест автоматизации рецепта
+не проверяет реальные устройства.
+
 Релизы выходят раз в месяц и регулярно содержат несовместимые изменения
 интеграций. Обязательно прочитайте раздел
 [Backward-incompatible changes](https://www.home-assistant.io/blog/categories/release-notes/)
@@ -192,7 +196,7 @@ docker compose ps
 
 ```bash
 ./backup.sh
-sed -i 's/^HOMEASSISTANT_VERSION=.*/HOMEASSISTANT_VERSION=2026.10.0/' .env
+sed -i 's/^HOMEASSISTANT_VERSION=.*/HOMEASSISTANT_VERSION=2026.10.4/' .env
 docker compose pull
 docker compose up -d
 docker compose ps
@@ -214,7 +218,7 @@ Supervisor версию задаёт тег образа. Кнопка обно�
 восстановите архив, созданный перед обновлением:
 
 ```bash
-./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose up -d
 ```
 

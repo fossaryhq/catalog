@@ -89,23 +89,32 @@ operations:
 
 recipe:
   id: pi-hole-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: "2026.09.0"
+  application_version: "2026.10.0"
   images:
     - name: pihole/pihole
       tag_source: env
-  tested_at: "2026-10-09"
+  tested_at: "2026-10-25"
   tested_architectures:
     amd64: passed
     arm64: not_tested
     armv7: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-10-25"
+      application_version: 2026.10.0
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-10-09"
       application_version: 2026.09.0
       recipe_version: 1
@@ -126,7 +135,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 and armv7 were not tested in this run.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-25. arm64 and armv7 were not tested in this run.
     - DHCP, NTP, and external DNS-over-HTTPS are not enabled by this recipe and were not tested.
 
 security:
@@ -147,21 +156,21 @@ security:
 upstream:
   release_source: github
   repository: pi-hole/docker-pi-hole
-  last_release_at: "2026-09-19"
-  last_checked_at: "2026-10-03T09:49:09Z"
+  last_release_at: "2026-10-17"
+  last_checked_at: "2026-10-25T15:20:14.217Z"
   stars: 11644
   stars_checked_at: "2026-10-03T09:49:09Z"
   releases_last_year: 15
-  releases_checked_at: "2026-10-03T09:49:09Z"
+  releases_checked_at: "2026-10-25T15:20:14.217Z"
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-25T13:46:15.786Z"
-    latest_version: "2026.10.0"
+    status: current
+    checked_at: "2026-10-25T15:20:14.217Z"
+    latest_version: 2026.10.0
   critical_vulnerabilities:
     status: no_findings
-    checked_at: "2026-10-09T13:58:51Z"
+    checked_at: "2026-10-25T15:21:03.910Z"
     critical_count: 0
     scanner: trivy
     ids: []
@@ -173,7 +182,7 @@ update_tracking:
     checked_at: null
   outdated_images:
     status: current
-    checked_at: "2026-10-09T13:58:51Z"
+    checked_at: "2026-10-25T15:20:14.217Z"
     images: []
 
 update_policy:
@@ -193,4 +202,4 @@ content:
       alt: Pi-hole query log listing client requests, domains, and blocked or allowed status
     - file: assets/settings.webp
       alt: Pi-hole DNS settings showing selectable upstream resolver providers
-  updated_at: "2026-10-03"
+  updated_at: "2026-10-25"

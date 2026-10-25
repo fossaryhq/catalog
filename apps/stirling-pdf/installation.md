@@ -109,11 +109,11 @@ outside `STIRLING_PDF_DATA_PATH` yourself.
 
 <!-- coverage:restore -->
 
-Restore irreversibly replaces all four directories. Put the **same 3.1.0
+Restore irreversibly replaces all four directories. Put the **same 3.2.2
 version** in Compose, retain the active `.env`, verify free space, and run:
 
 ```bash
-./restore.sh ./backups/stirling-pdf-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/stirling-pdf-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose ps
 curl --fail http://127.0.0.1:8080/api/v1/info/status
 ```
@@ -128,7 +128,7 @@ files, and pipelines.
 <!-- coverage:update -->
 
 Back up first and read the new release notes, migration guide, and licence.
-Replace only the exact `stirlingtools/stirling-pdf:3.1.0` tag with a reviewed
+Replace only the exact `stirlingtools/stirling-pdf:3.2.2` tag with a reviewed
 semantic version, never `latest`, then run:
 
 ```bash
@@ -168,4 +168,4 @@ Sources: [Docker installation](https://docs.stirlingpdf.com/Installation/Docker%
 [production, health, and backup](https://docs.stirlingpdf.com/Production-Deployment-Guide/),
 [analytics](https://docs.stirlingpdf.com/analytics-telemetry/),
 [modes and licensing](https://docs.stirlingpdf.com/Modes%20and%20Licensing/), and
-the [3.1.0 licence](https://github.com/Stirling-Tools/Stirling-PDF/blob/v3.1.0/LICENSE).
+the [3.2.2 licence](https://github.com/Stirling-Tools/Stirling-PDF/blob/v3.2.2/LICENSE).

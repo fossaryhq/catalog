@@ -115,7 +115,7 @@ server.
 Restoring replaces the volume contents with the archive you name:
 
 ```bash
-./restore.sh ./backups/uptime-kuma-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/uptime-kuma-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose ps
 ```
 

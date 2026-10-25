@@ -15,7 +15,7 @@ set +a
 compose=(docker compose --env-file "$env_file")
 
 backup_dir="${MINIFLUX_BACKUP_DIR:-$script_dir/backups}"
-timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
+timestamp="$(date -u +%Y%m%dT%H%M%S.%NZ)"
 staging="$(mktemp -d)"
 miniflux_stopped=false
 cleanup() {

@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
+umask 077
 
 if [[ $# -ne 1 || ! -f "$1" ]]; then
-  echo "Usage: $0 path/to/gitea-YYYYMMDDTHHMMSSZ.tar" >&2
+  echo "Usage: $0 path/to/gitea-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar" >&2
   exit 2
 fi
 

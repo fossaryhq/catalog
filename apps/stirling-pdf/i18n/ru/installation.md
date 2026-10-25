@@ -111,10 +111,10 @@ restore. Входные и временные PDF обычно удаляютс�
 <!-- coverage:restore -->
 
 Restore необратимо заменяет все четыре каталога. Верните в Compose **ту же
-версию 3.1.0**, оставьте активный `.env`, проверьте место и выполните:
+версию 3.2.2**, оставьте активный `.env`, проверьте место и выполните:
 
 ```bash
-./restore.sh ./backups/stirling-pdf-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/stirling-pdf-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose ps
 curl --fail http://127.0.0.1:8080/api/v1/info/status
 ```
@@ -129,7 +129,7 @@ curl --fail http://127.0.0.1:8080/api/v1/info/status
 <!-- coverage:update -->
 
 Сделайте backup, прочитайте release notes, migration guide и лицензию новой
-версии. Замените только точный тег `stirlingtools/stirling-pdf:3.1.0` на
+версии. Замените только точный тег `stirlingtools/stirling-pdf:3.2.2` на
 проверенный semantic version, никогда не используйте `latest`, затем:
 
 ```bash
@@ -170,4 +170,4 @@ rm -rf ./data ./backups .env
 [production, health и backup](https://docs.stirlingpdf.com/Production-Deployment-Guide/),
 [analytics](https://docs.stirlingpdf.com/analytics-telemetry/),
 [modes and licensing](https://docs.stirlingpdf.com/Modes%20and%20Licensing/) и
-[лицензия 3.1.0](https://github.com/Stirling-Tools/Stirling-PDF/blob/v3.1.0/LICENSE).
+[лицензия 3.2.2](https://github.com/Stirling-Tools/Stirling-PDF/blob/v3.2.2/LICENSE).
