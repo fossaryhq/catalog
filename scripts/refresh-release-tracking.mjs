@@ -46,6 +46,8 @@ export function updateManifest(source, tagName, checkedAt) {
   const repository = valueIn(upstream, "repository");
   const comparison = current ? compareVersions(current, tagName) : null;
   if (!repository || comparison === null) return null;
+  // GitHub's latest release may point to an older maintenance branch.
+  if (comparison > 0) return { repository, changed: false, source };
   const latestVersion = catalogVersion(current, tagName);
   const status = comparison < 0 ? "update_available" : "current";
   const release = /^update_tracking:\n[\s\S]*?^  releases:\n[\s\S]*?(?=^  \S|^\S)/m.exec(source)?.[0];
