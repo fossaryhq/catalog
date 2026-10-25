@@ -1,0 +1,185 @@
+schema_version: 6
+publication_status: draft
+slug: it-tools
+name: IT Tools
+tagline: Local browser utilities for everyday development
+summary: IT Tools collects text encoders, hash calculators and format converters in one self-hosted browser
+  interface. This static, non-root recipe serves the pinned upstream build without an application database;
+  configuration backups do not include favorites or tool data stored in each browser.
+status: active
+editorial_status: experimental
+links:
+  website: https://it-tools.tech/
+  source: https://github.com/CorentinTh/it-tools
+  documentation: https://github.com/CorentinTh/it-tools#readme
+  issues: https://github.com/CorentinTh/it-tools/issues
+classification:
+  categories:
+  - Development
+  tags:
+  - developer-tools
+  - converters
+  - encoding
+  - utilities
+  implementation_languages:
+  - TypeScript
+  alternatives_to: []
+license:
+  spdx: GPL-3.0-only
+  kind: open_source
+  restrictions: []
+  notes: IT Tools is GPLv3. Preserve license and corresponding-source obligations when redistributing
+    modified builds. The recipe and original screenshot samples are MIT; no vendor price saving is claimed.
+localization:
+  ui_languages:
+  - en
+  - de
+  - es
+  - fr
+  - pt
+  - uk
+  - vi
+  - zh
+  docs_languages:
+  - en
+  - ru
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: false
+auth:
+  oidc: none
+  saml: none
+  two_factor: none
+  proxy_header: false
+requirements:
+  architectures:
+  - amd64
+  - arm64
+  min_cpu_cores: 1
+  min_ram_mb: 128
+  recommended_ram_mb: 256
+  min_disk_gb: 1
+  gpu:
+    required: false
+    supported: false
+  database: none
+  dependencies: []
+operations:
+  install_difficulty: 1
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: unsupported
+  maintenance_difficulty: 1
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: in_place
+recipe:
+  id: it-tools-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: '>=2.24.0'
+  application_version: 2024.10.22-7ca5933
+  images:
+  - name: ghcr.io/corentinth/it-tools
+    tag_source: env
+  tested_at: '2026-10-25'
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  check_history:
+  - tested_at: '2026-10-25'
+    application_version: 2024.10.22-7ca5933
+    recipe_version: 1
+    tested_architectures:
+      amd64: passed
+      arm64: not_tested
+    smoke_test: full
+    restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+  - On amd64, verifies non-root/read-only serving, SPA routes, native browser Unicode Base64 roundtrip,
+    SHA-256, JSON-to-YAML and invalid-input validation without off-origin requests for those tools. Recreates
+    a clean deployment, restores a custom Nginx configuration marker, rejects incomplete archives before
+    mutation, and preserves stopped-state backup. ARM64 was not tested.
+  - Backups cover server configuration, environment and Compose only. Favorites, preferences and any persisted
+    tool inputs belong to browser storage and are not server-restored. Other tools, external links, TLS
+    proxies, authentication gateways and dependency vulnerabilities were not exercised or scanned.
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+  - This static application has no accounts, native OIDC, MFA or authorization. Anyone who can reach it
+    can use it. Keep the recipe on loopback; use a private VPN or an independently protected HTTPS gateway
+    if needed.
+  - Some tool values and favorites persist in browser local storage; clearing the site or losing the browser
+    profile loses them. Server backups cannot recover browser data. Do not paste production keys or untrusted
+    active content into casual utility sessions; browser extensions and shared profiles can observe your
+    input.
+  - The latest stable upstream image is dated 2024-10-22, verified on 2026-10-25. A successful smoke does
+    not establish current dependency security or ongoing release maintenance. No vulnerability scan is
+    claimed.
+  - The tested encoders, hashing and format conversions run in the browser without off-origin requests.
+    This is a scoped observation, not a guarantee for every tool, external link or future image. Frontend
+    VITE settings are build-time; runtime environment variables do not rebuild the official image.
+  assessment:
+    status: warnings
+    assessed_at: '2026-10-25'
+upstream:
+  release_source: github
+  repository: CorentinTh/it-tools
+  last_release_at: '2024-10-22'
+  last_checked_at: '2026-10-25T08:23:51Z'
+  stars: 40962
+  stars_checked_at: '2026-10-25T08:23:51Z'
+  releases_last_year: 0
+  releases_checked_at: '2026-10-25T08:23:51Z'
+update_tracking:
+  releases:
+    status: current
+    checked_at: '2026-10-25T08:23:51Z'
+    latest_version: 2024.10.22-7ca5933
+  critical_vulnerabilities:
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+update_policy:
+  images:
+  - image: ghcr.io/corentinth/it-tools
+    provider: ghcr
+    repository: corentinth/it-tools
+  compose: null
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+  - file: assets/json.webp
+    alt: IT Tools native JSON-to-YAML conversion with original configuration data in light mode
+  - file: assets/hash.webp
+    alt: IT Tools native hash calculator with original sample text in dark mode
+  - file: assets/base64.webp
+    alt: IT Tools native Base64 Unicode encoding and decoding of original sample text in light mode
+  updated_at: '2026-10-25'
