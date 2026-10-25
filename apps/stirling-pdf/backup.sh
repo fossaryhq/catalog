@@ -15,7 +15,7 @@ set +a
 
 data_path="${STIRLING_PDF_DATA_PATH:-$script_dir/data}"
 backup_dir="${STIRLING_PDF_BACKUP_DIR:-$script_dir/backups}"
-timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
+timestamp="$(date -u +%Y%m%dT%H%M%S.%NZ)"
 mkdir -p "$backup_dir"
 for directory in configs customFiles pipeline tessdata; do
   mkdir -p "$data_path/$directory"

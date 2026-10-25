@@ -114,7 +114,7 @@ Restore необратимо заменяет все четыре каталог
 версию 3.2.2**, оставьте активный `.env`, проверьте место и выполните:
 
 ```bash
-./restore.sh ./backups/stirling-pdf-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/stirling-pdf-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose ps
 curl --fail http://127.0.0.1:8080/api/v1/info/status
 ```

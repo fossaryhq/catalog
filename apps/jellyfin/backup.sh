@@ -13,7 +13,7 @@ fi
 
 volume="${JELLYFIN_CONFIG_VOLUME:-jellyfin-config}"
 backup_dir="${JELLYFIN_BACKUP_DIR:-$script_dir/backups}"
-timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
+timestamp="$(date -u +%Y%m%dT%H%M%S.%NZ)"
 
 mkdir -p "$backup_dir"
 

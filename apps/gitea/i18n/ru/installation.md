@@ -95,7 +95,7 @@ volume и снова запускает сервис. Остановка обя�
 проверьте `.env`, затем:
 
 ```bash
-./restore.sh ./backups/gitea-YYYYMMDDTHHMMSSZ.tar
+./restore.sh ./backups/gitea-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar
 docker compose ps
 curl --fail http://127.0.0.1:3000/api/healthz
 ```

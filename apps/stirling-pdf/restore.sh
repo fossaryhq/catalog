@@ -3,7 +3,7 @@ set -Eeuo pipefail
 umask 077
 
 if [[ $# -ne 1 || ! -f "$1" ]]; then
-  echo "Usage: $0 path/to/stirling-pdf-YYYYMMDDTHHMMSSZ.tar.gz" >&2
+  echo "Usage: $0 path/to/stirling-pdf-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz" >&2
   exit 2
 fi
 
@@ -21,7 +21,7 @@ set +a
 
 data_path="${STIRLING_PDF_DATA_PATH:-$script_dir/data}"
 backup_dir="${STIRLING_PDF_BACKUP_DIR:-$script_dir/backups}"
-timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
+timestamp="$(date -u +%Y%m%dT%H%M%S.%NZ)"
 mkdir -p "$data_path" "$backup_dir"
 tar -tzf "$archive" >/dev/null
 

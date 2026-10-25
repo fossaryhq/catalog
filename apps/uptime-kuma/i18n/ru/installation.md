@@ -106,7 +106,7 @@ chmod +x backup.sh restore.sh
 Восстановление полностью заменяет содержимое volume выбранным архивом:
 
 ```bash
-./restore.sh ./backups/uptime-kuma-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/uptime-kuma-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose ps
 ```
 

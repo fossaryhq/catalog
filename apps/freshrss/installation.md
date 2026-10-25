@@ -131,7 +131,7 @@ Restore irreversibly replaces data, extensions, and PostgreSQL. Use the same
 FreshRSS version and the active `.env`, then run:
 
 ```bash
-./restore.sh ./backups/freshrss-YYYYMMDDTHHMMSSZ.tar
+./restore.sh ./backups/freshrss-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar
 docker compose exec freshrss cli/health.php
 ```
 

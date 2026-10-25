@@ -135,7 +135,7 @@ chmod +x backup.sh restore.sh
 узлы продолжат работать без повторного добавления:
 
 ```bash
-./restore.sh ./backups/syncthing-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/syncthing-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose ps
 curl --fail http://127.0.0.1:8384/rest/noauth/health
 ```

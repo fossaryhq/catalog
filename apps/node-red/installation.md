@@ -102,7 +102,7 @@ Restore irreversibly replaces the current data volume. The script creates a
 safety backup first, then restores the selected archive:
 
 ```bash
-./restore.sh ./backups/node-red-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/node-red-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose up -d
 ```
 

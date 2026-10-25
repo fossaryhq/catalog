@@ -173,7 +173,7 @@ chmod +x backup.sh restore.sh
 Восстановление полностью заменяет содержимое volume выбранным архивом:
 
 ```bash
-./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose ps
 ```
 
@@ -218,7 +218,7 @@ Supervisor версию задаёт тег образа. Кнопка обно�
 восстановите архив, созданный перед обновлением:
 
 ```bash
-./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose up -d
 ```
 

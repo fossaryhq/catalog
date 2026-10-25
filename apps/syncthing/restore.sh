@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if [[ $# -ne 1 || ! -f "$1" ]]; then
-  echo "Usage: $0 path/to/syncthing-YYYYMMDDTHHMMSSZ.tar.gz" >&2
+  echo "Usage: $0 path/to/syncthing-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz" >&2
   exit 2
 fi
 

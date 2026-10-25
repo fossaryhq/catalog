@@ -19,7 +19,7 @@ set +a
 export_volume="${PAPERLESS_EXPORT_VOLUME:-paperless-export}"
 consume_volume="${PAPERLESS_CONSUME_VOLUME:-paperless-consume}"
 backup_dir="${PAPERLESS_BACKUP_DIR:-$script_dir/backups}"
-timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
+timestamp="$(date -u +%Y%m%dT%H%M%S.%NZ)"
 staging="$(mktemp -d)"
 trap 'rm -rf "$staging"' EXIT
 mkdir -p "$backup_dir"

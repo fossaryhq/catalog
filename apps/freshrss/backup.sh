@@ -19,7 +19,7 @@ set +a
 data_volume="${FRESHRSS_DATA_VOLUME:-freshrss-data}"
 extensions_volume="${FRESHRSS_EXTENSIONS_VOLUME:-freshrss-extensions}"
 backup_dir="${FRESHRSS_BACKUP_DIR:-$script_dir/backups}"
-timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
+timestamp="$(date -u +%Y%m%dT%H%M%S.%NZ)"
 staging="$(mktemp -d)"
 freshrss_stopped=false
 cleanup() {

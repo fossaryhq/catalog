@@ -145,7 +145,7 @@ export, могут не попасть в согласованный снимо�
 путей. Проверьте тег `3.3.4`, свободное место и активный `.env`, затем:
 
 ```bash
-./restore.sh ./backups/paperless-ngx-YYYYMMDDTHHMMSSZ.tar
+./restore.sh ./backups/paperless-ngx-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar
 docker compose ps
 docker compose exec webserver document_sanity_checker
 ```

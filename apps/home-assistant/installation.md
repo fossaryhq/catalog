@@ -173,7 +173,7 @@ server. The script and the built-in backups complement each other.
 Restoring completely replaces the volume content with the chosen archive:
 
 ```bash
-./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose ps
 ```
 
@@ -218,7 +218,7 @@ schema to the new format, and there is no reverse migration. If the older versio
 refuses to start, restore the archive created before the update:
 
 ```bash
-./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose up -d
 ```
 

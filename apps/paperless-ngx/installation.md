@@ -148,7 +148,7 @@ completely empty installation of the **same Paperless-ngx version**, with the
 same path settings. Verify tag `3.3.4`, free space, and the active `.env`, then:
 
 ```bash
-./restore.sh ./backups/paperless-ngx-YYYYMMDDTHHMMSSZ.tar
+./restore.sh ./backups/paperless-ngx-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar
 docker compose ps
 docker compose exec webserver document_sanity_checker
 ```

@@ -5,7 +5,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$script_dir"
 volume="${NODE_RED_DATA_VOLUME:-node-red-data}"
 backup_dir="${NODE_RED_BACKUP_DIR:-$script_dir/backups}"
-timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
+timestamp="$(date -u +%Y%m%dT%H%M%S.%NZ)"
 
 mkdir -p "$backup_dir"
 docker compose stop node-red

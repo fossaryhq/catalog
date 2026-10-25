@@ -62,8 +62,10 @@ docker run --rm -v "${volume}:/data" alpine:3.22 touch /data/fossary-restore-che
 bash "$app_dir/backup.sh"
 archives=("$backup_dir"/node-red-*.tar.gz)
 test -f "${archives[0]}"
+archive_hash="$(sha256sum "${archives[0]}")"
 docker run --rm -v "${volume}:/data" alpine:3.22 sh -c 'rm -f /data/fossary-restore-check /data/flows.json'
 bash "$app_dir/restore.sh" "${archives[0]}"
+printf '%s\n' "$archive_hash" | sha256sum --check --status
 "${compose[@]}" up --detach --wait --wait-timeout 300
 docker run --rm -v "${volume}:/data:ro" alpine:3.22 test -f /data/fossary-restore-check
 published="$("${compose[@]}" port node-red 1880)"

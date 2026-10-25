@@ -141,7 +141,7 @@ the last 14 by default; they do not replace a copy of the files.
 Restoring replaces both the database and the library directory:
 
 ```bash
-./restore.sh ./backups/immich-YYYYMMDDTHHMMSSZ.tar
+./restore.sh ./backups/immich-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar
 docker compose ps
 curl --fail http://127.0.0.1:2283/api/server/ping
 ```

@@ -100,7 +100,7 @@ chmod +x backup.sh restore.sh
 затем загружается выбранный архив:
 
 ```bash
-./restore.sh ./backups/node-red-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/node-red-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose up -d
 ```
 

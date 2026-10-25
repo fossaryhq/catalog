@@ -122,7 +122,7 @@ chmod +x backup.sh restore.sh
 PostgreSQL и текущий `.env`:
 
 ```bash
-./restore.sh ./backups/miniflux-YYYYMMDDTHHMMSSZ.tar
+./restore.sh ./backups/miniflux-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar
 curl --fail http://127.0.0.1:8080/healthcheck
 ```
 

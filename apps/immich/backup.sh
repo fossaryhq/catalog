@@ -15,7 +15,7 @@ upload_location="${IMMICH_UPLOAD_LOCATION:-./library}"
 db_username="${IMMICH_DB_USERNAME:-immich}"
 db_database_name="${IMMICH_DB_DATABASE_NAME:-immich}"
 backup_dir="${IMMICH_BACKUP_DIR:-$script_dir/backups}"
-timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
+timestamp="$(date -u +%Y%m%dT%H%M%S.%NZ)"
 
 if [[ ! -d "$upload_location" ]]; then
   echo "IMMICH_UPLOAD_LOCATION not found: $upload_location" >&2

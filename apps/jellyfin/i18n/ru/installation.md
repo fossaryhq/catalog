@@ -143,7 +143,7 @@ Create Backup создаёт архив в `/config/data/backups`, не оста
 Восстановление полностью заменяет содержимое `/config` выбранным архивом:
 
 ```bash
-./restore.sh ./backups/jellyfin-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/jellyfin-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose ps
 curl --fail http://127.0.0.1:8096/health
 ```

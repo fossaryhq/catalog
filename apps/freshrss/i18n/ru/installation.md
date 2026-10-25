@@ -131,7 +131,7 @@ Restore необратимо заменяет data, extensions и PostgreSQL. И
 версию FreshRSS и активный `.env`, затем:
 
 ```bash
-./restore.sh ./backups/freshrss-YYYYMMDDTHHMMSSZ.tar
+./restore.sh ./backups/freshrss-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar
 docker compose exec freshrss cli/health.php
 ```
 

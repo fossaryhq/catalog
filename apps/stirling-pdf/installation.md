@@ -113,7 +113,7 @@ Restore irreversibly replaces all four directories. Put the **same 3.2.2
 version** in Compose, retain the active `.env`, verify free space, and run:
 
 ```bash
-./restore.sh ./backups/stirling-pdf-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/stirling-pdf-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 docker compose ps
 curl --fail http://127.0.0.1:8080/api/v1/info/status
 ```

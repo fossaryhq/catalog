@@ -107,7 +107,7 @@ recorder:
 созданный перед обновлением:
 
 ```bash
-./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSSZ.tar.gz
+./restore.sh ./backups/home-assistant-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar.gz
 ```
 
 ### Автоматизации срабатывают не в то время

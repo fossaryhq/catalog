@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 if [[ $# -ne 1 || ! -f "$1" ]]; then
-  echo "Usage: $0 path/to/paperless-ngx-YYYYMMDDTHHMMSSZ.tar" >&2
+  echo "Usage: $0 path/to/paperless-ngx-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar" >&2
   exit 2
 fi
 

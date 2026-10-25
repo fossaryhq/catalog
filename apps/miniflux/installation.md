@@ -123,7 +123,7 @@ Restore irreversibly replaces the database. Use the same Miniflux and PostgreSQL
 versions with the active `.env`:
 
 ```bash
-./restore.sh ./backups/miniflux-YYYYMMDDTHHMMSSZ.tar
+./restore.sh ./backups/miniflux-YYYYMMDDTHHMMSS.NNNNNNNNNZ.tar
 curl --fail http://127.0.0.1:8080/healthcheck
 ```
 
