@@ -8,6 +8,13 @@ test("identical commit-suffixed releases are current without guessing their orde
   assert.equal(compareVersions("2024.10.22-7ca5933", "v2024.10.22-abcdef0"), null);
 });
 
+test("an older maintenance release preserves the last known recipe release check", async () => {
+  const source = await readFile(new URL("../apps/nextcloud/manifest.yaml", import.meta.url), "utf8");
+  const result = updateManifest(source, "v33.0.10", "2026-10-25T14:00:00Z");
+  assert.equal(result.changed, false);
+  assert.equal(result.source, source);
+});
+
 test("a new upstream release preserves checks of the unchanged recipe", async () => {
   const source = await readFile(new URL("../apps/uptime-kuma/manifest.yaml", import.meta.url), "utf8");
   assert.match(source, /critical_vulnerabilities:\n    status: findings/);
