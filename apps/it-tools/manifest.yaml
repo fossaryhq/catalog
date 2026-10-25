@@ -58,8 +58,8 @@ requirements:
   - amd64
   - arm64
   min_cpu_cores: 1
-  min_ram_mb: 64
-  recommended_ram_mb: 128
+  min_ram_mb: 128
+  recommended_ram_mb: 256
   min_disk_gb: 1
   gpu:
     required: false

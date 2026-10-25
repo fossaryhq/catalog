@@ -1,7 +1,7 @@
 <!-- coverage:os -->
 # Install IT Tools
 
-Requires Docker Engine, Compose >=2.24, 1 CPU, 64 MB RAM (128 MB recommended) and 1 GB disk for the image. Tested on amd64; the image also publishes arm64.
+Requires Docker Engine, Compose >=2.24, 1 CPU, 128 MB RAM (256 MB recommended) and 1 GB disk for the image. Tested on amd64; the image also publishes arm64.
 
 ```sh
 cp .env.example .env

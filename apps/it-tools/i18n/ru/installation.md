@@ -1,7 +1,7 @@
 <!-- coverage:os -->
 # Установка IT Tools
 
-Нужны Docker Engine, Compose >=2.24, 1 CPU, 64 МБ RAM (128 МБ рекомендуются) и 1 ГБ диска для образа. Проверен amd64; образ также публикует arm64.
+Нужны Docker Engine, Compose >=2.24, 1 CPU, 128 МБ RAM (256 МБ рекомендуются) и 1 ГБ диска для образа. Проверен amd64; образ также публикует arm64.
 
 ```sh
 cp .env.example .env
