@@ -1,0 +1,14 @@
+http:
+  routers:
+    it-tools:
+      rule: Host(`tools.example.com`)
+      entryPoints: [websecure]
+      service: it-tools
+      tls:
+        certResolver: letsencrypt
+  services:
+    it-tools:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8084
+# Host-based Traefik file provider; containerized Traefik needs suitable networking.
