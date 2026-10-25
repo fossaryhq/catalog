@@ -7,14 +7,14 @@
 ```bash
 cp .env.example .env
 chmod 600 .env
-docker run --rm -it binwiederhier/ntfy:v2.33.1 user hash
+docker run --rm -it binwiederhier/ntfy:v2.34.0 user hash
 ```
 
 Запишите выведенный хэш в .env: `NTFY_AUTH_USERS='ntfyadmin:<bcrypt-хэш>:admin'`. Одинарные кавычки сохраняют буквальные `$`; в .env не удваивайте их. Сам открытый пароль сохраните в менеджере паролей. Не вставляйте хэш непосредственно в Compose: там правила экранирования отличаются.
 
 | Параметр | Значение |
 | --- | --- |
-| `NTFY_VERSION` | Закреплённый тег с v, исходно v2.33.1. |
+| `NTFY_VERSION` | Закреплённый тег с v, исходно v2.34.0. |
 | `NTFY_PORT` | Loopback-порт хоста, исходно 8083. |
 | `NTFY_URL` | Точный адрес браузера, исходно http://localhost:8083; внешний HTTPS URL за прокси. Используется в ссылках клиентов и вложений. |
 | `NTFY_AUTH_USERS` | Администраторская запись name:bcrypt:role в одинарных кавычках. Применяется при каждом запуске, не только при первичной настройке. |
@@ -114,4 +114,4 @@ docker compose create ntfy
 
 `docker compose down` сохраняет именованный том. После проверки зашифрованной внешней копии `docker compose down --volumes` навсегда удаляет сообщения, вложения, аккаунты, токены, ACL и настройки. Удаление каталога рецепта также удаляет .env и локальные копии.
 
-Источники: [configuration](https://docs.ntfy.sh/config/), [Docker installation](https://docs.ntfy.sh/install/#docker), [publishing](https://docs.ntfy.sh/publish/), [subscription clients](https://docs.ntfy.sh/subscribe/), [v2.33.1](https://github.com/binwiederhier/ntfy/releases/tag/v2.33.1).
+Источники: [configuration](https://docs.ntfy.sh/config/), [Docker installation](https://docs.ntfy.sh/install/#docker), [publishing](https://docs.ntfy.sh/publish/), [subscription clients](https://docs.ntfy.sh/subscribe/), [v2.34.0](https://github.com/binwiederhier/ntfy/releases/tag/v2.34.0).

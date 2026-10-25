@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
+umask 077
 
 if [[ $# -ne 1 || ! -f "$1" ]]; then
   echo "Usage: $0 path/to/stirling-pdf-YYYYMMDDTHHMMSSZ.tar.gz" >&2
@@ -28,10 +29,19 @@ docker compose stop stirling-pdf
 for directory in configs customFiles pipeline tessdata; do
   mkdir -p "$data_path/$directory"
 done
+data_path="$(cd "$data_path" && pwd)"
+backup_dir="$(cd "$backup_dir" && pwd)"
 emergency="$backup_dir/stirling-pdf-before-restore-${timestamp}.tar.gz"
-tar -C "$data_path" -czf "$emergency" configs customFiles pipeline tessdata
-rm -rf "$data_path/configs" "$data_path/customFiles" "$data_path/pipeline" "$data_path/tessdata"
-tar -C "$data_path" -xzf "$archive" configs customFiles pipeline tessdata
+# Keep the bind-mounted directories themselves in place across the restore.
+docker run --rm -v "${data_path}:/target" -v "${backup_dir}:/backup" -v "${archive}:/restore.tar.gz:ro" alpine:3.22 \
+  sh -eu -c 'umask 077
+    tar -C /target -czf "/backup/$1" configs customFiles pipeline tessdata
+    chown "$2:$3" "/backup/$1"
+    for directory in configs customFiles pipeline tessdata; do
+      find "/target/$directory" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
+    done
+    tar -C /target -xzf /restore.tar.gz configs customFiles pipeline tessdata' \
+  sh "$(basename "$emergency")" "$(id -u)" "$(id -g)"
 docker compose up -d --wait
 
 echo "Backup restored from: $archive"

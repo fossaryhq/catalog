@@ -27,7 +27,7 @@ secret in a password manager. Never change `NODE_RED_CREDENTIAL_SECRET` after
 creating credentials, or existing ones will no longer decrypt.
 
 ```bash
-docker run --rm -it nodered/node-red:5.0.8-24 node-red admin hash-pw
+docker run --rm -it nodered/node-red:5.0.9-24 node-red admin hash-pw
 openssl rand -hex 32
 ```
 
@@ -113,6 +113,9 @@ credentials cannot be used.
 ## Update
 
 <!-- coverage:update -->
+
+In 5.0.9 the Range node drops non-numeric inputs instead of coercing them.
+Check flows that relied on the previous conversion behavior.
 
 Back up first, read the [release notes](https://github.com/node-red/node-red/releases),
 change `NODE_RED_VERSION` in `.env`, and recreate the service:

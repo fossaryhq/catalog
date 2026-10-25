@@ -9,7 +9,7 @@ services:
     restart: "no"
 
   ntfy:
-    image: binwiederhier/ntfy:${NTFY_VERSION:-v2.33.1}
+    image: binwiederhier/ntfy:${NTFY_VERSION:-v2.34.0}
     command: ["serve"]
     user: "1000:1000"
     restart: unless-stopped

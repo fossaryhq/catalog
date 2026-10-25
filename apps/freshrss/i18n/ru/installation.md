@@ -29,7 +29,7 @@ sed -i "s|^FRESHRSS_DB_PASSWORD=.*|FRESHRSS_DB_PASSWORD=$db_password|" .env
 unset login_password api_password db_password
 ```
 
-Секреты состоят только из букв и цифр: entrypoint 1.30.1 выполняет first-run
+Секреты состоят только из букв и цифр: entrypoint 1.30.4 выполняет first-run
 option strings через shell `eval`, поэтому пробелы и shell-метасимволы здесь
 недопустимы. Все три значения должны отличаться. Сохраните их в менеджере
 паролей: API-клиент использует не пароль web-входа, а отдельный API password.
@@ -152,7 +152,7 @@ restore на отдельном сервере. После восстановл�
 <!-- coverage:update -->
 
 Сделайте backup и прочитайте release notes. Замените точный тег
-`freshrss/freshrss:1.30.1` на проверенную версию, не используйте `latest`, затем:
+`freshrss/freshrss:1.30.4` на проверенную версию, не используйте `latest`, затем:
 
 ```bash
 docker compose pull
@@ -198,7 +198,7 @@ rm -rf ~/services/freshrss
 
 Если имена volumes изменены в `.env`, подставьте фактические значения.
 
-Источники: [Docker и first run](https://github.com/FreshRSS/FreshRSS/blob/1.30.1/Docker/README.md),
+Источники: [Docker и first run](https://github.com/FreshRSS/FreshRSS/blob/1.30.4/Docker/README.md),
 [backup и OPML](https://freshrss.github.io/FreshRSS/en/admins/05_Backup.html),
 [access control и SSRF](https://freshrss.github.io/FreshRSS/en/admins/09_AccessControl.html),
 [server CSP](https://freshrss.github.io/FreshRSS/en/admins/10_ServerConfig.html) и

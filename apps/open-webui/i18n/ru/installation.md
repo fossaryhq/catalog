@@ -17,7 +17,7 @@ openssl rand -hex 32
 
 | Параметр | Назначение |
 | --- | --- |
-| `OPEN_WEBUI_VERSION` | Точный тег приложения, изначально `v0.12.3`, с `v`. |
+| `OPEN_WEBUI_VERSION` | Точный тег приложения, изначально `v0.12.4`, с `v`. |
 | `OLLAMA_VERSION` | Независимый точный тег сервера генерации, изначально `0.40.10`. |
 | `OPEN_WEBUI_PORT` | Порт хоста на loopback, по умолчанию `3080`. |
 | `OPEN_WEBUI_URL` | Точный origin браузера, изначально `http://localhost:3080`; за прокси укажите внешний HTTPS origin. Он используется и в CORS allowlist. |
@@ -135,4 +135,4 @@ docker compose create open-webui ollama
 
 `docker compose down` сохраняет оба тома. После проверки внешней копии `docker compose down --volumes` безвозвратно удаляет аккаунты, чаты, файлы, веса и состояние Ollama. Удаление каталога рецепта удаляет также локальные копии и `.env`.
 
-Источники: [документация](https://docs.openwebui.com/), [переменные окружения](https://docs.openwebui.com/getting-started/env-configuration/), [v0.12.3](https://github.com/open-webui/open-webui/releases/tag/v0.12.3), [Ollama](https://github.com/ollama/ollama), [модель Qwen](https://ollama.com/library/qwen3:0.6b), [лицензия](https://docs.openwebui.com/license/).
+Источники: [документация](https://docs.openwebui.com/), [переменные окружения](https://docs.openwebui.com/getting-started/env-configuration/), [v0.12.4](https://github.com/open-webui/open-webui/releases/tag/v0.12.4), [Ollama](https://github.com/ollama/ollama), [модель Qwen](https://ollama.com/library/qwen3:0.6b), [лицензия](https://docs.openwebui.com/license/).

@@ -47,7 +47,7 @@ WebSockets.
 
 ### Feeds on internal addresses are reachable
 
-This is FreshRSS 1.30.1 behavior, not a recipe error. Do not add a wildcard
+This is FreshRSS 1.30.4 behavior, not a recipe error. Do not add a wildcard
 internal-host allowlist: this version has no such supported variable, and
 allowing every address would create a false sense of protection. For untrusted users, block
 container egress to loopback, RFC1918, link-local, and cloud metadata addresses

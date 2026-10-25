@@ -3,7 +3,7 @@ FreshRSS — лёгкий агрегатор RSS и Atom для личной л�
 OPML и WebSub, а Google Reader/Fever API позволяет читать ленты в сторонних
 Android, iOS и desktop-клиентах.
 
-Рецепт запускает закреплённый FreshRSS 1.30.1 с PostgreSQL 18. Первый запуск
+Рецепт запускает закреплённый FreshRSS 1.30.4 с PostgreSQL 18. Первый запуск
 детерминирован: создаётся отдельный администратор с form auth, включается API с
 другим паролем, выбираются английский интерфейс, production environment и cron
 дважды в час. Data, extensions и PostgreSQL сохраняются в отдельных volumes.

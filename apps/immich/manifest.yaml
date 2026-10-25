@@ -83,20 +83,20 @@ operations:
     reliable: partial
   maintenance_difficulty: 3
   backup_supported: true
-  restore_tested: true
+  restore_tested: false
   healthcheck: true
   reverse_proxy_required: true
   update_complexity: staged_migration
 
 recipe:
   id: immich-compose
-  version: 2
+  version: 3
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: v3.3.1
+  application_version: v3.3.5
   images:
     - name: ghcr.io/immich-app/immich-server
       tag_source: env
@@ -111,9 +111,9 @@ recipe:
   # lives 30 days instead of the standard 90.
   recheck_interval_days: 30
   tested_architectures:
-    amd64: passed
+    amd64: not_tested
     arm64: not_tested
-  smoke_test: full
+  smoke_test: not_tested
   check_history:
     - tested_at: "2026-10-09"
       application_version: v3.3.1
@@ -179,26 +179,15 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-25T13:46:15.786Z"
-    latest_version: "v3.3.5"
+    status: unknown
+    checked_at: null
+    latest_version: null
   critical_vulnerabilities:
-    status: findings
-    checked_at: "2026-10-09T13:58:51Z"
-    critical_count: 11
-    scanner: trivy
-    ids:
-      - CVE-2026-106445
-      - CVE-2026-106446
-      - CVE-2026-13221
-      - CVE-2026-42216
-      - CVE-2026-42217
-      - CVE-2026-42496
-      - CVE-2026-59873
-      - CVE-2026-63374
-      - CVE-2026-6653
-      - CVE-2026-8376
-      - CVE-2026-90711
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
   breaking_updates:
     status: unknown
     checked_at: null

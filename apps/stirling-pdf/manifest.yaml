@@ -91,21 +91,21 @@ operations:
 
 recipe:
   id: stirling-pdf-compose
-  version: 2
+  version: 3
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: 3.1.0
+  application_version: 3.2.2
   images:
     - name: stirlingtools/stirling-pdf
       tag_source: pinned
   tested_at: "2026-10-09"
   tested_architectures:
-    amd64: passed
+    amd64: not_tested
     arm64: not_tested
-  smoke_test: full
+  smoke_test: not_tested
   check_history:
     - tested_at: "2026-10-09"
       application_version: 3.1.0
@@ -164,14 +164,14 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-25T13:46:15.786Z"
-    latest_version: "3.2.2"
+    status: unknown
+    checked_at: null
+    latest_version: null
   critical_vulnerabilities:
-    status: no_findings
-    checked_at: "2026-10-09T13:58:51Z"
-    critical_count: 0
-    scanner: trivy
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
     ids: []
   breaking_updates:
     status: unknown
@@ -180,8 +180,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: current
-    checked_at: "2026-10-09T13:58:51Z"
+    status: unknown
+    checked_at: null
     images: []
 update_policy:
   images:

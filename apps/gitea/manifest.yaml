@@ -85,13 +85,13 @@ operations:
 
 recipe:
   id: gitea-compose
-  version: 2
+  version: 3
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: 28.1.0
+  application_version: 28.2.0
   images:
     - name: docker.gitea.com/gitea
       tag_source: pinned
@@ -99,9 +99,9 @@ recipe:
       tag_source: pinned
   tested_at: "2026-10-09"
   tested_architectures:
-    amd64: passed
+    amd64: not_tested
     arm64: not_tested
-  smoke_test: full
+  smoke_test: not_tested
   check_history:
     - tested_at: "2026-10-09"
       application_version: 28.1.0
@@ -158,14 +158,14 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-25T13:46:15.786Z"
-    latest_version: "28.2.0"
+    status: unknown
+    checked_at: null
+    latest_version: null
   critical_vulnerabilities:
-    status: no_findings
-    checked_at: "2026-10-09T17:06:13.851764847+03:00"
-    critical_count: 0
-    scanner: trivy
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
     ids: []
   breaking_updates:
     status: unknown

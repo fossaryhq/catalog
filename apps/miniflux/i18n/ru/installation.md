@@ -136,8 +136,13 @@ volume, восстанавливает дамп и поднимает стек. 
 
 <!-- coverage:update -->
 
+Версия 2.3.4 по умолчанию блокирует приватные прокси отдельных лент и усиливает
+защиту от SSRF. Проверьте ленты с такими прокси. `FETCHER_ALLOW_PRIVATE_FEED_PROXY=1`
+возвращает доступ, но ослабляет ограничение; не включайте его для недоверенных
+пользователей. При `DISABLE_LOCAL_AUTH` API-клиентам нужен API-ключ.
+
 Сделайте резервную копию и прочитайте release notes. Замените точный тег
-`miniflux/miniflux:2.3.3` на проверенную версию, никогда не используйте `latest`
+`miniflux/miniflux:2.3.4` на проверенную версию, никогда не используйте `latest`
 и не меняйте PostgreSQL тем же шагом:
 
 ```bash
@@ -191,5 +196,5 @@ rm -rf ~/services/miniflux
 
 Источники: [установка в Docker](https://miniflux.app/docs/docker.html),
 [параметры конфигурации](https://miniflux.app/docs/configuration.html),
-[релиз 2.3.3](https://github.com/miniflux/v2/releases/tag/2.3.3) и
+[релиз 2.3.4](https://github.com/miniflux/v2/releases/tag/2.3.4) и
 [обновление PostgreSQL](https://www.postgresql.org/docs/18/upgrading.html).

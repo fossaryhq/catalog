@@ -7,14 +7,14 @@ Copy the complete recipe, scripts, and proxy/ directory. Create .env with mode 6
 ```bash
 cp .env.example .env
 chmod 600 .env
-docker run --rm -it binwiederhier/ntfy:v2.33.1 user hash
+docker run --rm -it binwiederhier/ntfy:v2.34.0 user hash
 ```
 
 Put the printed hash in .env as `NTFY_AUTH_USERS='ntfyadmin:<bcrypt-hash>:admin'`. Single quotes preserve literal `$`; do not double them in .env. Keep the original password in a password manager. Do not paste the hash directly into Compose, where escaping rules differ.
 
 | Parameter | Meaning |
 | --- | --- |
-| `NTFY_VERSION` | Pinned app tag including v, initially v2.33.1. |
+| `NTFY_VERSION` | Pinned app tag including v, initially v2.34.0. |
 | `NTFY_PORT` | Host loopback port, initially 8083. |
 | `NTFY_URL` | Exact browser origin, initially http://localhost:8083; external HTTPS URL behind a proxy. Used for attachment/client URLs. |
 | `NTFY_AUTH_USERS` | Single-quoted name:bcrypt:role administrator entry. Authoritative on startup, not a one-time setup password. |
@@ -114,4 +114,4 @@ docker compose create ntfy
 
 `docker compose down` keeps the named data volume. After checking an encrypted off-server backup, `docker compose down --volumes` permanently removes messages, attachments, accounts, tokens, ACLs and settings. Removing the recipe directory also removes .env and any local backups.
 
-Sources: [configuration](https://docs.ntfy.sh/config/), [Docker installation](https://docs.ntfy.sh/install/#docker), [publishing](https://docs.ntfy.sh/publish/), [subscription clients](https://docs.ntfy.sh/subscribe/), [v2.33.1](https://github.com/binwiederhier/ntfy/releases/tag/v2.33.1).
+Sources: [configuration](https://docs.ntfy.sh/config/), [Docker installation](https://docs.ntfy.sh/install/#docker), [publishing](https://docs.ntfy.sh/publish/), [subscription clients](https://docs.ntfy.sh/subscribe/), [v2.34.0](https://github.com/binwiederhier/ntfy/releases/tag/v2.34.0).

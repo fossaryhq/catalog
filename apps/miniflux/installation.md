@@ -136,8 +136,13 @@ practical restore test; rehearse it on a separate server before you rely on it.
 
 <!-- coverage:update -->
 
+Version 2.3.4 blocks private per-feed proxies by default and tightens SSRF
+checks. Review feeds that use private proxies. `FETCHER_ALLOW_PRIVATE_FEED_PROXY=1`
+restores that access but weakens the default restriction; do not enable it for
+untrusted users. API clients with `DISABLE_LOCAL_AUTH` must use an API key.
+
 Create a backup and read the release notes. Replace the exact
-`miniflux/miniflux:2.3.3` tag with a reviewed version, never `latest`, and do
+`miniflux/miniflux:2.3.4` tag with a reviewed version, never `latest`, and do
 not change PostgreSQL in the same step:
 
 ```bash
@@ -189,5 +194,5 @@ Substitute the actual name when `MINIFLUX_DB_VOLUME` differs.
 
 Sources: [Docker installation](https://miniflux.app/docs/docker.html),
 [configuration parameters](https://miniflux.app/docs/configuration.html),
-[release 2.3.3](https://github.com/miniflux/v2/releases/tag/2.3.3), and
+[release 2.3.4](https://github.com/miniflux/v2/releases/tag/2.3.4), and
 [PostgreSQL upgrades](https://www.postgresql.org/docs/18/upgrading.html).

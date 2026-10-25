@@ -28,4 +28,4 @@ Upstream предлагает браузерный клиент и официа�
 
 Upstream использует двойную лицензию Apache-2.0/GPLv2, рецепт — MIT. Иконка каталога взята из исходного mask-ресурса по варианту Apache-2.0; лицензия сохранена в ASSET-LICENSES.md.
 
-Источники: [v2.33.1](https://github.com/binwiederhier/ntfy/releases/tag/v2.33.1), [настройки и доступ](https://docs.ntfy.sh/config/), [отправка](https://docs.ntfy.sh/publish/), [подписки](https://docs.ntfy.sh/subscribe/), [лицензия](https://github.com/binwiederhier/ntfy/tree/v2.33.1).
+Источники: [v2.34.0](https://github.com/binwiederhier/ntfy/releases/tag/v2.34.0), [настройки и доступ](https://docs.ntfy.sh/config/), [отправка](https://docs.ntfy.sh/publish/), [подписки](https://docs.ntfy.sh/subscribe/), [лицензия](https://github.com/binwiederhier/ntfy/tree/v2.34.0).

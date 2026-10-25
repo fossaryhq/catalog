@@ -79,28 +79,28 @@ operations:
     reliable: unsupported
   maintenance_difficulty: 2
   backup_supported: true
-  restore_tested: true
+  restore_tested: false
   healthcheck: true
   reverse_proxy_required: true
   update_complexity: staged_migration
 
 recipe:
   id: jellyfin-compose
-  version: 2
+  version: 3
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: v12.2
+  application_version: v12.3
   images:
     - name: jellyfin/jellyfin
       tag_source: env
   tested_at: "2026-10-09"
   tested_architectures:
-    amd64: passed
+    amd64: not_tested
     arm64: not_tested
-  smoke_test: full
+  smoke_test: not_tested
   check_history:
     - tested_at: "2026-10-09"
       application_version: v12.2
@@ -158,16 +158,15 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-25T13:46:15.786Z"
-    latest_version: "v12.3"
+    status: unknown
+    checked_at: null
+    latest_version: null
   critical_vulnerabilities:
-    status: findings
-    checked_at: "2026-10-09T13:58:51Z"
-    critical_count: 1
-    scanner: trivy
-    ids:
-      - CVE-2026-6653
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
+    ids: []
   breaking_updates:
     status: unknown
     checked_at: null
@@ -175,8 +174,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: current
-    checked_at: "2026-10-09T13:58:51Z"
+    status: unknown
+    checked_at: null
     images: []
 update_policy:
   images:

@@ -2,7 +2,7 @@ name: pi-hole
 
 services:
   pi-hole:
-    image: pihole/pihole:${PIHOLE_VERSION:-2026.09.0}
+    image: pihole/pihole:${PIHOLE_VERSION:-2026.10.0}
     hostname: pi-hole
     restart: unless-stopped
     ports:

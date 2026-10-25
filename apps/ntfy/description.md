@@ -28,4 +28,4 @@ The declarative administrator hash is authoritative on every startup. Rotate it 
 
 Upstream is dual licensed under Apache-2.0 and GPLv2; the recipe is MIT. The catalog icon comes from the upstream mask asset under the Apache-2.0 option; its license is retained in ASSET-LICENSES.md.
 
-Sources: [v2.33.1](https://github.com/binwiederhier/ntfy/releases/tag/v2.33.1), [configuration and access control](https://docs.ntfy.sh/config/), [publishing](https://docs.ntfy.sh/publish/), [subscriptions](https://docs.ntfy.sh/subscribe/), [license](https://github.com/binwiederhier/ntfy/tree/v2.33.1).
+Sources: [v2.34.0](https://github.com/binwiederhier/ntfy/releases/tag/v2.34.0), [configuration and access control](https://docs.ntfy.sh/config/), [publishing](https://docs.ntfy.sh/publish/), [subscriptions](https://docs.ntfy.sh/subscribe/), [license](https://github.com/binwiederhier/ntfy/tree/v2.34.0).

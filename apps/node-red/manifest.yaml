@@ -81,29 +81,29 @@ operations:
     reliable: partial
   maintenance_difficulty: 2
   backup_supported: true
-  restore_tested: true
+  restore_tested: false
   healthcheck: true
   reverse_proxy_required: false
   update_complexity: in_place
 
 recipe:
   id: node-red-compose
-  version: 2
+  version: 3
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: 5.0.8
+  application_version: 5.0.9
   images:
     - name: nodered/node-red
       tag_source: env
   tested_at: "2026-10-09"
   tested_architectures:
-    amd64: passed
+    amd64: not_tested
     arm64: not_tested
     armv7: not_tested
-  smoke_test: full
+  smoke_test: not_tested
   check_history:
     - tested_at: "2026-10-09"
       application_version: 5.0.8
@@ -154,14 +154,14 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-10-25T13:46:15.786Z"
-    latest_version: "5.0.9"
+    status: unknown
+    checked_at: null
+    latest_version: null
   critical_vulnerabilities:
-    status: no_findings
-    checked_at: "2026-10-09T17:07:32.133213011+03:00"
-    critical_count: 0
-    scanner: trivy
+    status: unknown
+    checked_at: null
+    critical_count: null
+    scanner: null
     ids: []
   breaking_updates:
     status: unknown
@@ -170,8 +170,8 @@ update_tracking:
     status: not_tracked
     checked_at: null
   outdated_images:
-    status: current
-    checked_at: "2026-10-09T13:58:51Z"
+    status: unknown
+    checked_at: null
     images: []
 update_policy:
   images:
