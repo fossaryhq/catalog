@@ -103,7 +103,6 @@ recipe:
     and recovery after both volumes were removed passed on amd64. arm64 was not tested.
   - OIDC, external HTTPS proxies, AI providers, mobile clients, large imports, and cross-version migrations are
     not covered.
-  recheck_interval_days: 30
   check_history:
   - tested_at: '2026-10-29'
     application_version: 0.34.1
