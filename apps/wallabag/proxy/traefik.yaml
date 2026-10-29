@@ -1,0 +1,14 @@
+http:
+  routers:
+    wallabag:
+      rule: Host(`read.example.com`)
+      entryPoints:
+        - websecure
+      service: wallabag
+      tls:
+        certResolver: letsencrypt
+  services:
+    wallabag:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8087
