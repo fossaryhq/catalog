@@ -1,0 +1,85 @@
+services:
+  firefly:
+    image: fireflyiii/core:version-${FIREFLY_VERSION:-6.7.9}
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${FIREFLY_PORT:-8088}:8080"
+    entrypoint: [/bin/sh, -ec]
+    command:
+      - |
+        case "$$APP_KEY" in replace-*|'') echo 'Set a random FIREFLY_APP_KEY' >&2; exit 2;; esac
+        [ "$${#APP_KEY}" -eq 32 ] || { echo 'FIREFLY_APP_KEY must have exactly 32 characters' >&2; exit 2; }
+        case "$$DB_PASSWORD" in replace-*|'') echo 'Set a unique FIREFLY_DB_PASSWORD' >&2; exit 2;; esac
+        [ "$${#STATIC_CRON_TOKEN}" -eq 32 ] || { echo 'FIREFLY_CRON_TOKEN must have exactly 32 characters' >&2; exit 2; }
+        exec docker-php-serversideup-entrypoint /init
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: ${FIREFLY_APP_KEY}
+      APP_URL: ${FIREFLY_URL:-http://localhost:8088}
+      SITE_OWNER: ${FIREFLY_SITE_OWNER:-owner@example.com}
+      DEFAULT_LANGUAGE: ${FIREFLY_LANGUAGE:-en_US}
+      TZ: ${TZ:-UTC}
+      TRUSTED_PROXIES: ${FIREFLY_TRUSTED_PROXIES:-}
+      AUTHENTICATION_GUARD: web
+      DB_CONNECTION: pgsql
+      DB_HOST: database
+      DB_PORT: "5432"
+      DB_DATABASE: firefly
+      DB_USERNAME: firefly
+      DB_PASSWORD: ${FIREFLY_DB_PASSWORD}
+      STATIC_CRON_TOKEN: ${FIREFLY_CRON_TOKEN}
+      MAIL_MAILER: log
+      APP_LOG_LEVEL: notice
+    volumes:
+      - storage:/var/www/html/storage
+      - uploads:/var/www/html/storage/upload
+    healthcheck:
+      test: [CMD, curl, --fail, --silent, --show-error, --max-time, "5", http://127.0.0.1:8080/health]
+      interval: 15s
+      timeout: 10s
+      retries: 30
+      start_period: 120s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+  database:
+    image: postgres:18.6-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: firefly
+      POSTGRES_USER: firefly
+      POSTGRES_PASSWORD: ${FIREFLY_DB_PASSWORD}
+    volumes:
+      - database:/var/lib/postgresql
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U firefly -d firefly]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    security_opt:
+      - no-new-privileges:true
+  cron:
+    image: alpine:3.22.2
+    restart: unless-stopped
+    depends_on:
+      firefly:
+        condition: service_healthy
+    environment:
+      STATIC_CRON_TOKEN: ${FIREFLY_CRON_TOKEN}
+    command:
+      - /bin/sh
+      - -ec
+      - |
+        printf '0 3 * * * wget -qO- http://firefly:8080/api/v1/cron/$$STATIC_CRON_TOKEN\n' | crontab -
+        exec crond -f -L /dev/stdout
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  database:
+  storage:
+  uploads:
