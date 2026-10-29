@@ -1,0 +1,14 @@
+http:
+  routers:
+    firefly-iii:
+      rule: Host(`money.example.com`)
+      entryPoints:
+        - websecure
+      service: firefly-iii
+      tls:
+        certResolver: letsencrypt
+  services:
+    firefly-iii:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8088

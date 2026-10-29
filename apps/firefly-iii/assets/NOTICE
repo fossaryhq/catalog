@@ -1,0 +1,5 @@
+Firefly III logo: Copyright (c) 2022 james@firefly-iii.org.
+AGPL-3.0-or-later.
+Source: https://github.com/firefly-iii/firefly-iii/blob/v6.7.9/public/maskable-icon.svg
+License: https://github.com/firefly-iii/firefly-iii/blob/v6.7.9/LICENSE
+Changes: removed non-rendering comments; added a square SVG viewBox.

@@ -1,0 +1,192 @@
+schema_version: 6
+publication_status: published
+slug: firefly-iii
+name: Firefly III
+tagline: Accounts, transactions, and budgets on your own server
+summary: Firefly III records income, expenses, transfers and attachments, groups spending into categories and
+  budgets, and tracks subscriptions and savings goals. This recipe runs the web application with PostgreSQL
+  and a daily cron service; bank imports and the separate Data Importer are not included.
+status: active
+editorial_status: experimental
+links:
+  website: https://www.firefly-iii.org/
+  source: https://github.com/firefly-iii/firefly-iii
+  documentation: https://docs.firefly-iii.org/
+  issues: https://github.com/firefly-iii/firefly-iii/issues
+classification:
+  categories:
+  - Personal finance
+  tags:
+  - finance
+  - budgets
+  - transactions
+  - accounts
+  - expenses
+  implementation_languages:
+  - PHP
+  - JavaScript
+  alternatives_to:
+  - Quicken
+  - Monarch Money
+license:
+  spdx: AGPL-3.0-or-later
+  kind: open_source
+  restrictions: []
+  notes: The application and upstream logo use AGPL-3.0-or-later; the deployment recipe uses MIT. See assets/NOTICE
+    for the logo source and copyright.
+localization:
+  ui_languages:
+  - en
+  - ru
+  docs_languages:
+  - en
+clients:
+  web: true
+  android: true
+  ios: true
+  desktop: false
+auth:
+  oidc: none
+  saml: none
+  two_factor: native
+  proxy_header: true
+requirements:
+  architectures:
+  - amd64
+  - arm64
+  min_cpu_cores: 1
+  min_ram_mb: 1024
+  recommended_ram_mb: 2048
+  min_disk_gb: 5
+  gpu:
+    required: false
+    supported: false
+  database: postgresql
+  dependencies:
+  - PostgreSQL 18.6
+  - Daily cron service (Alpine 3.22.2)
+operations:
+  install_difficulty: 3
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: partial
+  maintenance_difficulty: 3
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: in_place
+recipe:
+  id: firefly-iii-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: '>=2.24.0'
+  application_version: 6.7.9
+  images:
+  - name: fireflyiii/core
+    tag_source: env
+  - name: postgres
+    tag_source: pinned
+  - name: alpine
+    tag_source: pinned
+  tested_at: '2026-10-29'
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  check_history:
+  - tested_at: '2026-10-29'
+    application_version: 6.7.9
+    recipe_version: 1
+    tested_architectures:
+      amd64: passed
+      arm64: not_tested
+    smoke_test: full
+    restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+  - The full application and volume-loss recovery scenario ran on amd64; arm64 was not tested.
+  - The test registers and signs in the owner, creates a personal API token, account, transaction, category,
+    tag and encrypted attachment, then verifies them after deleting all three volumes and restoring the archive.
+    Public registration closes after the first account.
+  - The cron endpoint is checked once; overnight scheduling, recurring-transaction timing, bank connections,
+    Data Importer, email, TOTP and third-party mobile clients are not exercised.
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+  - The first visitor can claim an empty installation. Create the owner account over loopback or an SSH tunnel
+    before exposing it to the LAN or a reverse proxy; registration then closes in the default single-user mode.
+  - Financial records, attachment encryption keys, OAuth credentials and deployment secrets are included in
+    backups. Encrypt external copies and restrict access to the volumes and .env.
+  - Firefly III automatically migrates the database at startup. A downgrade requires restoring a compatible
+    pre-upgrade database and storage archive, not merely selecting an older image.
+  - Keep AUTHENTICATION_GUARD=web. The optional remote-user guard trusts the identity header without validation
+    and requires an authenticating proxy that strips client-supplied headers.
+  - Trivy found 8 CRITICAL package findings across the pinned application, PostgreSQL and Alpine helper images;
+    functional verification does not resolve these findings.
+  - SMTP, automatic bank connections and the separate Data Importer are not configured. MAIL_MAILER=log can
+    write password-reset links to application logs; protect those logs.
+  assessment:
+    status: warnings
+    assessed_at: '2026-10-29'
+upstream:
+  release_source: github
+  repository: firefly-iii/firefly-iii
+  last_release_at: '2026-10-11'
+  last_checked_at: '2026-10-29T19:48:52Z'
+  stars: 25032
+  stars_checked_at: '2026-10-29T19:48:52Z'
+  releases_last_year: 47
+  releases_checked_at: '2026-10-29T19:48:52Z'
+update_tracking:
+  releases:
+    status: current
+    checked_at: '2026-10-29T19:48:52Z'
+    latest_version: 6.7.9
+  critical_vulnerabilities:
+    status: findings
+    checked_at: '2026-10-29T19:48:52Z'
+    critical_count: 8
+    scanner: trivy
+    ids:
+    - CVE-2025-68121
+    - CVE-2026-111497
+    - CVE-2026-31789
+    - CVE-2026-6653
+    - CVE-2026-93221
+    - CVE-2026-99083
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+update_policy:
+  images: []
+  compose: null
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+  - file: assets/dashboard.webp
+    alt: Firefly III dashboard with household accounts, income and expense charts in light theme
+  - file: assets/transactions.webp
+    alt: Recorded household expenses with categories, accounts and amounts in dark theme
+  - file: assets/budgets.webp
+    alt: Monthly household budgets with spending and available amounts in light theme
+  updated_at: '2026-10-29'
+
+# The official tag is version-6.7.9, which the current update checker cannot resolve
+# from application_version. Keep images empty; the pinned images were scanned manually.
