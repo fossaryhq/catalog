@@ -1,0 +1,194 @@
+schema_version: 6
+publication_status: published
+slug: karakeep
+name: Karakeep
+tagline: Bookmarks, saved pages, and notes in one library
+summary: Karakeep saves links, readable pages, screenshots, images, PDFs, and text notes. Organize a private library
+  with lists, tags, and full-text search. This recipe includes SQLite, Meilisearch, and a headless browser; AI tagging
+  is optional and is not configured.
+status: active
+editorial_status: experimental
+links:
+  website: https://karakeep.app/
+  source: https://github.com/karakeep-app/karakeep
+  documentation: https://docs.karakeep.app/
+  issues: https://github.com/karakeep-app/karakeep/issues
+classification:
+  categories:
+  - Bookmarks and archiving
+  tags:
+  - bookmarks
+  - archiving
+  - notes
+  - search
+  implementation_languages:
+  - TypeScript
+  alternatives_to:
+  - Raindrop.io
+license:
+  spdx: AGPL-3.0-only
+  kind: open_source
+  restrictions: []
+  notes: Karakeep is AGPL-3.0 licensed; modified network deployments carry source-sharing obligations. The recipe
+    is MIT licensed. Optional AI providers have separate terms and costs and are not configured.
+localization:
+  ui_languages:
+  - en
+  - ru
+  docs_languages:
+  - en
+clients:
+  web: true
+  android: true
+  ios: true
+  desktop: false
+auth:
+  oidc: native
+  saml: none
+  two_factor: none
+  proxy_header: false
+requirements:
+  architectures:
+  - amd64
+  - arm64
+  min_cpu_cores: 2
+  min_ram_mb: 2048
+  recommended_ram_mb: 4096
+  min_disk_gb: 10
+  gpu:
+    required: false
+    supported: false
+  database: sqlite
+  dependencies:
+  - Meilisearch 1.41.0
+  - Karakeep Chrome 154.0.8037.57-r1
+operations:
+  install_difficulty: 3
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: unsupported
+  maintenance_difficulty: 3
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: manual_steps
+recipe:
+  id: karakeep-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: '>=2.24.0'
+  application_version: 0.34.1
+  images:
+  - name: ghcr.io/karakeep-app/karakeep
+    tag_source: env
+  - name: ghcr.io/karakeep-app/karakeep-chrome
+    tag_source: pinned
+  - name: getmeili/meilisearch
+    tag_source: pinned
+  - name: alpine
+    tag_source: pinned
+  tested_at: '2026-10-29'
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  license: MIT
+  smoke_test_limitations:
+  - Full health, account creation, closed registration, private-note access, image upload/download, full-text search,
+    and recovery after both volumes were removed passed on amd64. arm64 was not tested.
+  - OIDC, external HTTPS proxies, AI providers, mobile clients, large imports, and cross-version migrations are
+    not covered.
+  recheck_interval_days: 30
+  check_history:
+  - tested_at: '2026-10-29'
+    application_version: 0.34.1
+    recipe_version: 1
+    tested_architectures:
+      amd64: passed
+      arm64: not_tested
+    smoke_test: full
+    restore_tested: true
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+  - Temporarily enable registration only through loopback or an SSH tunnel, create the first account, then disable
+    it before publishing a proxy.
+  - The crawler fetches user-controlled pages and exposes the server IP. Basic SSRF protections are not a complete
+    network boundary; restrict access to trusted users and restrict crawler egress.
+  - The official browser runs with --no-sandbox. Its DevTools port must remain private; hostile pages can consume
+    resources or exploit the browser.
+  - SQLite, saved assets, search data, API keys, and session secrets are private server data, not end-to-end encrypted.
+    Encrypt backups and keep .env out of Git.
+  - AI providers are not configured. Enabling an external provider can send bookmark content off-server and incur
+    charges.
+  assessment:
+    status: warnings
+    assessed_at: '2026-10-29'
+upstream:
+  release_source: github
+  repository: karakeep-app/karakeep
+  last_release_at: '2026-10-22'
+  last_checked_at: '2026-10-29T14:25:15Z'
+  stars: 30144
+  stars_checked_at: '2026-10-29T14:25:15Z'
+  releases_last_year: 12
+  releases_checked_at: '2026-10-29T14:25:15Z'
+update_tracking:
+  releases:
+    status: current
+    checked_at: '2026-10-29T14:25:15Z'
+    latest_version: 0.34.1
+  critical_vulnerabilities:
+    status: findings
+    checked_at: '2026-10-29T14:35:33Z'
+    critical_count: 18
+    scanner: trivy
+    ids:
+    - CVE-2023-45853
+    - CVE-2023-6879
+    - CVE-2024-24790
+    - CVE-2025-47917
+    - CVE-2025-68121
+    - CVE-2026-111497
+    - CVE-2026-31789
+    - CVE-2026-34873
+    - CVE-2026-34875
+    - CVE-2026-58016
+    - CVE-2026-6653
+    - GHSA-cg2g-xh64-v4q7
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+update_policy:
+  images:
+  - image: ghcr.io/karakeep-app/karakeep
+    provider: ghcr
+    repository: karakeep-app/karakeep
+  compose: null
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+  - file: assets/library.webp
+    alt: Karakeep library with saved references, reading notes, and tags in light mode
+  - file: assets/list.webp
+    alt: A Karakeep reading list with curated bookmarks and notes in dark mode
+  - file: assets/note.webp
+    alt: A saved Karakeep recovery note with its Markdown checklist and tags
+  updated_at: '2026-10-29'
