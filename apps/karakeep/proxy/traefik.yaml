@@ -1,0 +1,14 @@
+http:
+  routers:
+    karakeep:
+      rule: Host(`keep.example.com`)
+      entryPoints:
+        - websecure
+      service: karakeep
+      tls:
+        certResolver: letsencrypt
+  services:
+    karakeep:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:3000
