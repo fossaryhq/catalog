@@ -1,0 +1,52 @@
+name: wallabag
+services:
+  initialize:
+    image: wallabag/wallabag:${WALLABAG_VERSION:-2.6.15}
+    restart: "no"
+    entrypoint: [/bin/sh, -ec]
+    command:
+      - |
+        case "$$WALLABAG_ADMIN_PASSWORD" in replace-*|wallabag) echo "Set a unique WALLABAG_ADMIN_PASSWORD" >&2; exit 2;; esac
+        case "$$SYMFONY__ENV__SECRET" in replace-*|'') echo "Set a random WALLABAG_SECRET" >&2; exit 2;; esac
+        [ "$${#WALLABAG_ADMIN_PASSWORD}" -ge 16 ] || { echo "Administrator password must be at least 16 characters" >&2; exit 2; }
+        /entrypoint.sh migrate
+        su -s /bin/sh nobody -c 'php bin/console fos:user:change-password --env=prod --no-interaction wallabag "$$WALLABAG_ADMIN_PASSWORD"'
+    environment: &wallabag-environment
+      SYMFONY__ENV__DATABASE_DRIVER: pdo_sqlite
+      SYMFONY__ENV__DATABASE_CHARSET: utf8
+      SYMFONY__ENV__SECRET: ${WALLABAG_SECRET:?Set WALLABAG_SECRET}
+      SYMFONY__ENV__DOMAIN_NAME: ${WALLABAG_URL:-http://localhost:8087}
+      SYMFONY__ENV__LOCALE: ${WALLABAG_LOCALE:-en}
+      SYMFONY__ENV__FOSUSER_REGISTRATION: "false"
+      SYMFONY__ENV__FOSUSER_CONFIRMATION: "true"
+      WALLABAG_ADMIN_PASSWORD: ${WALLABAG_ADMIN_PASSWORD:?Set WALLABAG_ADMIN_PASSWORD}
+      TZ: ${TZ:-Etc/UTC}
+    volumes: &wallabag-volumes
+      - data:/var/www/wallabag/data
+      - images:/var/www/wallabag/web/assets/images
+    healthcheck:
+      disable: true
+    security_opt:
+      - no-new-privileges:true
+  wallabag:
+    image: wallabag/wallabag:${WALLABAG_VERSION:-2.6.15}
+    restart: unless-stopped
+    depends_on:
+      initialize:
+        condition: service_completed_successfully
+    ports:
+      - "127.0.0.1:${WALLABAG_PORT:-8087}:80"
+    environment: *wallabag-environment
+    volumes: *wallabag-volumes
+    healthcheck:
+      test: [CMD, curl, --fail, --silent, --show-error, --max-time, "5", http://127.0.0.1/api/info]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 90s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+volumes:
+  data:
+  images:

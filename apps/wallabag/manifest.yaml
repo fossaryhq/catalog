@@ -1,0 +1,187 @@
+schema_version: 6
+publication_status: published
+slug: wallabag
+name: Wallabag
+tagline: Save articles for focused reading later
+summary: Wallabag keeps readable copies of articles with tags, favourites, reading progress, and annotations. Read
+  your library through the web interface or mobile clients. This recipe uses the official image and SQLite, disables
+  registration, and replaces the upstream default password before the web server starts.
+status: active
+editorial_status: experimental
+links:
+  website: https://wallabag.org/
+  source: https://github.com/wallabag/wallabag
+  documentation: https://doc.wallabag.org/
+  issues: https://github.com/wallabag/wallabag/issues
+classification:
+  categories:
+  - Bookmarks and archiving
+  tags:
+  - read-it-later
+  - articles
+  - bookmarks
+  - reading
+  - archiving
+  implementation_languages:
+  - PHP
+  alternatives_to:
+  - Raindrop.io
+license:
+  spdx: MIT
+  kind: open_source
+  restrictions: []
+  notes: The application and this recipe are MIT licensed. Mobile applications and external services have their
+    own distribution terms and are not bundled.
+localization:
+  ui_languages:
+  - en
+  - ru
+  docs_languages:
+  - en
+clients:
+  web: true
+  android: true
+  ios: true
+  desktop: false
+auth:
+  oidc: none
+  saml: none
+  two_factor: native
+  proxy_header: false
+requirements:
+  architectures:
+  - amd64
+  - arm64
+  - armv7
+  min_cpu_cores: 1
+  min_ram_mb: 512
+  recommended_ram_mb: 1024
+  min_disk_gb: 2
+  gpu:
+    required: false
+    supported: false
+  database: sqlite
+  dependencies: []
+operations:
+  install_difficulty: 2
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: unsupported
+  maintenance_difficulty: 2
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: in_place
+recipe:
+  id: wallabag-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: '>=2.24.0'
+  application_version: 2.6.15
+  images:
+  - name: wallabag/wallabag
+    tag_source: env
+  - name: alpine
+    tag_source: pinned
+  tested_at: '2026-10-29'
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+    armv7: not_tested
+  smoke_test: full
+  check_history:
+  - tested_at: '2026-10-29'
+    application_version: 2.6.15
+    recipe_version: 1
+    tested_architectures:
+      amd64: passed
+      arm64: not_tested
+      armv7: not_tested
+    smoke_test: full
+    restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+  - Full amd64 health, rejection of placeholder credentials before startup, administrator login, closed registration,
+    OAuth client creation, private article/tags, and recovery after removal of both volumes were checked. A marker
+    in the cached-image volume was restored. ARM64 and ARMv7 were not tested.
+  - TOTP/email two-factor authentication, external HTTPS proxies, SMTP, mobile clients, large imports, and cross-version
+    database migrations were not exercised.
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+  - The initializer owns the wallabag administrator password from .env and enforces it before the web server starts.
+    Keep the account name; deleting or renaming it prevents initialization, and a UI password change is replaced
+    on initialization.
+  - Article retrieval contacts user-supplied URLs from the server. Limit access to trusted users and restrict egress
+    to protect internal services and prevent SSRF.
+  - Articles, cached images, RSS feed credentials, OAuth clients, and backups are not end-to-end encrypted. Protect
+    the host, the active .env, and encrypted off-server copies.
+  - Public article links and personal RSS URLs grant access to the content they expose. Keep tokens private and
+    review sharing before publishing material.
+  assessment:
+    status: warnings
+    assessed_at: '2026-10-29'
+upstream:
+  release_source: github
+  repository: wallabag/wallabag
+  last_release_at: '2026-10-28'
+  last_checked_at: '2026-10-29T15:37:58Z'
+  stars: 13032
+  stars_checked_at: '2026-10-29T15:37:58Z'
+  releases_last_year: 1
+  releases_checked_at: '2026-10-29T15:37:58Z'
+update_tracking:
+  releases:
+    status: current
+    checked_at: '2026-10-29T15:37:58Z'
+    latest_version: 2.6.15
+  critical_vulnerabilities:
+    status: findings
+    checked_at: '2026-10-29T15:37:58Z'
+    critical_count: 9
+    scanner: trivy
+    ids:
+    - CVE-2026-24425
+    - CVE-2026-31789
+    - CVE-2026-45063
+    - CVE-2026-46633
+    - CVE-2026-46634
+    - CVE-2026-48805
+    - CVE-2026-48806
+    - CVE-2026-48807
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+update_policy:
+  images:
+  - image: wallabag/wallabag
+    provider: docker_hub
+    repository: wallabag/wallabag
+  compose: null
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+  - file: assets/library.webp
+    alt: Wallabag unread library with saved articles, reading times, and tags in light mode
+  - file: assets/article.webp
+    alt: A saved article opened in the Wallabag reader in dark mode
+  - file: assets/tags.webp
+    alt: Wallabag tag management with reading-library tags and article counts
+  updated_at: '2026-10-29'
