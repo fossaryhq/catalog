@@ -1,0 +1,13 @@
+http:
+  routers:
+    netdata:
+      rule: Host(`metrics.example.com`)
+      entryPoints: [websecure]
+      service: netdata
+      tls:
+        certResolver: letsencrypt
+  services:
+    netdata:
+      loadBalancer:
+        servers:
+          - url: http://gateway:8080

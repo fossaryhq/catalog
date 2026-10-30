@@ -1,0 +1,79 @@
+services:
+  netdata:
+    image: netdata/netdata:v${NETDATA_VERSION:-2.12.2}
+    hostname: ${NETDATA_HOSTNAME:-metrics-server}
+    pid: host
+    restart: unless-stopped
+    environment:
+      DO_NOT_TRACK: "1"
+      TZ: ${TZ:-Etc/UTC}
+    volumes:
+      - ./config/netdata.conf:/etc/netdata/netdata.conf:ro
+      - netdata-lib:/var/lib/netdata
+      - netdata-cache:/var/cache/netdata
+      - /:/host/root:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+    healthcheck:
+      test: [CMD, curl, --fail, --silent, http://127.0.0.1:19999/api/v1/info]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 60s
+    networks:
+      - private
+
+  gateway:
+    image: caddy:2.11.7-alpine
+    user: "65534:65534"
+    restart: unless-stopped
+    depends_on:
+      netdata:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${NETDATA_PORT:-19999}:8080"
+    environment:
+      NETDATA_AUTH_USER: ${NETDATA_AUTH_USER:-admin}
+      NETDATA_AUTH_HASH: ${NETDATA_AUTH_HASH:?Set a bcrypt password hash}
+    entrypoint: [/bin/sh, -ec]
+    command:
+      - |
+        case "$$NETDATA_AUTH_HASH" in '$$2a$$'*|'$$2b$$'*|'$$2y$$'*) ;; *) echo 'Set NETDATA_AUTH_HASH to a bcrypt hash' >&2; exit 2;; esac
+        exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    volumes:
+      - ./config/Caddyfile:/etc/caddy/Caddyfile:ro
+    read_only: true
+    tmpfs:
+      - /config:rw,noexec,nosuid,size=4m,mode=1777
+      - /data:rw,noexec,nosuid,size=4m,mode=1777
+      - /tmp:rw,noexec,nosuid,size=16m,mode=1777
+    cap_drop:
+      - ALL
+    # The official Caddy binary carries this file capability, even on port 8080.
+    cap_add:
+      - NET_BIND_SERVICE
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:8080/healthz]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    networks:
+      - private
+      - frontend
+
+networks:
+  private:
+    internal: true
+  frontend: {}
+
+volumes:
+  netdata-lib:
+  netdata-cache:

@@ -1,0 +1,212 @@
+schema_version: 6
+publication_status: published
+slug: netdata
+name: Netdata
+tagline: Live host metrics with protected local access
+summary: Netdata collects Linux host CPU, memory, disk and network measurements and keeps local metric history.
+  This recipe runs the official Agent behind a password-protected gateway, without publishing the Agent API
+  or requiring a Cloud account. The Agent is GPLv3+; the bundled modern web UI is proprietary.
+status: active
+editorial_status: experimental
+links:
+  website: https://www.netdata.cloud/
+  source: https://github.com/netdata/netdata
+  documentation: https://learn.netdata.cloud/
+  issues: https://github.com/netdata/netdata/issues
+classification:
+  categories:
+  - Monitoring
+  tags:
+  - monitoring
+  - metrics
+  - linux
+  - servers
+  - observability
+  implementation_languages:
+  - Go
+  - C
+  - Rust
+  alternatives_to:
+  - Netdata Cloud
+license:
+  spdx: GPL-3.0-or-later AND LicenseRef-Netdata-Cloud-UI-1.0
+  kind: proprietary
+  restrictions:
+  - NCUL1 permits the binary modern UI only with Netdata components, forbids modification and reverse engineering,
+    and requires its terms to accompany redistribution.
+  - The GPLv3+ Agent and redistributed open-source components retain their own licenses; preserve applicable
+    notices and source-distribution obligations.
+  notes: The Agent is open-source GPLv3+, while the official image bundles the closed-source modern UI under
+    NCUL1. The combined deployment is classified as proprietary because that UI is not open source or source-available.
+    NCUL1 allows free use with Netdata components but restricts modification/reverse engineering. Netdata
+    Cloud is a separate service. The recipe is MIT; assets/NOTICE and the adjacent license files record upstream
+    terms.
+localization:
+  ui_languages:
+  - en
+  docs_languages:
+  - en
+clients:
+  web: true
+  android: false
+  ios: false
+  desktop: false
+auth:
+  oidc: none
+  saml: none
+  two_factor: none
+  proxy_header: false
+requirements:
+  architectures:
+  - amd64
+  - arm64
+  min_cpu_cores: 1
+  min_ram_mb: 512
+  recommended_ram_mb: 1024
+  min_disk_gb: 5
+  gpu:
+    required: false
+    supported: false
+  database: other
+  dependencies:
+  - Linux host with readable /proc and /sys, plus host PID namespace and read-only host filesystem mounts
+  - Caddy 2.11.7 authentication gateway
+  - Embedded dbengine history and SQLite metadata; no external database
+operations:
+  install_difficulty: 3
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: partial
+  maintenance_difficulty: 3
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: in_place
+recipe:
+  id: netdata-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: '>=2.24.0'
+  application_version: 2.12.2
+  images:
+  - name: netdata/netdata
+    tag_source: env
+  - name: caddy
+    tag_source: pinned
+  tested_at: '2026-10-30'
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  check_history:
+  - tested_at: '2026-10-30'
+    application_version: 2.12.2
+    recipe_version: 1
+    tested_architectures:
+      amd64: passed
+      arm64: not_tested
+    smoke_test: full
+    restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+  - The full recipe and complete loss/recreation of both data volumes were tested on amd64. ARM64 image availability
+    was checked, but ARM64 runtime was not tested.
+  - The test compares reported CPU cores with mounted host /proc, records real CPU/RAM charts and fixed historical
+    CPU samples, restores the original Agent identity and API-key hash, and verifies the historical values
+    exactly.
+  - Anonymous UI and metric APIs return 401; authenticated APIs, invalid archive rejection, source archive
+    integrity, a safety backup and stopped-state backup were exercised.
+  - The Linux Docker host is the monitored system. Under Docker Desktop this is the Linux VM, not the surrounding
+    Windows/macOS hardware. Read-only host mounts do not prove complete physical-device visibility.
+  - No Docker socket, extra SYS_ADMIN/SYS_PTRACE capabilities or unconfined security profile is granted. Per-process
+    descriptors, privileged collectors, GPU, SMART, eBPF, systemd logs, streaming, Cloud login/SSO and notification
+    delivery were not tested.
+  - The unclaimed modern UI restricts Live function tables and account settings. Screenshots use its available
+    default dark theme without a Cloud account.
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+  - The Agent shares the host PID namespace and reads host root, /proc, /sys and account databases. These
+    mounts expose infrastructure details and potentially readable secrets; run only a trusted pinned image.
+    The entrypoint starts as root and the Agent drops to UID/GID 201.
+  - The Agent has no local user accounts in this deployment. The mandatory gateway authenticates UI/API requests;
+    /healthz intentionally reveals only a plain health response. Never publish the backend port or remove
+    the gateway. Use HTTPS or an encrypted VPN beyond loopback.
+  - Both data volumes and backups contain host inventory, historical metrics, local management/API keys and
+    possible integration secrets. Keep .env and backups private and encrypt off-server copies. A data restore
+    replaces the Agent identity and history.
+  - The Agent remains unclaimed on an internal Docker network and DO_NOT_TRACK=1 opts out of Agent telemetry.
+    The modern browser UI attempts to contact Netdata domains, including a registry iframe carrying the Agent
+    identifier and hostname. This recipe does not claim zero third-party browser traffic.
+  - The official modern UI uses restrictive NCUL1, independently of the GPLv3+ Agent. Cloud authentication,
+    paid SSO and saved Cloud dashboards are outside this recipe and are not enabled.
+  - Host networking, Docker socket, SYS_ADMIN/SYS_PTRACE and unconfined security profiles are deliberately
+    absent. Some privileged collectors and per-process descriptors are unavailable. New host mounts may require
+    restarting the Agent; this recipe does not request shared mount propagation.
+  - Trivy 0.74.0 found eight CRITICAL package findings across the Agent (seven) and Caddy (one), with four
+    distinct CVE identifiers. Functional recovery testing does not fix those findings.
+  assessment:
+    status: warnings
+    assessed_at: '2026-10-30'
+upstream:
+  release_source: github
+  repository: netdata/netdata
+  last_release_at: '2026-10-23'
+  last_checked_at: '2026-10-30T18:17:11Z'
+  stars: 81226
+  stars_checked_at: '2026-10-30T18:17:11Z'
+  releases_last_year: 17
+  releases_checked_at: '2026-10-30T17:41:32Z'
+update_tracking:
+  releases:
+    status: current
+    checked_at: '2026-10-30T18:17:11Z'
+    latest_version: 2.12.2
+  critical_vulnerabilities:
+    status: findings
+    checked_at: '2026-10-30T17:41:32Z'
+    critical_count: 8
+    scanner: Trivy 0.74.0
+    ids:
+    - CVE-2026-111497
+    - CVE-2026-44172
+    - CVE-2026-49261
+    - CVE-2026-6653
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: unknown
+    checked_at: null
+    images: []
+update_policy:
+  images:
+  - image: netdata/netdata
+    provider: docker_hub
+    repository: netdata/netdata
+  compose: null
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+  - file: assets/overview.webp
+    alt: Netdata native metric overview with real host CPU, memory, disk and network measurements in dark
+      mode
+  - file: assets/nodes.webp
+    alt: Netdata local node table showing the monitored host and real resource measurements in its default
+      dark theme
+  - file: assets/alerts.webp
+    alt: Netdata native table of configured running alert rules for the monitored host in dark mode
+  updated_at: '2026-10-30'
