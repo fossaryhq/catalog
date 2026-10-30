@@ -1,0 +1,14 @@
+http:
+  routers:
+    tandoor:
+      rule: Host(`recipes.example.com`)
+      entryPoints:
+        - websecure
+      service: tandoor
+      tls:
+        certResolver: letsencrypt
+  services:
+    tandoor:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8089
