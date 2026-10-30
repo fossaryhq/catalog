@@ -1,0 +1,16 @@
+{
+    admin off
+    auto_https off
+}
+
+:8080 {
+    handle /healthz {
+        respond "ok" 200
+    }
+    handle {
+        basic_auth {
+            {$NETDATA_AUTH_USER} {$NETDATA_AUTH_HASH}
+        }
+        reverse_proxy netdata:19999
+    }
+}

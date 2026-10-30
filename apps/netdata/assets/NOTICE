@@ -1,0 +1,6 @@
+Netdata logo: Netdata Inc.
+Source: https://www.netdata.cloud/img/netdata-logo.svg
+Mark extracted from the official wordmark; geometry unchanged, placed in a square viewBox.
+Netdata is a trademark of Netdata Inc.; no endorsement is implied.
+The Agent is GPL-3.0-or-later; the modern bundled UI uses NCUL1.
+See LICENSE-AGENT and LICENSE-UI in this directory. The deployment recipe alone is MIT.
