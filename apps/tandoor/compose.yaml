@@ -1,0 +1,77 @@
+services:
+  initialize:
+    image: alpine:3.22.2
+    restart: "no"
+    command: [sh, -ec, "chown 65534:65534 /media /static"]
+    volumes:
+      - media:/media
+      - static:/static
+    security_opt:
+      - no-new-privileges:true
+  tandoor:
+    image: vabene1111/recipes:${TANDOOR_VERSION:-2.7.2}
+    user: "65534:65534"
+    restart: unless-stopped
+    depends_on:
+      initialize:
+        condition: service_completed_successfully
+      database:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${TANDOOR_PORT:-8089}:80"
+    entrypoint: [/bin/sh, -ec]
+    command:
+      - |
+        case "$$SECRET_KEY" in replace-*|'') echo 'Set a random TANDOOR_SECRET_KEY' >&2; exit 2;; esac
+        [ "$${#SECRET_KEY}" -ge 50 ] || { echo 'TANDOOR_SECRET_KEY must have at least 50 characters' >&2; exit 2; }
+        case "$$POSTGRES_PASSWORD" in replace-*|'') echo 'Set a unique TANDOOR_DB_PASSWORD' >&2; exit 2;; esac
+        exec /sbin/tini -- /opt/recipes/boot.sh
+    environment:
+      SECRET_KEY: ${TANDOOR_SECRET_KEY}
+      ALLOWED_HOSTS: ${TANDOOR_ALLOWED_HOSTS:-localhost,127.0.0.1}
+      CSRF_TRUSTED_ORIGINS: ${TANDOOR_CSRF_TRUSTED_ORIGINS:-http://localhost:8089,http://127.0.0.1:8089}
+      DB_ENGINE: django.db.backends.postgresql
+      POSTGRES_HOST: database
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: tandoor
+      POSTGRES_USER: tandoor
+      POSTGRES_PASSWORD: ${TANDOOR_DB_PASSWORD}
+      ENABLE_SIGNUP: "0"
+      REMOTE_USER_AUTH: "0"
+      DEBUG: "0"
+      GUNICORN_WORKERS: "2"
+      GUNICORN_THREADS: "2"
+      TZ: ${TZ:-UTC}
+    volumes:
+      - media:/opt/recipes/mediafiles
+      - static:/opt/recipes/staticfiles
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1/accounts/login/]
+      interval: 15s
+      timeout: 10s
+      retries: 30
+      start_period: 120s
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+  database:
+    image: postgres:18.6-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tandoor
+      POSTGRES_USER: tandoor
+      POSTGRES_PASSWORD: ${TANDOOR_DB_PASSWORD}
+    volumes:
+      - database:/var/lib/postgresql
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U tandoor -d tandoor]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  database:
+  media:
+  static:

@@ -1,0 +1,204 @@
+schema_version: 6
+publication_status: published
+slug: tandoor
+name: Tandoor
+tagline: Recipes, meal plans, and shared shopping lists
+summary: Tandoor organizes household recipes with ingredients, cooking steps and images, plans meals on a calendar,
+  and turns planned dishes into shared shopping lists. This recipe runs Tandoor with PostgreSQL, persistent
+  media and regenerated static files; external AI and storage services are optional and unconfigured.
+status: active
+editorial_status: experimental
+links:
+  website: https://tandoor.dev/
+  source: https://github.com/TandoorRecipes/recipes
+  documentation: https://docs.tandoor.dev/
+  issues: https://github.com/TandoorRecipes/recipes/issues
+classification:
+  categories:
+  - Food and cooking
+  tags:
+  - recipes
+  - meal-planning
+  - shopping-list
+  - cooking
+  - household
+  implementation_languages:
+  - Python
+  - JavaScript
+  - TypeScript
+  alternatives_to:
+  - Paprika Recipe Manager
+  - Recipe Keeper
+  - AnyList
+license:
+  spdx: LicenseRef-AGPL-3.0-with-Commons-Clause
+  kind: source_available
+  restrictions:
+  - The Commons Clause does not grant the right to sell the software or a product/service whose value derives
+    substantially from it, including paid hosting and related consulting/support.
+  - Keep upstream license and attribution notices together with the Commons Clause condition when distributing
+    copies.
+  notes: 'AGPL v3 with the Commons Clause selling restriction: source-available, not an OSI-approved open-source
+    license. Personal and internal use are allowed; selling the software or substantially derived hosted, consulting
+    or support services is restricted. The deployment recipe is MIT; the upstream logo notice and license are
+    in assets/NOTICE and assets/LICENSE.'
+localization:
+  ui_languages:
+  - en
+  - ru
+  docs_languages:
+  - en
+clients:
+  web: true
+  android: true
+  ios: true
+  desktop: false
+auth:
+  oidc: native
+  saml: native
+  two_factor: none
+  proxy_header: true
+requirements:
+  architectures:
+  - amd64
+  - arm64
+  min_cpu_cores: 1
+  min_ram_mb: 1024
+  recommended_ram_mb: 2048
+  min_disk_gb: 5
+  gpu:
+    required: false
+    supported: false
+  database: postgresql
+  dependencies:
+  - PostgreSQL 18.6
+  - Nginx and Gunicorn included in the application image
+  - Alpine 3.22.2 for volume initialization and archives
+operations:
+  install_difficulty: 3
+  installation_levels:
+    home: supported
+    vps: supported
+    reliable: partial
+  maintenance_difficulty: 3
+  backup_supported: true
+  restore_tested: true
+  healthcheck: true
+  reverse_proxy_required: false
+  update_complexity: in_place
+recipe:
+  id: tandoor-compose
+  version: 1
+  compose_file: compose.yaml
+  env_example: .env.example
+  installation: installation.md
+  troubleshooting: troubleshooting.md
+  supported_docker_compose: '>=2.24.0'
+  application_version: 2.7.2
+  images:
+  - name: vabene1111/recipes
+    tag_source: env
+  - name: postgres
+    tag_source: pinned
+  - name: alpine
+    tag_source: pinned
+  tested_at: '2026-10-29'
+  tested_architectures:
+    amd64: passed
+    arm64: not_tested
+  smoke_test: full
+  check_history:
+  - tested_at: '2026-10-29'
+    application_version: 2.7.2
+    recipe_version: 1
+    tested_architectures:
+      amd64: passed
+      arm64: not_tested
+    smoke_test: full
+    restore_tested: true
+  license: MIT
+  smoke_test_limitations:
+  - The complete native recipe and volume-loss recovery scenario ran on amd64; arm64 was not tested.
+  - The test creates the owner through the native CSRF form, logs in through the browser authentication API,
+    saves a private recipe with ingredients, instructions, keyword and an uploaded image, removes all three
+    volumes, and verifies restored data and the stored image hash.
+  - Public signup is checked through the authentication configuration API and anonymous recipe access is denied.
+    The known upstream /setup/ redirect bug after owner creation is documented, not counted as a successful
+    security check.
+  - Meal-plan timing, shopping synchronization, external URL imports, OIDC/SAML, remote-user login, email,
+    AI services and third-party mobile clients are not exercised by the recovery test.
+security:
+  public_exposure: supported
+  default_bind: localhost
+  privileged: false
+  host_network: false
+  docker_socket: false
+  known_risks:
+  - The first visitor can become the owner through /setup/. Complete setup over loopback or an SSH tunnel before
+    enabling a proxy or LAN access; ordinary public signup is disabled.
+  - Uploaded media are served by Nginx without per-image authorization. A private recipe does not turn its
+    image URL into a private file; do not upload sensitive images.
+  - URL imports make server-side outbound requests. Limit accounts to trusted users and restrict access from
+    the container to sensitive internal services; AI and external storage providers are not configured.
+  - The database, media volume and archives contain household information and integration credentials. Restrict
+    access to .env and volumes, encrypt off-server backups and keep the matching SECRET_KEY.
+  - Startup migrates PostgreSQL automatically. Restore a compatible pre-upgrade archive before downgrading;
+    changing the image tag alone is not a safe rollback.
+  - 'Upstream 2.7.2 returns HTTP 500 when /setup/ is revisited after an owner exists (issue #4907). Use /account/login/
+    for normal access; the recipe does not patch upstream authentication.'
+  - Trivy found 5 CRITICAL package findings across the application, PostgreSQL and Alpine images. Functional
+    verification does not resolve those findings.
+  assessment:
+    status: warnings
+    assessed_at: '2026-10-29'
+upstream:
+  release_source: github
+  repository: TandoorRecipes/recipes
+  last_release_at: '2026-10-27'
+  last_checked_at: '2026-10-29T20:43:56Z'
+  stars: 8703
+  stars_checked_at: '2026-10-29T20:43:56Z'
+  releases_last_year: 28
+  releases_checked_at: '2026-10-29T20:43:56Z'
+update_tracking:
+  releases:
+    status: current
+    checked_at: '2026-10-29T20:43:56Z'
+    latest_version: 2.7.2
+  critical_vulnerabilities:
+    status: findings
+    checked_at: '2026-10-29T20:43:56Z'
+    critical_count: 5
+    scanner: trivy
+    ids:
+    - CVE-2025-68121
+    - CVE-2026-111497
+    - CVE-2026-31789
+    - CVE-2026-59873
+  breaking_updates:
+    status: unknown
+    checked_at: null
+  compose_changes:
+    status: not_tracked
+    checked_at: null
+  outdated_images:
+    status: current
+    checked_at: '2026-10-29T20:43:56Z'
+    images: []
+update_policy:
+  images:
+  - image: vabene1111/recipes
+    provider: docker_hub
+    repository: vabene1111/recipes
+  compose: null
+content:
+  description: description.md
+  logo: assets/logo.svg
+  screenshots:
+  - file: assets/collection.webp
+    alt: Tandoor household recipe collection with food photographs and preparation times in light theme
+  - file: assets/recipe.webp
+    alt: A populated Tandoor recipe with ingredients and cooking instructions in dark theme
+  - file: assets/meal-plan.webp
+    alt: Tandoor meal calendar with three weeks of lunches and dinners in light theme
+  updated_at: '2026-10-30'
