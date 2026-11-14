@@ -143,9 +143,9 @@ upstream:
   releases_checked_at: '2026-10-24T09:00:10Z'
 update_tracking:
   releases:
-    status: current
-    checked_at: '2026-10-24T09:00:10Z'
-    latest_version: v2.7.0
+    status: update_available
+    checked_at: "2026-11-14T11:33:53.302Z"
+    latest_version: "v2.8.0"
   critical_vulnerabilities:
     status: unknown
     checked_at: null
