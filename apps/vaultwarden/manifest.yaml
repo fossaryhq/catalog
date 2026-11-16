@@ -87,23 +87,32 @@ operations:
 
 recipe:
   id: vaultwarden-compose
-  version: 3
+  version: 4
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: 1.37.4
+  application_version: 1.37.5
   images:
     - name: vaultwarden/server
       tag_source: env
-  tested_at: "2026-10-09"
+  tested_at: "2026-11-16"
   tested_architectures:
     amd64: passed
     arm64: not_tested
     armv7: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-11-16"
+      application_version: 1.37.5
+      recipe_version: 4
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-10-09"
       application_version: 1.37.4
       recipe_version: 3
@@ -133,7 +142,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 and armv7 were not tested in this run.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-11-16. arm64 and armv7 were not tested in this run.
 
 security:
   public_exposure: supported
@@ -161,15 +170,16 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-11-16T12:50:46.035Z"
+    status: current
+    checked_at: "2026-11-16T15:52:46Z"
     latest_version: "1.37.5"
   critical_vulnerabilities:
     status: findings
-    checked_at: "2026-10-09T13:58:51Z"
-    critical_count: 4
+    checked_at: "2026-11-16T15:52:46Z"
+    critical_count: 5
     scanner: trivy
     ids:
+      - CVE-2026-111497
       - CVE-2026-44172
       - CVE-2026-49261
   breaking_updates:
@@ -180,7 +190,7 @@ update_tracking:
     checked_at: null
   outdated_images:
     status: current
-    checked_at: "2026-10-09T13:58:51Z"
+    checked_at: "2026-11-16T15:52:46Z"
     images: []
 update_policy:
   images:

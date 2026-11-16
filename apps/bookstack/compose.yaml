@@ -2,7 +2,7 @@ name: bookstack
 
 services:
   bookstack:
-    image: lscr.io/linuxserver/bookstack:version-${BOOKSTACK_VERSION:-v26.09.2}
+    image: lscr.io/linuxserver/bookstack:version-${BOOKSTACK_VERSION:-v26.09.3}
     restart: unless-stopped
     environment:
       PUID: ${PUID:-1000}

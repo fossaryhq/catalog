@@ -69,7 +69,7 @@ docker compose down keeps the named volume. For permanent deletion, export a bac
 
 | Variable | Meaning |
 | --- | --- |
-| `BESZEL_VERSION` | Pinned hub image tag 0.21.1 |
+| `BESZEL_VERSION` | Pinned hub image tag 0.21.2 |
 | `BESZEL_PORT` | Loopback host HTTP port, default8090 |
 | `BESZEL_URL` | Actual external URL for UI and links |
 | `BESZEL_ADMIN_EMAIL` | Email for first administrator and superuser, new DB only |
@@ -79,4 +79,4 @@ docker compose down keeps the named volume. For permanent deletion, export a bac
 | `BESZEL_BACKUP_DIR` | Optional private archive destination |
 
 ## Connect real systems
-Use Add System and the [agent guide](https://beszel.dev/guide/agent-installation) on the machine you intend to monitor. Replace any floating image in the UI-generated command with `henrygd/beszel-agent:0.21.1`. For SSH allow the agent port only from the hub; for WebSocket use TLS. Add Docker socket, host networking or devices only when those integrations are needed. The hub public key is not its private key. SMTP, OIDC, MFA and notification delivery are not configured by this recipe.
+Use Add System and the [agent guide](https://beszel.dev/guide/agent-installation) on the machine you intend to monitor. Replace any floating image in the UI-generated command with `henrygd/beszel-agent:0.21.2`. For SSH allow the agent port only from the hub; for WebSocket use TLS. Add Docker socket, host networking or devices only when those integrations are needed. The hub public key is not its private key. SMTP, OIDC, MFA and notification delivery are not configured by this recipe.

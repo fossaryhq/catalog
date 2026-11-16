@@ -72,24 +72,32 @@ operations:
   update_complexity: in_place
 recipe:
   id: bookstack-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: v26.09.2
+  application_version: v26.09.3
   images:
     - name: lscr.io/linuxserver/bookstack
       tag_source: env
     - name: mariadb
       tag_source: pinned
-  tested_at: "2026-10-23"
+  tested_at: "2026-11-16"
   tested_architectures:
     amd64: passed
     arm64: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-11-16"
+      application_version: v26.09.3
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-10-23"
       application_version: v26.09.2
       recipe_version: 1
@@ -127,8 +135,8 @@ upstream:
   releases_checked_at: "2026-10-23T15:03:41Z"
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-11-16T12:50:46.035Z"
+    status: current
+    checked_at: "2026-11-16T15:52:46Z"
     latest_version: "v26.09.3"
   critical_vulnerabilities:
     status: unknown
