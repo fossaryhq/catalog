@@ -9,7 +9,7 @@ export BESZEL_BACKUP_DIR="$tmp/backups"
 export BESZEL_PORT
 BESZEL_PORT="$(python3 -c 'import socket; s=socket.socket(); s.bind(("127.0.0.1",0)); print(s.getsockname()[1]); s.close()')"
 export BESZEL_URL="http://127.0.0.1:$BESZEL_PORT"
-export BESZEL_VERSION="${BESZEL_VERSION:-0.21.1}"
+export BESZEL_VERSION="${BESZEL_VERSION:-0.21.2}"
 export BESZEL_DATA_VOLUME="$project-data"
 export BESZEL_ADMIN_EMAIL=recipe@example.com
 export BESZEL_ADMIN_PASSWORD

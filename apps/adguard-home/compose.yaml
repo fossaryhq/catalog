@@ -2,7 +2,7 @@ name: adguard-home
 
 services:
   adguard-home:
-    image: adguard/adguardhome:${ADGUARD_VERSION:-v0.107.79}
+    image: adguard/adguardhome:${ADGUARD_VERSION:-v0.107.80}
     restart: unless-stopped
     ports:
       # DNS listens on localhost only by default. Set the LAN interface address

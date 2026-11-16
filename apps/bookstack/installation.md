@@ -19,7 +19,7 @@ Edit `.env` before starting. All parameters:
 
 | Parameter | Meaning |
 | --- | --- |
-| `BOOKSTACK_VERSION` | Pinned upstream release, initially `v26.09.2`; the Compose file adds the image's `version-` prefix. |
+| `BOOKSTACK_VERSION` | Pinned upstream release, initially `v26.09.3`; the Compose file adds the image's `version-` prefix. |
 | `BOOKSTACK_PORT` | Loopback host port, default `6875`. |
 | `BOOKSTACK_APP_URL` | Exact browser URL, including scheme and any nonstandard port. Initially `http://localhost:6875`; use the public HTTPS URL behind a proxy. |
 | `BOOKSTACK_APP_KEY` | Unique `base64:` key generated above. Preserve it across upgrades and restores. |

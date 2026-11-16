@@ -90,23 +90,32 @@ operations:
 
 recipe:
   id: adguard-home-compose
-  version: 1
+  version: 2
   compose_file: compose.yaml
   env_example: .env.example
   installation: installation.md
   troubleshooting: troubleshooting.md
   supported_docker_compose: ">=2.24.0"
-  application_version: v0.107.79
+  application_version: v0.107.80
   images:
     - name: adguard/adguardhome
       tag_source: env
-  tested_at: "2026-10-09"
+  tested_at: "2026-11-16"
   tested_architectures:
     amd64: passed
     arm64: not_tested
     armv7: not_tested
   smoke_test: full
   check_history:
+    - tested_at: "2026-11-16"
+      application_version: v0.107.80
+      recipe_version: 2
+      tested_architectures:
+        amd64: passed
+        arm64: not_tested
+        armv7: not_tested
+      smoke_test: full
+      restore_tested: true
     - tested_at: "2026-10-09"
       application_version: v0.107.79
       recipe_version: 1
@@ -136,7 +145,7 @@ recipe:
       restore_tested: true
   license: MIT
   smoke_test_limitations:
-    - The application smoke test, including backup and restore, passed on amd64 on 2026-10-09. arm64 and armv7 were not tested in this run.
+    - The application smoke test, including backup and restore, passed on amd64 on 2026-11-16. arm64 and armv7 were not tested in this run.
     - The DHCP server and DNS-over-HTTPS are not enabled in the recipe and were not tested.
 
 security:
@@ -166,12 +175,12 @@ upstream:
 
 update_tracking:
   releases:
-    status: update_available
-    checked_at: "2026-11-16T12:50:46.035Z"
+    status: current
+    checked_at: "2026-11-16T15:52:46Z"
     latest_version: "v0.107.80"
   critical_vulnerabilities:
     status: no_findings
-    checked_at: "2026-10-09T13:58:51Z"
+    checked_at: "2026-11-16T15:52:46Z"
     critical_count: 0
     scanner: trivy
     ids: []
@@ -183,7 +192,7 @@ update_tracking:
     checked_at: null
   outdated_images:
     status: current
-    checked_at: "2026-10-09T13:58:51Z"
+    checked_at: "2026-11-16T15:52:46Z"
     images: []
 
 update_policy:
